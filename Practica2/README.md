@@ -1,9 +1,3 @@
-![](RackMultipart20230204-1-ipviye_html_9efe932347ec43c4.png)
-
-##
-
-
-## Diseño y Análisis de Algoritmos
 
 ## Práctica 2 - Simulador de la máquina RAM
 
