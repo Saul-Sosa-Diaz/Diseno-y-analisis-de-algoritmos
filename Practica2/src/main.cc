@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   try {
     Usage(argc, argv);  
   } catch (const std::exception& e) {
-    std::cout << e.what();
+    std::cerr << e.what();
   }
 
   return 0;
