@@ -22,7 +22,7 @@ int Usage(int argc, char* argv[]) {
       throw std::runtime_error(exception);
     }
   }
-  if (argc != 3) {
+  if (argc != 4) {
     std::string exception = "This program needs 3 parameters:\n\tprogram.ram: ";
     exception += "Name of the file with the ram machine.\n\tinput_tape.in\n\toutput_tape.out\nWrite: \"--help\" for more information.\n";
     throw std::runtime_error(exception);
