@@ -1,6 +1,5 @@
-
 /**
- * @file programMemory.h
+ * @file dataMemory.h
  * @author Saul Sosa Diaz
  * @brief definition of the  programMemory
  * @version 0.1
@@ -10,7 +9,7 @@
  *
  */
 #pragma once
-#include "memory.h"
+#include "../memory.h"
 
 class DataMemory : public Memory<double> {
  public:

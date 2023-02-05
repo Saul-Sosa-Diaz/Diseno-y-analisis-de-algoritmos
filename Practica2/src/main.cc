@@ -10,7 +10,6 @@
  */
 
 #include "utils.h"
-#include "entity/memory/dataMemory.h"
 
 int main(int argc, char* argv[]) {
   try {
