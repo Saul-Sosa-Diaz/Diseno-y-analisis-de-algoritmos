@@ -16,7 +16,9 @@ class DataMemory : public Memory<double> {
  public:
   DataMemory(int);
   void load();
+  std::vector<double> getContent() {
+    return content_;
+  }
 
  private:
-  
 };
