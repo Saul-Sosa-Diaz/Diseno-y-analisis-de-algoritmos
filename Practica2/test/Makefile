@@ -16,4 +16,4 @@ fileProgram.o: ../src/entity/file/fileProgram/fileProgram.cc
 	g++ -g -c ../src/entity/file/fileProgram/fileProgram.cc
 
 clean:
-	rm -rf *.o
+	rm -rf *.o *.out
