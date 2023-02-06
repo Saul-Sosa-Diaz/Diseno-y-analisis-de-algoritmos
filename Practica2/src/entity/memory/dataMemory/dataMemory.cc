@@ -19,7 +19,7 @@ void DataMemory::load() {
   std::fill(content_.begin(), content_.end(), 0);
 }
 
-double DataMemory::at(int index) {
+double DataMemory::at(int index) const {
   if (index < 0 || index >= content_.size()) {
     throw std::runtime_error("Attempt to access incorrect memory address");
   }
@@ -28,4 +28,8 @@ double DataMemory::at(int index) {
 
 void DataMemory::setValue(double newValue) {
   content_[0] = newValue;
+}
+
+void DataMemory::writeValue(int index, double value) {
+  content_[index] = value;
 }
