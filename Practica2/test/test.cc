@@ -1,13 +1,12 @@
-
-
 #include "test_dataMemory.h"
 #include "test_fileProgram.h"
 
 
 
 
-
 int main(int argc, char** argv) {
+
+
   test_data_memory();
   test_file_program();
 

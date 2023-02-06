@@ -1,7 +1,6 @@
 
 tests.out: utils.o test.o dataMemory.o fileProgram.o
 	g++ -g -o tests.out test.o utils.o dataMemory.o fileProgram.o
-	rm -rf *.o
 
 test.o: test.cc
 	g++ -g -c test.cc

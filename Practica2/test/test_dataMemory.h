@@ -2,8 +2,6 @@
 
 #include "../src/entity/memory/dataMemory/dataMemory.h"
 
-
-
 void constructor_data_memory() {
   TEST_DONE++;
   try {

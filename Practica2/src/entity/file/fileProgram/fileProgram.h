@@ -9,15 +9,17 @@
  *
  */
 #pragma once
-#include "../file.h"
 #include <regex>
+
+#include "../file.h"
 
 class FileProgram : public File {
  public:
   FileProgram(std::string name);
-  int read(); // IMPLEMENTAR!!!!
-
+  int read(); 
+  std::string getSrcCode() {return srcCode_;}
+  int getNumberOfLines() {return numberOfLines_;}
  protected:
-  std::string name_;
-  // Operation*
+  std::string srcCode_;
+  int numberOfLines_;
 };

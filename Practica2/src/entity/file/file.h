@@ -19,5 +19,4 @@ class File {
 
  protected:
   std::string name_;
-  // Operation*
 };

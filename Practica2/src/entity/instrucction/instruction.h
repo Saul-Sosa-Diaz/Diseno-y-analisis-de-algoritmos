@@ -10,14 +10,23 @@
  */
 #pragma once
 #include <string>
+#include "../memory/dataMemory/dataMemory.h"
+#include "../operand/operand.h"
 
+enum type {
+  jump = 0,
+  halt = 1,
+  io = 2,
+  aritmethic = 3
+};
 
 class Instruction {
  public:
-  virtual int function() = 0;
+  Instruction (type type);
+  virtual int function(DataMemory&) = 0;
 
  protected:
-  std::string type_;
-  //Operation*
+  type type_;
+  Operand* operand_;
 
 };

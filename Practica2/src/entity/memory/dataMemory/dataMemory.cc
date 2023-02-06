@@ -18,3 +18,14 @@ DataMemory::DataMemory(int numberOfRegisters) {
 void DataMemory::load() {
   std::fill(content_.begin(), content_.end(), 0);
 }
+
+double DataMemory::at(int index) {
+  if (index < 0 || index >= content_.size()) {
+    throw std::runtime_error("Attempt to access incorrect memory address");
+  }
+  return content_[index];
+}
+
+void DataMemory::setValue(double newValue) {
+  content_[0] = newValue;
+}

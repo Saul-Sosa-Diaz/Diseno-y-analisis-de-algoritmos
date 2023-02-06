@@ -18,6 +18,7 @@ class DataMemory : public Memory<double> {
   std::vector<double> getContent() {
     return content_;
   }
-
+  double at(int);
+  void setValue(double);
  private:
 };
