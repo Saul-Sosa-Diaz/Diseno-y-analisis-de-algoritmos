@@ -9,16 +9,15 @@
  * 
  */
 
-#include "utils.h"
+#include "functions/utils.h"
 
 int main(int argc, char* argv[]) {
   try {
-    Usage(argc, argv);  
+    Usage(argc, argv);
+
   } catch (const std::exception& e) {
     std::cerr << e.what();
   }
   
-
-
   return 0;
 }
