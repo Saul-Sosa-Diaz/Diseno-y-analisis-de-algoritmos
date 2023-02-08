@@ -11,12 +11,11 @@
 #pragma once
 #include "../memory/dataMemory/dataMemory.h"
 
-template <class T>
 class Operand {
  public:
-  Operand( T& index) { index_ = index; }
+  Operand(int index) { index_ = index; }
   virtual double getValue(const DataMemory&) = 0;
 
  protected:
-  T index_;
+  int index_;
 };

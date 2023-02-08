@@ -17,7 +17,7 @@ enum type {
   jump = 0,
   halt = 1,
   io = 2,
-  aritmethic = 3
+  arithmetic = 3
 };
 
 class Instruction {

@@ -11,15 +11,15 @@
 #pragma once
 #include "../memory.h"
 
-class DataMemory : public Memory<double> {
+class DataMemory : public Memory<int> {
  public:
   DataMemory(int);
   void load();
-  std::vector<double> getContent() {
+  std::vector<int> getContent() {
     return content_;
   }
-  double at(int) const;
-  void setValue(double);
-  void writeValue(int, double);
+  int at(int) const;
+  void setValue(int);
+  void writeValue(int, int);
  private:
 };

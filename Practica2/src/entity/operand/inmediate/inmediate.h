@@ -12,7 +12,7 @@
 
 #include "../operand.h"
 
-class InmediateOperand : public Operand<double> {
+class InmediateOperand : public Operand {
  public:
   InmediateOperand(double index) : Operand(index){};
   double getValue(const DataMemory&);

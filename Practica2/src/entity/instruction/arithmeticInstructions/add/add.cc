@@ -11,10 +11,10 @@
 
 #include "add.h"
 
-Add::Add(type type) : Instruction(type) {}
+Add::Add() {}
 
 int Add::function(DataMemory& registers) {
-  double temp = registers.at(0) + operand_->value(registers);
+  double temp = registers.at(0) + operand_->getValue(registers);
   registers.setValue(temp);
   return 0;
 }

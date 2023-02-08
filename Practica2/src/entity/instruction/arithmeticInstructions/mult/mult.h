@@ -1,7 +1,7 @@
 /**
- * @file add.h
+ * @file mult.h
  * @author Saul Sosa Diaz
- * @brief Declaration of Instruction add
+ * @brief Declaration of Instruction mult
  * @version 0.1
  * @date 2023-02-04
  *
@@ -9,13 +9,11 @@
  *
  */
 #pragma once
-#include <regex>
+#include "../arithmeticInstruction.h"
 
-#include "../instruction.h"
-
-class Add : public Instruction {
+class Mult : public ArithmeticInstruction {
  public:
-  Add(type type);
+  Mult();
   int function(DataMemory&);
  private:
 };

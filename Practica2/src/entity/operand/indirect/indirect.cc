@@ -12,5 +12,5 @@
 #include "indirect.h"
 
 double IndirectOperand::getValue(const DataMemory& registers) {
-  return registers.at(int(registers.at(index_)));
+  return registers.at(registers.at(index_));
 }

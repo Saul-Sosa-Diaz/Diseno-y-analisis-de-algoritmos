@@ -19,17 +19,17 @@ void DataMemory::load() {
   std::fill(content_.begin(), content_.end(), 0);
 }
 
-double DataMemory::at(int index) const {
+int DataMemory::at(int index) const {
   if (index < 0 || index >= content_.size()) {
     throw std::runtime_error("Attempt to access incorrect memory address");
   }
   return content_[index];
 }
 
-void DataMemory::setValue(double newValue) {
+void DataMemory::setValue(int newValue) {
   content_[0] = newValue;
 }
 
-void DataMemory::writeValue(int index, double value) {
+void DataMemory::writeValue(int index, int value) {
   content_[index] = value;
 }

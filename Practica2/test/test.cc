@@ -3,8 +3,6 @@
 #include "test_operandos.h"
 
 
-
-
 int main(int argc, char** argv) {
 
 
