@@ -19,8 +19,8 @@ class TapeFile : public File {
   TapeFile(std::string name = "defaultName");
   int read();
   int write();
-  int addNewItemToBuffer(int);
-  int getNextItem();
+  void addNewItemToBuffer(int);
+  int getItem();
 
  protected:
   std::vector<int> buffer_;

@@ -14,6 +14,6 @@
 Read::Read(TapeFile& file) : InputOutputInstruction(file) {}
 
 int Read::function(DataMemory& registers) {
-  registers.writeValue(operand_->getValue(registers), file_.getNextItem());
+  registers.writeValue(operand_->getValue(registers), file_.getItem());
   return 0;
 }

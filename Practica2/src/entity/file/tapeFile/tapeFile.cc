@@ -63,3 +63,14 @@ int TapeFile::write() {
   }
   return 0;
 }
+
+void TapeFile::addNewItemToBuffer(int newItem) {
+  buffer_.push_back(newItem);
+}
+
+int TapeFile::getItem() {
+  int result = buffer_[readHead_];
+  readHead_++;
+  return result;
+
+}

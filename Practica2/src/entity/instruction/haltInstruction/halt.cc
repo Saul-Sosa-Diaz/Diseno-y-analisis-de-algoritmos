@@ -11,7 +11,7 @@
 
 #include "halt.h"
 
-Halt::Halt(type type) : Instruction(type) {}
+Halt::Halt() : Instruction(halt){};
 
 int Halt::function(DataMemory& registers) {
   return 0;
