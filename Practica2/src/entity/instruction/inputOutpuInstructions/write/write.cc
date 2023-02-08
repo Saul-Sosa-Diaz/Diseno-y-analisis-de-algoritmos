@@ -14,7 +14,7 @@
 Write::Write(TapeFile& file) : InputOutputInstruction(file) {}
 
 int Write::function(DataMemory& registers) {
-  registers.at(1);
+  file_.addNewItemToBuffer(registers.at(operand_->getValue(registers)));
   file_.write();
   return 0;
 }
