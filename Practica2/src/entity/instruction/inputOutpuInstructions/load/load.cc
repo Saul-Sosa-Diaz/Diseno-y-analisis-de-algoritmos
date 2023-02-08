@@ -1,0 +1,19 @@
+/**
+ * @file load.cc
+ * @author Saul Sosa Diaz
+ * @brief Implementation of Instruction load
+ * @version 0.1
+ * @date 2023-02-04
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
+#include "load.h"
+
+Load::Load() {}
+
+int Load::function(DataMemory& registers) {
+  registers.setValue(operand_->getValue(registers));
+  return 0;
+}

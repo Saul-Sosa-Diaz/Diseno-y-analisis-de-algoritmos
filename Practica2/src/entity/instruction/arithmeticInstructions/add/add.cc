@@ -1,5 +1,5 @@
 /**
- * @file add.h
+ * @file add.cc
  * @author Saul Sosa Diaz
  * @brief Implementation of Instruction add
  * @version 0.1
@@ -14,7 +14,7 @@
 Add::Add() {}
 
 int Add::function(DataMemory& registers) {
-  double temp = registers.at(0) + operand_->getValue(registers);
+  int temp = registers.at(0) + operand_->getValue(registers);
   registers.setValue(temp);
   return 0;
 }
