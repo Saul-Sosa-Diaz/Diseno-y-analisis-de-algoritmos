@@ -1,7 +1,7 @@
 /**
- * @file store.h
+ * @file load.h
  * @author Saul Sosa Diaz
- * @brief Declaration of Instruction store
+ * @brief Declaration of Instruction load
  * @version 0.1
  * @date 2023-02-04
  *
@@ -10,11 +10,11 @@
  */
 #pragma once
 
-#include "../inputOutputInstruction.h"
+#include "../memoryManipulationInstrucction.h"
 
-class Store : public InputOutputInstruction {
+class Load : public MemoryManipulationInstrucction {
  public:
-  Store();
+  Load();
   int function(DataMemory&);
 
  private:

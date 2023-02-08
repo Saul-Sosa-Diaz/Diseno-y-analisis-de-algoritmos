@@ -9,14 +9,12 @@
  *
  */
 #pragma once
-
+#include "../../../file/tapeFile/tapeFile.h"
 #include "../inputOutputInstruction.h"
 
 class Read : public InputOutputInstruction {
  public:
-  Read(const TapeFile& file);
+  Read(TapeFile& file);
   int function(DataMemory&);
 
- private:
-  TapeFile file_;
 };

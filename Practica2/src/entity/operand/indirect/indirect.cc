@@ -11,6 +11,6 @@
 
 #include "indirect.h"
 
-double IndirectOperand::getValue(const DataMemory& registers) {
+int IndirectOperand::getValue(const DataMemory& registers) {
   return registers.at(registers.at(index_));
 }

@@ -11,6 +11,6 @@
 
 #include "direct.h"
 
-double DirectOperand::getValue(const DataMemory& registers) {
+int DirectOperand::getValue(const DataMemory& registers) {
   return registers.at(index_);
 }

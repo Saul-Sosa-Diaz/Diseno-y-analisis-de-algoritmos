@@ -11,9 +11,12 @@
 #pragma once
 
 #include "../instruction.h"
+#include "../../file/tapeFile/tapeFile.h"
 
 class InputOutputInstruction : public Instruction {
  public:
-  InputOutputInstruction() : Instruction(io) {};
+  InputOutputInstruction(TapeFile& file) : Instruction(io) { file_ = file;};
   virtual int function(DataMemory&) = 0;
+ protected:
+  TapeFile file_;
 };

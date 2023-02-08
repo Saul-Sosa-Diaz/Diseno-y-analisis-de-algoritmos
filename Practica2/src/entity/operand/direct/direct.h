@@ -15,6 +15,6 @@
 class DirectOperand : public Operand {
  public:
   DirectOperand(int index) : Operand(index){};
-  double getValue(const DataMemory&);
+  int getValue(const DataMemory&);
  private:
 };

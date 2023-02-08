@@ -10,13 +10,11 @@
  */
 #pragma once
 
+#include "../../../file/tapeFile/tapeFile.h"
 #include "../inputOutputInstruction.h"
 
 class Write : public InputOutputInstruction {
  public:
   Write(TapeFile& file);
   int function(DataMemory&);
-
- private:
-  TapeFile file_;
 };

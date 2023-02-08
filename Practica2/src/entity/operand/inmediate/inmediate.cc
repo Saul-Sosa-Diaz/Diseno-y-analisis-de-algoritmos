@@ -11,6 +11,6 @@
 
 #include "inmediate.h"
 
-double InmediateOperand::getValue(const DataMemory& registers) {
+int InmediateOperand::getValue(const DataMemory& registers) {
   return index_;
 }

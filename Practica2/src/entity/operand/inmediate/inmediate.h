@@ -15,7 +15,7 @@
 class InmediateOperand : public Operand {
  public:
   InmediateOperand(double index) : Operand(index){};
-  double getValue(const DataMemory&);
+  int getValue(const DataMemory&);
 
  private:
 };

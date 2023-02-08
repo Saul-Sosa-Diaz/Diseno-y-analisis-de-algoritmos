@@ -11,7 +11,7 @@
 
 #include "read.h"
 
-Read::Read(const TapeFile& file) {}
+Read::Read(TapeFile& file) : InputOutputInstruction(file) {}
 
 int Read::function(DataMemory& registers) {
   registers.writeValue(operand_->getValue(registers), file_.getNextItem());

@@ -11,9 +11,10 @@
 
 #include "write.h"
 
-Write::Write(TapeFile& file) {}
+Write::Write(TapeFile& file) : InputOutputInstruction(file) {}
 
 int Write::function(DataMemory& registers) {
-  file_->write(registers.at(operand_->getValue(registers)));
+  registers.at(1);
+  file_.write();
   return 0;
 }
