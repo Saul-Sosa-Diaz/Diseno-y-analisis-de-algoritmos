@@ -10,8 +10,8 @@
  */
 #pragma once
 #include <string>
-#include "../memory/dataMemory/dataMemory.h"
-#include "../operand/operand.h"
+#include "../memories/dataMemory/dataMemory.h"
+#include "../operands/operand.h"
 
 enum type {
   jump = 0,

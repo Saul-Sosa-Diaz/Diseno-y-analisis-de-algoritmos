@@ -9,7 +9,7 @@
  *
  */
 #pragma once
-#include "../memory/dataMemory/dataMemory.h"
+#include "../memories/dataMemory/dataMemory.h"
 
 class Operand {
  public:

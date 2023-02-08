@@ -10,7 +10,6 @@
  */
 #pragma once
 
-#include "../../../file/tapeFile/tapeFile.h"
 #include "../inputOutputInstruction.h"
 
 class Write : public InputOutputInstruction {

@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../instruction.h"
-#include "../../file/tapeFile/tapeFile.h"
+#include "../../files/tapeFile/tapeFile.h"
 
 class InputOutputInstruction : public Instruction {
  public:
