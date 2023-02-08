@@ -11,8 +11,12 @@
 
 #include "jgtz.h"
 
-Jgtz::Jgtz(type type, int lineOfLabel) : Instruction(type) { lineOfLabel_ = lineOfLabel; }
+Jgtz::Jgtz(int lineOfLabel) : JumpInstruction(lineOfLabel) {}
 
 int Jgtz::function(DataMemory& registers) {
-  return lineOfLabel_;
+  int result = 0;
+  if (registers.at(0) == 0) {
+    result = lineOfLabel_;
+  }
+  return result;
 }

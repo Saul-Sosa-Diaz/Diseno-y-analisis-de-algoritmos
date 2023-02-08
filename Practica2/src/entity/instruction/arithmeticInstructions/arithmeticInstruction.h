@@ -1,7 +1,7 @@
 /**
- * @file jgtz.h
+ * @file arithmeticInstruction.h
  * @author Saul Sosa Diaz
- * @brief Declaration of Instruction jgtz
+ * @brief Declaration of abstract class ArithmeticInstruction
  * @version 0.1
  * @date 2023-02-04
  *
@@ -14,6 +14,6 @@
 
 class ArithmeticInstruction : public Instruction {
  public:
-  ArithmeticInstruction(type type = arithmetic) : Instruction(type) {};
+  ArithmeticInstruction() : Instruction(arithmetic) {};
   virtual int function(DataMemory&) = 0;
 };

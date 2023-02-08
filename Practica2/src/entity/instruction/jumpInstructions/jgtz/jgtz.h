@@ -10,12 +10,10 @@
  */
 #pragma once
 
-#include "../instruction.h"
+#include "../jumpInstruction.h"
 
-class Jgtz : public Instruction {
+class Jgtz : public JumpInstruction {
  public:
-  Jgtz(type type, int lineOfLabel);
+  Jgtz(int lineOfLabel) : JumpInstruction(lineOfLabel) {};
   int function(DataMemory&);
- private:
-  int lineOfLabel_;
 };
