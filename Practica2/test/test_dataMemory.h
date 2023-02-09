@@ -1,6 +1,7 @@
 #include "var_tests.h"
 
 #include "../src/lib/memories/dataMemory/dataMemory.h"
+#include "../src/lib/memories/programMemory/programMemory.h"
 #include "../src/lib/operands/inmediate/inmediate.h"
 #include "../src/lib/operands/direct/direct.h"
 #include "../src/lib/operands/indirect/indirect.h"
@@ -36,8 +37,23 @@ void load_data_memory() {
   TEST_PASSED++;
 }
 
+void load_ProgramMemory() {
+  TEST_DONE++;
+  try {
+    ProgramMemory datamemo("prueba.ram");
+    datamemo.load();
+    }
+   catch (const std::exception& e) {
+    std::cout << e.what();
+    TEST_FAILED++;
+    return;
+  }
+  TEST_PASSED++;
+}
+
 
 void test_data_memory() {
   constructor_data_memory();
   load_data_memory();
+  load_ProgramMemory();
 }

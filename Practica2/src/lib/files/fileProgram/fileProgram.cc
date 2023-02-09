@@ -19,6 +19,7 @@ FileProgram::FileProgram(std::string name) : File(name) {
     std::string exception = "The file with the program RAM doesn´t match with: namein.ram\n";
     throw std::runtime_error(exception);
   }
+  read();
 };
 
 int FileProgram::read() {
@@ -30,6 +31,7 @@ int FileProgram::read() {
     while (getline(filein, aux)) {
       if (!std::regex_match(aux, uselessLine)) { // insert only useful lines
         transform(aux.begin(), aux.end(), aux.begin(), ::toupper);  // Convert into caps
+        aux.erase(std::remove(aux.begin(), aux.end(), '\t'), aux.end()); //  Delete \t from string
         srcCode_ += aux + "\n";
         numberOfLines_++;
       }

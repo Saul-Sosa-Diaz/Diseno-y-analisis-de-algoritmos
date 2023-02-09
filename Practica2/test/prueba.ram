@@ -1,6 +1,10 @@
-#Comentario super epico
- #Comentario inutil
-ETIQ: Grtz 01
+# Programa que lee los elementos la cinta de entrada hasta
+# que encuentre un 0 y copia los valores leídos a la cinta 
+# de salida (el valor 0 no se copia)
 
-HAlt 69
-AdD  *3
+lee:	read 1
+			load 1
+			jzero fin
+			write 1
+			jump lee
+fin:	halt

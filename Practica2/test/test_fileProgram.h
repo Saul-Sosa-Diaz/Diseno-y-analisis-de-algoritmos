@@ -16,9 +16,9 @@ void constructor_file_program_fail() {
 void constructor_file_program() {
   TEST_DONE++;
   try {
-    FileProgram datamemo("program.ram");
+    FileProgram datamemo("prueba.ram");
   } catch (const std::exception& e) {
-    std::cout << "Error Constructor\n";
+    std::cout << e.what();
     TEST_FAILED++;
     return;
   }
@@ -29,7 +29,6 @@ void getSrcCode() {
   TEST_DONE++;
   try {
     FileProgram datamemo("prueba.ram");
-    datamemo.read();
     ASSERT_EQ(datamemo.getSrcCode(), 
       "ETIQ: GRTZ 01\n"
       "HALT 69\n"
@@ -45,12 +44,11 @@ void getSrcCode() {
 
 void getNumberOfLines() {
   TEST_DONE++;
-  try {
-    FileProgram datamemo("prueba.ram");
-    datamemo.read();
-    ASSERT_EQ(datamemo.getNumberOfLines(),3);
+  FileProgram datamemo("prueba.ram");
+  try {  
+    ASSERT_EQ(datamemo.getNumberOfLines(),6);
   } catch (const std::exception& e) {
-    std::cout << "getNumberOfLines\n";
+    std::cout << "getNumberOfLines " << "\n";
     TEST_FAILED++;
     return;
   }

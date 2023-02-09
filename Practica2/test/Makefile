@@ -1,6 +1,6 @@
 
-tests.out: utils.o test.o dataMemory.o fileProgram.o indirect.o direct.o inmediate.o
-	g++ -g -o tests.out test.o utils.o dataMemory.o fileProgram.o indirect.o direct.o inmediate.o
+tests.out: utils.o test.o dataMemory.o fileProgram.o indirect.o direct.o inmediate.o programMemory.o
+	g++ -g -o tests.out test.o utils.o dataMemory.o fileProgram.o indirect.o direct.o inmediate.o programMemory.o
 
 test.o: test.cc
 	g++ -g -c test.cc
@@ -10,6 +10,9 @@ utils.o: ../src/lib/functions/utils.cc
 
 dataMemory.o: ../src/lib/memories/dataMemory/dataMemory.cc
 	g++ -g -c ../src/lib/memories/dataMemory/dataMemory.cc
+
+programMemory.o: ../src/lib/memories/programMemory/programMemory.cc
+	g++ -g -c ../src/lib/memories/programMemory/programMemory.cc
 
 fileProgram.o: ../src/lib/files/fileProgram/fileProgram.cc
 	g++ -g -c ../src/lib/files/fileProgram/fileProgram.cc

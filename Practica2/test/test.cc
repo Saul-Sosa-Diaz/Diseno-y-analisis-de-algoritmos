@@ -5,9 +5,11 @@
 
 int main(int argc, char** argv) {
 
-
+  std::cout << "Memoria: " << std::endl;
   test_data_memory();
+  std::cout << "Ficheros: " << std::endl;
   test_file_program();
+  std::cout << "Operandos: " << std::endl;
   test_operandos();
 
   std::cout << "Totales: " << TEST_DONE << std::endl
