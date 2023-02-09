@@ -4,7 +4,7 @@
 template <class T>
 bool ASSERT_EQ(const T& t1, const T& t2) {
   if (t1 != t2) {
-    throw "Error";
+    throw std::runtime_error("Error de comparación de " + std::to_string(t1) + " y " + std::to_string(t2) + "\n");
   }
   return true;
 }

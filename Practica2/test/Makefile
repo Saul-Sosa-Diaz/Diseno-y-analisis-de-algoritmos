@@ -5,23 +5,23 @@ tests.out: utils.o test.o dataMemory.o fileProgram.o indirect.o direct.o inmedia
 test.o: test.cc
 	g++ -g -c test.cc
 
-utils.o: ../src/utils.cc
-	g++ -g -c ../src/utils.cc
+utils.o: ../src/lib/functions/utils.cc
+	g++ -g -c ../src/lib/functions/utils.cc
 
-dataMemory.o: ../src/entity/memory/dataMemory/dataMemory.cc
-	g++ -g -c ../src/entity/memory/dataMemory/dataMemory.cc
+dataMemory.o: ../src/lib/memories/dataMemory/dataMemory.cc
+	g++ -g -c ../src/lib/memories/dataMemory/dataMemory.cc
 
-fileProgram.o: ../src/entity/file/fileProgram/fileProgram.cc
-	g++ -g -c ../src/entity/file/fileProgram/fileProgram.cc
+fileProgram.o: ../src/lib/files/fileProgram/fileProgram.cc
+	g++ -g -c ../src/lib/files/fileProgram/fileProgram.cc
 
-indirect.o: ../src/entity/operand/indirect/indirect.cc
-	g++ -g -c ../src/entity/operand/indirect/indirect.cc
+indirect.o: ../src/lib/operands/indirect/indirect.cc
+	g++ -g -c ../src/lib/operands/indirect/indirect.cc
 
-direct.o: ../src/entity/operand/direct/direct.cc
-	g++ -g -c ../src/entity/operand/direct/direct.cc
+direct.o: ../src/lib/operands/direct/direct.cc
+	g++ -g -c ../src/lib/operands/direct/direct.cc
 
-inmediate.o: ../src/entity/operand/inmediate/inmediate.cc
-	g++ -g -c ../src/entity/operand/inmediate/inmediate.cc
+inmediate.o: ../src/lib/operands/inmediate/inmediate.cc
+	g++ -g -c ../src/lib/operands/inmediate/inmediate.cc
 
 
 clean:

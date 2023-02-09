@@ -9,8 +9,9 @@
  *
  */
 #pragma once
-#include <vector>
 #include <iostream>
+#include <string>
+#include <vector>
 
 template <class T>
 class Memory {
@@ -20,4 +21,3 @@ class Memory {
  protected:
   std::vector<T> content_;
 };
-

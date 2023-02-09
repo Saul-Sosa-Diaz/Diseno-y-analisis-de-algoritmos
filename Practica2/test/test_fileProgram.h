@@ -1,6 +1,6 @@
 #include "var_tests.h"
 
-#include "../src/entity/file/fileProgram/fileProgram.h"
+#include "../src/lib/files/fileProgram/fileProgram.h"
 
 void constructor_file_program_fail() {
   TEST_DONE++;

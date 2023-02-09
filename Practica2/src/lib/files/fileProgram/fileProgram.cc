@@ -26,10 +26,13 @@ int FileProgram::read() {
   filein.open(name_, std::ios_base::in);
   if (filein.is_open()) {
     std::string aux = "";
+    std::regex uselessLine("(\\s*#.*)|(^\\s*$)"); // Identify comment line or blank line
     while (getline(filein, aux)) {
-      transform(aux.begin(), aux.end(), aux.begin(), ::toupper);  // Convert into caps
-      srcCode_ += aux + "\n";
-      numberOfLines_++;
+      if (!std::regex_match(aux, uselessLine)) { // insert only useful lines
+        transform(aux.begin(), aux.end(), aux.begin(), ::toupper);  // Convert into caps
+        srcCode_ += aux + "\n";
+        numberOfLines_++;
+      }
     }
   } else {
     std::string info_error;

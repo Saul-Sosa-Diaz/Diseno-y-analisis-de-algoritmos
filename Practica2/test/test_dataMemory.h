@@ -1,9 +1,9 @@
 #include "var_tests.h"
 
-#include "../src/entity/memory/dataMemory/dataMemory.h"
-#include "../src/entity/operand/inmediate/inmediate.h"
-#include "../src/entity/operand/direct/direct.h"
-#include "../src/entity/operand/indirect/indirect.h"
+#include "../src/lib/memories/dataMemory/dataMemory.h"
+#include "../src/lib/operands/inmediate/inmediate.h"
+#include "../src/lib/operands/direct/direct.h"
+#include "../src/lib/operands/indirect/indirect.h"
 
 void constructor_data_memory() {
   TEST_DONE++;

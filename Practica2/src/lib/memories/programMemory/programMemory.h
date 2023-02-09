@@ -9,17 +9,18 @@
  *
  */
 #pragma once
+#include <regex>
+
+#include "../../files/fileProgram/fileProgram.h"
+#include "../../instructions/instruction.h"
 #include "../memory.h"
-#include "../instrucction/instruction.h"
-#include "../file/fileProgram/fileProgram.h"
 
 class ProgramMemory : public Memory<Instruction*> {
  public:
   ProgramMemory(std::string);
   void load();
-  std::vector<Instruction*> getContent() {
-    return content_;
-  }
+  bool parseLine(std::string);
+
  private:
-  FileProgram program_;
+  std::string nameOfTheFileWithProgram_;
 };
