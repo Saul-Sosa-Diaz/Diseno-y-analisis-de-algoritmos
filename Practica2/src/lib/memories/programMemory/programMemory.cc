@@ -28,13 +28,22 @@ void ProgramMemory::load() {
  * @return bool true if the sentence can be constructed
  */
 bool ProgramMemory::parseLine(std::string lineToParse) {
-  std::regex label("^\\s*[A-Z][A-Z0-9]*:.*"); // Labels must be at the beginning of the line and not start with a number.
-  std::regex arithmetic("(ADD|LOAD|DIV|MULT)\s*((=[0-9]+)|([0-9]+)|(\*[0-9]+))\n")
+  std::string regex;
+  regex = "^\\s*([A-Z][A-Z0-9]*[[:blank:]]*:)?[[:blank:]]*"; // Labels must be at the beginning of the line and not start with a number.
+  regex += "(";
+    regex += "((ADD|SUB|DIV|MULT)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|"; // Arithmetic instruction
+    regex += "(HALT)|"; //HALT
+    regex += "((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9]*)|"; //JUMP
+    regex += "((WRITE|READ)\\s*(([0-9]+)|(\\*[0-9]+)))|"; //InputOutput
+    regex += "(STORE\\s*(([0-9]+)|(\\*[0-9]+)))|";  // Store
+    regex += "(LOAD\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))"; // Load
+  regex += ")";
+  regex += "[[:blank:]]*\\n"; 
 
-
-  if () {
-    return true
+  std::regex grammar(regex);
+  if (std::regex_match(lineToParse, grammar)) {
+    return true;
   } else {
-    return false
+    return false;
   }
 }
