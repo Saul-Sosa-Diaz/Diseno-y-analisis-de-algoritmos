@@ -13,6 +13,7 @@
 
 DataMemory::DataMemory(int numberOfRegisters) {
   content_.resize(numberOfRegisters);
+  load();
 }
 
 void DataMemory::load() {

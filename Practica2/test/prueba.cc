@@ -1,17 +1,17 @@
 #include <iostream>
 #include <regex>
+#include <map>
 
 int main(){
-  std::string regex;
-  regex = "^\\s*([A-Z][A-Z0-9]*[[:blank:]]*:)?[[:blank:]]*";  // Labels must be at the beginning of the line and not start with a number.
-  regex += "(";           // JUMP
-  regex += "((WRITE|READ)\\s*(([0-9]+)|(\\*[0-9]+)))|";                  // InputOutput            // Load
-  regex += ")";
-  regex += "[[:blank:]]*\\n";
+  
+  std::map<std::string, int> label_;
+std::cout << label_["aaa"]; 
+std::cout << label_["bbbb"]; 
 
-  std::regex grammar(regex);
 
-  (std::regex_match("LEE:READ 1\n", grammar)) ? std::cout << "Cachi" : std::cout << "NO";
 
 
 }
+
+((?!((ADD)|(SUB)|(DIV)|(MULT)|(HALT)|(JUMP)|(JGTZ)|(WRITE)|(READ)|(STORE)|(LOAD)))[A-Z][A-Z0-9]*[[:blank:]]*:)?[[:blank:]]*(((ADD|SUB|DIV|MULT)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|(HALT)|((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9]*)|((WRITE|READ)\\s*(([0-9]+)|(\\*[0-9]+)))|(STORE\\s*(([0-9]+)|(\\*[0-9]+)))|(LOAD\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+))))
+  regex += "[[:blank:]]*\\n";
