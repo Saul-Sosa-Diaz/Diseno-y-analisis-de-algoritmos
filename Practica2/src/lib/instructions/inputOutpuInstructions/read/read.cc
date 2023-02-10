@@ -11,13 +11,13 @@
 
 #include "read.h"
 
-Read::Read(TapeFile& file, Operand* operand) : InputOutputInstruction(file, operand) {}
+Read::Read(TapeFile* file, Operand* operand) : InputOutputInstruction(file, operand) {}
 
 int Read::function(DataMemory& registers) {
   if (operand_->getValue(registers) == 0) {
     std::string exception = "Trying to access register 0 with a READ operation";
     throw std::runtime_error(exception);
   }
-  registers.writeValue(operand_->getValue(registers), file_.getItem());
+  registers.writeValue(operand_->getValue(registers), file_->getItem());
   return 0;
 }

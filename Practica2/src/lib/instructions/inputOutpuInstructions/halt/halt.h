@@ -10,10 +10,10 @@
  */
 #pragma once
 
-#include "../instruction.h"
+#include "../inputOutputInstruction.h"
 
-class Halt : public Instruction {
+class Halt : public InputOutputInstruction {
  public:
-  Halt();
+  Halt(TapeFile* file);
   int function(DataMemory&);
 };

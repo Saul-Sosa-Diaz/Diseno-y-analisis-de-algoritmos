@@ -10,6 +10,7 @@
  */
 #pragma once
 #include <string>
+
 #include "../memories/dataMemory/dataMemory.h"
 #include "../operands/operand.h"
 
@@ -23,11 +24,11 @@ enum type {
 
 class Instruction {
  public:
-  Instruction (type type, Operand*);
+  Instruction(type type, Operand*);
   virtual int function(DataMemory&) = 0;
+  type getType() { return type_; }
 
  protected:
   type type_;
   Operand* operand_;
-
 };

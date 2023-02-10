@@ -10,11 +10,19 @@
  */
 
 #include "programMemory.h"
-
+/**
+ * @brief Construct a new Program Memory:: Program Memory object
+ *
+ * @param nameOfTheFileWithProgram
+ * @param nameOfTheTapeFileIn
+ * @param nameOfTheTapeFileOut
+ */
 ProgramMemory::ProgramMemory(std::string nameOfTheFileWithProgram, std::string nameOfTheTapeFileIn, std::string nameOfTheTapeFileOut) {
   nameOfTheFileWithProgram_ = nameOfTheFileWithProgram;
-  nameOfTheTapeFileIn_ = nameOfTheTapeFileIn;
-  nameOfTheTapeFileOut_ = nameOfTheTapeFileOut;
+  TapeFile* tapeFileIn = new TapeFile(nameOfTheTapeFileIn);
+  tapeFileIn_ = tapeFileIn;
+  TapeFile* tapeFileOut = new TapeFile(nameOfTheTapeFileOut);
+  tapeFileOut_ = tapeFileOut;
 }
 
 /**
@@ -189,11 +197,11 @@ Operand* ProgramMemory::getOperand(std::string test) {
 
 /**
  * @brief Construct the corresponding instruction
- * 
- * @param test 
- * @param operato 
- * @param operand 
- * @return Instruction* 
+ *
+ * @param test
+ * @param operato
+ * @param operand
+ * @return Instruction*
  */
 Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator operato, Operand* operand) {
   Instruction* result = NULL;
@@ -218,16 +226,13 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case DIV:
       result = new Div(operand);
       break;
-    case READ: {
-        TapeFile tapeFileIn(nameOfTheTapeFileIn_);
-        result = new Read(tapeFileIn, operand);
-      }
+    case READ:
+
+      result = new Read(tapeFileIn_,operand);
       break;
-    case WRITE: {
-        TapeFile tapeFileOut(nameOfTheTapeFileOut_);
-        result = new Write(tapeFileOut, operand);
-      }
-      break;
+    case WRITE: 
+      result = new Write(tapeFileOut_,operand);
+    break;
     case JUMP:
       result = new Jump(labels_[test]);
       break;
@@ -237,9 +242,9 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case JGTZ:
       result = new Jgtz(labels_[test]);
       break;
-    case HALT:
-      result = new Halt();
-      break;
+    case HALT: 
+      result = new Halt(tapeFileOut_);
+     break;
   }
   return result;
 }

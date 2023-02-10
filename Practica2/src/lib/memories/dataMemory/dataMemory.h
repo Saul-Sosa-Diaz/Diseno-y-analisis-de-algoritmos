@@ -13,7 +13,7 @@
 
 class DataMemory : public Memory<int> {
  public:
-  DataMemory(int);
+  DataMemory(int n = 32);
   void load();
   std::vector<int> getContent() {
     return content_;

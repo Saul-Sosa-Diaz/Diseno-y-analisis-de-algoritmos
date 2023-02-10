@@ -29,6 +29,10 @@ int TapeFile::read() {
     std::fstream filein;
     filein.open(name_, std::ios_base::in);
     if (filein.is_open()) {
+      int aux;
+      while (filein >> aux) {
+        buffer_.push_back(aux);
+      }
     } else {
       std::string info_error;
       info_error = name_ + " cannot be opened";
@@ -39,9 +43,15 @@ int TapeFile::read() {
     std::string exception = "Attempting to read in a write file\n";
     throw std::runtime_error(exception);
   }
+
   return 0;
 }
 
+/**
+ * @brief Writes to the output file the buffer and then clears it.
+ * 
+ * @return int 
+ */
 int TapeFile::write() {
   if (!in_) {  // Solo escribir si el fichero es de salida
     std::fstream fileOut;
@@ -64,13 +74,21 @@ int TapeFile::write() {
   return 0;
 }
 
+/**
+ * @brief Adds an element to the buffer
+ * 
+ * @param newItem 
+ */
 void TapeFile::addNewItemToBuffer(int newItem) {
   buffer_.push_back(newItem);
 }
-
+/**
+ * @brief Returns the element pointed to by the tape head
+ * 
+ * @return int 
+ */
 int TapeFile::getItem() {
   int result = buffer_[readHead_];
   readHead_++;
   return result;
-
 }
