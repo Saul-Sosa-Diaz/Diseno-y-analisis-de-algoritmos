@@ -14,6 +14,6 @@
 
 class Jump : public JumpInstruction {
  public:
-  Jump(int lineOfLabel) : JumpInstruction(lineOfLabel) {};
+  Jump(int lineOfLabel);
   int function(DataMemory&);
 };

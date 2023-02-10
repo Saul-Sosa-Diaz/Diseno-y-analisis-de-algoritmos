@@ -15,6 +15,7 @@ class Operand {
  public:
   Operand(int index) { index_ = index; }
   virtual int getValue(const DataMemory&) = 0;
+  virtual int getIndex(const DataMemory&) = 0;
 
  protected:
   int index_;

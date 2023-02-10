@@ -14,3 +14,6 @@
 int InmediateOperand::getValue(const DataMemory& registers) {
   return index_;
 }
+ int InmediateOperand::getIndex(const DataMemory& registers) {
+  return -1;
+ };

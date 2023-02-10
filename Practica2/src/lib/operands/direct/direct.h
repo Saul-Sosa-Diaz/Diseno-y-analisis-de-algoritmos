@@ -1,7 +1,7 @@
 /**
  * @file direct.h
  * @author Saul Sosa Diaz
- * @brief Declaration of direct operand 
+ * @brief Declaration of direct operand
  * @version 0.1
  * @date 2023-02-04
  *
@@ -16,5 +16,7 @@ class DirectOperand : public Operand {
  public:
   DirectOperand(int index) : Operand(index){};
   int getValue(const DataMemory&);
+  int getIndex(const DataMemory&);
+
  private:
 };

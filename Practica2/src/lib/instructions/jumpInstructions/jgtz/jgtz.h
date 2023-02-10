@@ -14,6 +14,6 @@
 
 class Jgtz : public JumpInstruction {
  public:
-  Jgtz(int lineOfLabel) : JumpInstruction(lineOfLabel) {};
+  Jgtz(int lineOfLabel);
   int function(DataMemory&);
 };

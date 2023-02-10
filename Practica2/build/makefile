@@ -1,6 +1,6 @@
 all: simulador
 
-simulador: utils.o main.o dataMemory.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o add.o div.o mult.o sub.o halt.o read.o write.o jgtz.o jump.o jzero.o load.o store.o
+simulador: utils.o main.o dataMemory.o jgtz.o jump.o jzero.o add.o div.o mult.o sub.o halt.o read.o write.o load.o store.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o 
 	g++ -g -o simulador main.o utils.o dataMemory.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o add.o div.o mult.o sub.o halt.o read.o write.o jgtz.o jump.o jzero.o load.o store.o
 
 main.o: ../src/main.cc

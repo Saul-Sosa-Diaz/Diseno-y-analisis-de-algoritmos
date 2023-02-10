@@ -21,7 +21,10 @@ TapeFile::TapeFile(std::string name) : File(name) {
     throw std::runtime_error(exception);
   }
   in_ = std::regex_match(name, legalTapeFileIn) ? true : false;  // Comprobar si es de entrada o salida
-  readHead_ = in_ ? 0 : NULL;
+  readHead_ = in_ ? 0 : -1;
+  if(in_) {
+    read();
+  } 
 };
 
 int TapeFile::read() {

@@ -14,11 +14,11 @@
 Write::Write(TapeFile* file, Operand* operand) : InputOutputInstruction(file, operand) {}
 
 int Write::function(DataMemory& registers) {
-  if (operand_->getValue(registers) == 0) {
+  if (operand_->getIndex(registers) == 0) {
     std::string exception = "Trying to access register 0 with a READ operation";
     throw std::runtime_error(exception);
   }
-  file_->addNewItemToBuffer(registers.at(operand_->getValue(registers)));
+  file_->addNewItemToBuffer(registers.at(operand_->getIndex(registers)));
   file_->write();
   return 0;
 }

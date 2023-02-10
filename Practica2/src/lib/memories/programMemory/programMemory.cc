@@ -23,6 +23,7 @@ ProgramMemory::ProgramMemory(std::string nameOfTheFileWithProgram, std::string n
   tapeFileIn_ = tapeFileIn;
   TapeFile* tapeFileOut = new TapeFile(nameOfTheTapeFileOut);
   tapeFileOut_ = tapeFileOut;
+  load();
 }
 
 /**
@@ -31,27 +32,44 @@ ProgramMemory::ProgramMemory(std::string nameOfTheFileWithProgram, std::string n
  */
 void ProgramMemory::load() {
   FileProgram program(nameOfTheFileWithProgram_);
-  std::stringstream srcCode(program.getSrcCode());
   std::cout << program.getSrcCode();
-  std::string test;
-  int numberOfLine = 1;
-  while (std::getline(srcCode, test, '\n')) {
-    test += '\n';
-    if (parseLine(test)) {  // The instruction can be constructed
 
+  if (parsing(program.getSrcCode())) { // Check the syntax of the program and create the labels
+    std::stringstream srcCode(program.getSrcCode());
+    std::string test;
+    int numberOfLine = 0;
+    while (std::getline(srcCode, test, '\n')) {
+      test += '\n';
       // 1) Check if it has a label
-      if (checkForLabel(test, numberOfLine)) {
+      if (test.find(':') != std::string::npos) {
         test = test.substr(test.find(':') + 1, test.size() - 1);
       }
       // 2) search operator type.
       SpecificOperator operato = getTypeOfOperator(test);
       test = test.substr(test.find(' ') + 1, test.size() - 1);
-
       // 4) Type of operand.
       Operand* operand = getOperand(test);
       // 3) Create the instrucction and push into the content.
       content_.push_back(getInstruction(test, operato, operand));
+      numberOfLine++;
+    }
+  }
+}
 
+/**
+ * @brief Parses the program and creates the labels
+ *
+ * @param srcCodeString
+ * @return true if Truth if the analysis has been performed successfully.
+ */
+bool ProgramMemory::parsing(std::string srcCodeString) {
+  std::stringstream srcCode(srcCodeString);
+  std::string test;
+  int numberOfLine = 0;
+  while (std::getline(srcCode, test, '\n')) {
+    test += '\n';
+    if (parseLine(test)) {  // The instruction can be constructed
+      checkForLabel(test, numberOfLine);
     } else {
       std::string exception = "File " + nameOfTheFileWithProgram_ + " has a syntax error in the line " + std::to_string(numberOfLine) + ": ";
       exception += test + "\n";
@@ -59,6 +77,7 @@ void ProgramMemory::load() {
     }
     numberOfLine++;
   }
+  return true;
 }
 
 /**
@@ -122,49 +141,50 @@ bool ProgramMemory::checkForLabel(std::string test, int numberOfLine) {
  * @return SpecificOperator
  */
 SpecificOperator ProgramMemory::getTypeOfOperator(std::string test) {
-  std::regex load("LOAD");
-  std::regex store("STORE");
-  std::regex add("ADD");
-  std::regex sub("SUB");
-  std::regex mult("MULT");
-  std::regex div("DIV");
-  std::regex read("READ");
-  std::regex write("WRITE");
-  std::regex jump("JUMP");
-  std::regex jzero("JZERO");
-  std::regex jgtz("JGTZ");
+  test = test.substr(0, test.find(' '));
+  std::regex load("LOAD.*");
+  std::regex store("STORE.*");
+  std::regex add("ADD.*");
+  std::regex sub("SUB.*");
+  std::regex mult("MULT.*");
+  std::regex div("DIV.*");
+  std::regex read("READ.*");
+  std::regex write("WRITE.*");
+  std::regex jump("JUMP.*");
+  std::regex jzero("JZERO.*");
+  std::regex jgtz("JGTZ.*");
   // It is important that the jump instructions are the first ones in case there is a label containing a substring.
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, jump)) {
     return JUMP;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, jzero)) {
     return JZERO;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, jgtz)) {
     return JGTZ;
   }
   if (std::regex_match(test, load)) {
     return LOAD;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, store)) {
     return STORE;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, add)) {
     return ADD;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, sub)) {
     return SUB;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, mult)) {
     return MULT;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, div)) {
     return DIV;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, read)) {
     return READ;
   }
-  if (std::regex_match(test, load)) {
+  if (std::regex_match(test, write)) {
     return WRITE;
   }
 
@@ -178,18 +198,18 @@ SpecificOperator ProgramMemory::getTypeOfOperator(std::string test) {
  * @return Operand*
  */
 Operand* ProgramMemory::getOperand(std::string test) {
-  std::regex indirect("\\*[0-9]+");
-  std::regex inmediate("=[0-9]+");
-  std::regex direct("[0-9]+");
+  std::regex indirect("\\*[0-9]+\\n");
+  std::regex inmediate("=[0-9]+\\n");
+  std::regex direct("[0-9]+\\n");
 
   if (std::regex_match(test, indirect)) {
     test = test.substr(test.find('*') + 1, test.size());
     return new IndirectOperand(stoi(test));
   } else if (std::regex_match(test, inmediate)) {
     test = test.substr(test.find('=') + 1, test.size());
-    return new IndirectOperand(stoi(test));
+    return new InmediateOperand(stoi(test));
   } else if (std::regex_match(test, direct)) {
-    return new IndirectOperand(stoi(test));
+    return new DirectOperand(stoi(test));
   } else {
     return NULL;
   }
@@ -206,7 +226,7 @@ Operand* ProgramMemory::getOperand(std::string test) {
 Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator operato, Operand* operand) {
   Instruction* result = NULL;
   test.erase(std::remove(test.begin(), test.end(), ' '), test.end());  //  Delete ' ' from string
-
+  test.erase(std::remove(test.begin(), test.end(), '\n'), test.end());
   switch (operato) {
     case LOAD:
       result = new Load(operand);
@@ -227,12 +247,11 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
       result = new Div(operand);
       break;
     case READ:
-
-      result = new Read(tapeFileIn_,operand);
+      result = new Read(tapeFileIn_, operand);
       break;
-    case WRITE: 
-      result = new Write(tapeFileOut_,operand);
-    break;
+    case WRITE:
+      result = new Write(tapeFileOut_, operand);
+      break;
     case JUMP:
       result = new Jump(labels_[test]);
       break;
@@ -242,9 +261,9 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case JGTZ:
       result = new Jgtz(labels_[test]);
       break;
-    case HALT: 
+    case HALT:
       result = new Halt(tapeFileOut_);
-     break;
+      break;
   }
   return result;
 }

@@ -14,7 +14,7 @@
 Halt::Halt(TapeFile* file) : InputOutputInstruction(file, NULL){};
 
 int Halt::function(DataMemory& registers) {
-  file_->addNewItemToBuffer(registers.at(operand_->getValue(registers)));
+  file_->addNewItemToBuffer(registers.at(0));
   file_->write();
   return 0;
 }

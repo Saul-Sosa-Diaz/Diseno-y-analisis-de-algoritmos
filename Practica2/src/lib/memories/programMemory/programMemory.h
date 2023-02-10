@@ -52,11 +52,14 @@ class ProgramMemory : public Memory<Instruction*> {
   ProgramMemory(std::string nameOfTheFileWithProgram = "defaultValue", std::string nameOfTheTapeFileIn = "defaultValue", std::string nameOfTheTapeFileOut = "defaultValue");
   void load();
   bool parseLine(std::string);
+  bool parsing(std::string);
   bool checkForLabel(std::string, int);
   SpecificOperator getTypeOfOperator(std::string);
   Operand* getOperand(std::string);
   Instruction* getInstruction(std::string, SpecificOperator, Operand*);
-  int getNumberOfInstructions() { return content_.size() - 1; }
+  int getNumberOfInstructions() { return content_.size(); }
+  TapeFile* getTapeFileIn() { return tapeFileIn_;}
+  TapeFile* getTapeFileOut() { return tapeFileOut_;}
   std::vector<Instruction*> getContent() { return content_; }
 
  private:

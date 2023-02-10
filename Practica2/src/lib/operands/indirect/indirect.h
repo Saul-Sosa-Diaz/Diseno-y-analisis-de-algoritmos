@@ -16,5 +16,6 @@ class IndirectOperand : public Operand {
  public:
   IndirectOperand(int index) : Operand(index){};
   int getValue(const DataMemory&);
+  int getIndex(const DataMemory&);
  private:
 };

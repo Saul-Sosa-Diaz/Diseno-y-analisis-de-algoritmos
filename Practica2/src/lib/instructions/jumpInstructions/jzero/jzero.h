@@ -14,6 +14,6 @@
 
 class Jzero : public JumpInstruction {
  public:
-  Jzero(int lineOfLabel) : JumpInstruction(lineOfLabel) {};
+  Jzero(int lineOfLabel);
   int function(DataMemory&);
 };

@@ -24,7 +24,7 @@ enum type {
 
 class Instruction {
  public:
-  Instruction(type type, Operand*);
+  Instruction(type type, Operand* operand) {type_ = type; operand_ = operand; };
   virtual int function(DataMemory&) = 0;
   type getType() { return type_; }
 

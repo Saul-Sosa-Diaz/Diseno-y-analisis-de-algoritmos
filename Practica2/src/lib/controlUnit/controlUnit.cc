@@ -17,11 +17,11 @@
  * @param programMemory
  * @param dataMemory
  */
-ControlUnit::ControlUnit(ProgramMemory& programMemory, DataMemory& dataMemory) {
+ControlUnit::ControlUnit(ProgramMemory* programMemory, DataMemory* dataMemory) {
   PC_ = 0;
   programMemory_ = programMemory;
   dataMemory_ = dataMemory;
-  numberOfInstructions_ = programMemory_.getNumberOfInstructions();
+  numberOfInstructions_ = programMemory_->getNumberOfInstructions();
 }
 
 /**
@@ -29,15 +29,17 @@ ControlUnit::ControlUnit(ProgramMemory& programMemory, DataMemory& dataMemory) {
  *
  */
 void ControlUnit::run() {
-  while (PC_ <= numberOfInstructions_)  {
-    Instruction* instruction = programMemory_.getContent()[PC_];
+  while (PC_ < numberOfInstructions_)  {
+    Instruction* instruction = programMemory_->getContent()[PC_];
     if (instruction->getType() == halt) {
-      instruction->function(dataMemory_);
-      break;
+      instruction->function(*dataMemory_);
+      return;
     } else if (instruction->getType() == jump) {
-      PC_ = instruction->function(dataMemory_);
+      PC_ = instruction->function(*dataMemory_);
+      continue;
     } else  {
-      instruction->function(dataMemory_);
+      instruction->function(*dataMemory_);
     }
+    PC_++;
   }
 }

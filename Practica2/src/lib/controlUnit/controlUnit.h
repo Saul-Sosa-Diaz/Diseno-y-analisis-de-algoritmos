@@ -14,12 +14,12 @@
 
 class ControlUnit {
  public:
-  ControlUnit(ProgramMemory&, DataMemory&);
+  ControlUnit(ProgramMemory*, DataMemory*);
   void run();
 
  private:
   int PC_;
-  ProgramMemory programMemory_;
-  DataMemory dataMemory_;
+  ProgramMemory* programMemory_;
+  DataMemory* dataMemory_;
   int numberOfInstructions_;
 };

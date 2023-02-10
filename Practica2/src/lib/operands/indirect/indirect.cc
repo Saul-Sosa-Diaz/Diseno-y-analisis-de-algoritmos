@@ -14,3 +14,7 @@
 int IndirectOperand::getValue(const DataMemory& registers) {
   return registers.at(registers.at(index_));
 }
+
+int IndirectOperand::getIndex(const DataMemory& registers) {
+  return registers.at(index_);
+}

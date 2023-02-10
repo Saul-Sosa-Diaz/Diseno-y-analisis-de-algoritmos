@@ -15,8 +15,10 @@
 int main(int argc, char* argv[]) {
   try {
     Usage(argc, argv);
-
-
+    ProgramMemory programMemory(argv[1], argv[2], argv[3]);
+    DataMemory dataMemory(32);
+    ControlUnit ramMachine(&programMemory, &dataMemory);
+    ramMachine.run();
   } catch (const std::exception& e) {
     std::cerr << e.what();
   }
