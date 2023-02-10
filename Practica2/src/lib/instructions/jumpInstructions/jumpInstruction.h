@@ -14,7 +14,7 @@
 
 class JumpInstruction : public Instruction {
  public:
-  JumpInstruction(int lineOfLabel) : Instruction(jump) { lineOfLabel_ = lineOfLabel;};
+  JumpInstruction(int lineOfLabel) : Instruction(jump, NULL) { lineOfLabel_ = lineOfLabel;};
   virtual int function(DataMemory&) = 0;
  protected:
   int lineOfLabel_;

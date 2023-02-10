@@ -11,7 +11,7 @@
 
 #include "store.h"
 
-Store::Store() {}
+Store::Store(Operand* operand) : MemoryManipulationInstrucction(operand) {}
 
 int Store::function(DataMemory& registers) {
   registers.writeValue(operand_->getValue(registers), registers.at(0));

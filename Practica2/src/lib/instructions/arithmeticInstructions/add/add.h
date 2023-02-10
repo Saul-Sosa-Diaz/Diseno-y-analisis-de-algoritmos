@@ -15,7 +15,7 @@
 
 class Add : public ArithmeticInstruction {
  public:
-  Add();
+  Add(Operand* operand);
   int function(DataMemory&);
  private:
 };

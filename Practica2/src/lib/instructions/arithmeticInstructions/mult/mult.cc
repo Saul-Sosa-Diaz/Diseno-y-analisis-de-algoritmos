@@ -11,7 +11,7 @@
 
 #include "mult.h"
 
-Mult::Mult() {}
+Mult::Mult(Operand* operand) : ArithmeticInstruction(operand) {}
 
 int Mult::function(DataMemory& registers) {
   int temp = registers.at(0) * operand_->getValue(registers);

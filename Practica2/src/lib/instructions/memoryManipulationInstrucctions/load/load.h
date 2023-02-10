@@ -14,7 +14,7 @@
 
 class Load : public MemoryManipulationInstrucction {
  public:
-  Load();
+  Load(Operand* operand);
   int function(DataMemory&);
 
  private:

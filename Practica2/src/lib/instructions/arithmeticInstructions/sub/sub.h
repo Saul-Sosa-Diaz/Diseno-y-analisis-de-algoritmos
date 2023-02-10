@@ -13,7 +13,7 @@
 
 class Sub : public ArithmeticInstruction {
  public:
-  Sub();
+  Sub(Operand* operand);
   int function(DataMemory&);
  private:
 };

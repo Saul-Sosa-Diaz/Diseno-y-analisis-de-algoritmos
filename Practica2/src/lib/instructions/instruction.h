@@ -23,7 +23,7 @@ enum type {
 
 class Instruction {
  public:
-  Instruction (type type);
+  Instruction (type type, Operand*);
   virtual int function(DataMemory&) = 0;
 
  protected:

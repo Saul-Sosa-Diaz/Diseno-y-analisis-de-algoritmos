@@ -13,7 +13,7 @@
 
 class Read : public InputOutputInstruction {
  public:
-  Read(TapeFile& file);
+  Read(TapeFile& file, Operand* operand);
   int function(DataMemory&);
 
 };

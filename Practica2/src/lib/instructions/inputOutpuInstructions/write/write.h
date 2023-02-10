@@ -14,6 +14,6 @@
 
 class Write : public InputOutputInstruction {
  public:
-  Write(TapeFile& file);
+  Write(TapeFile& file, Operand* operand);
   int function(DataMemory&);
 };

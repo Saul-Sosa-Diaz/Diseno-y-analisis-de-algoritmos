@@ -13,7 +13,7 @@
 
 class Mult : public ArithmeticInstruction {
  public:
-  Mult();
+  Mult(Operand* operand);
   int function(DataMemory&);
  private:
 };

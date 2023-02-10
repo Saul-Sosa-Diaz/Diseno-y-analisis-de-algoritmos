@@ -13,7 +13,7 @@
 
 class Div : public ArithmeticInstruction {
  public:
-  Div();
+  Div(Operand* operand);
   int function(DataMemory&);
  private:
 };

@@ -14,6 +14,6 @@
 
 class ArithmeticInstruction : public Instruction {
  public:
-  ArithmeticInstruction() : Instruction(arithmetic) {};
+  ArithmeticInstruction(Operand* operand) : Instruction(arithmetic, operand) {};
   virtual int function(DataMemory&) = 0;
 };

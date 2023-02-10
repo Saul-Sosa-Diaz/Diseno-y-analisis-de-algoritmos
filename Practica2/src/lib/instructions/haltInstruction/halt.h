@@ -15,5 +15,5 @@
 class Halt : public Instruction {
  public:
   Halt();
-  virtual int function(DataMemory&) = 0;
+  int function(DataMemory&);
 };

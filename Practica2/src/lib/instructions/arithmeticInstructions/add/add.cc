@@ -11,7 +11,7 @@
 
 #include "add.h"
 
-Add::Add() {}
+Add::Add(Operand* operand) : ArithmeticInstruction(operand) {}
 
 int Add::function(DataMemory& registers) {
   int temp = registers.at(0) + operand_->getValue(registers);

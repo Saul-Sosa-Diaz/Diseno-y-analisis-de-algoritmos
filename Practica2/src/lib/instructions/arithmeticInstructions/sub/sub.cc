@@ -11,7 +11,7 @@
 
 #include "sub.h"
 
-Sub::Sub() {}
+Sub::Sub(Operand* operand) : ArithmeticInstruction(operand) {}
 
 int Sub::function(DataMemory& registers) {
   int temp = registers.at(0) - operand_->getValue(registers);

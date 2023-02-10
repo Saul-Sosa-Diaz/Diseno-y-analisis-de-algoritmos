@@ -11,7 +11,7 @@
 
 #include "div.h"
 
-Div::Div() {}
+Div::Div(Operand* operand) : ArithmeticInstruction(operand) {}
 
 int Div::function(DataMemory& registers) {
   int temp = registers.at(0) / operand_->getValue(registers);

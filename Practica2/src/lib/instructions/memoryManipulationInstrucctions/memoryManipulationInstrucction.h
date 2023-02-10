@@ -14,6 +14,6 @@
 
 class MemoryManipulationInstrucction : public Instruction {
  public:
-  MemoryManipulationInstrucction() : Instruction(memory) {};
+  MemoryManipulationInstrucction(Operand* operand) : Instruction(memory, operand){};
   virtual int function(DataMemory&) = 0;
 };

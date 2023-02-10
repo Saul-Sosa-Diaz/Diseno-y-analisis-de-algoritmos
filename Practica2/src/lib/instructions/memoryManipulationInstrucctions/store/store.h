@@ -14,7 +14,7 @@
 
 class Store : public MemoryManipulationInstrucction {
  public:
-  Store();
+  Store(Operand* operand);
   int function(DataMemory&);
 
  private:

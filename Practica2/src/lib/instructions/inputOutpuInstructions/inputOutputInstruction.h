@@ -15,7 +15,7 @@
 
 class InputOutputInstruction : public Instruction {
  public:
-  InputOutputInstruction(TapeFile& file) : Instruction(io) { file_ = file;};
+  InputOutputInstruction(TapeFile& file, Operand* operand) : Instruction(io, operand) { file_ = file;};
   virtual int function(DataMemory&) = 0;
  protected:
   TapeFile file_;
