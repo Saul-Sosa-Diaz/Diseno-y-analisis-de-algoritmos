@@ -1,11 +1,12 @@
 #include <regex>
 #include <iostream>
+#include <map>
 
 int main() {
- std::regex read("READ");
-if (std::regex_match("READ", read)) {
-   std::cout << "a";
-}
+ 
+   std::map <std::string, int> mapa;
 
+   mapa["a"] = 0;
+   std::cout << mapa["a"] << std::endl;
 
 }

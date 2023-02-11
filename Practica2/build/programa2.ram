@@ -1,40 +1,30 @@
-# Programa que lee los elementos de la cinta de entrada hasta
-# que encuentra un 0 y va guardando los valores en registros
-# sucesivos comenzando por el registro R3. Luego, multiplica
-# todos esos valores por 3 y los escribe en la cinta de salida
+# Programa que reconoce el lenguaje formado por las 
+# palabras que tienen el mismo n�mero de 1 y 2.
+# Las palabras finalizan con el n�mero 0. 
+# Los �nicos s�mbolos posibles de entrada son 0, 1 y 2.
+# La cinta de salida contendr� un 1 si se reconoce la palabra
+# y un 0 si no pertenece al lenguaje
 
-# Se usa direccionamiento indirecto mediante el registro R2
-
-				load =3
-				store 2
-			
-lee:		read 1
-				load 1
-				jzero fin
-
-				store *2
-				load 2
-				add =1
-				store 2
-
-				jump lee
-
-fin:		load =0
-				store *2
-				load =3
-				store 2
-
-carga:	load *2
-				jzero fin2
-
-				mult =3
-				store *2
-				write *2
-
-				load 2
-				add =1
-				store 2
-			
-				jump carga
-
-fin2: 	halt
+					LOAD =0
+					STORE 2
+					READ 1
+while:		LOAD 1
+					JZERO end_wh
+					LOAD 1
+					SUB =1
+					JZERO else
+					LOAD 2
+					SUB =1
+					STORE 2
+					JUMP end_if
+else:			LOAD 2
+					ADD =1
+					STORE 2
+end_if:		READ 1
+					JUMP while
+end_wh:		LOAD 2
+					JZERO iguales
+					WRITE =0
+					JUMP fin
+iguales:	WRITE =1
+fin:			HALT

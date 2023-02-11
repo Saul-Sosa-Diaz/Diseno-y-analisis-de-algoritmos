@@ -13,6 +13,8 @@
 
 Load::Load(Operand* operand) : MemoryManipulationInstrucction(operand){}
 
+/**
+*/
 int Load::function(DataMemory& registers) {
   registers.setValue(operand_->getValue(registers));
   return 0;

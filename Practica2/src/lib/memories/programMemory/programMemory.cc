@@ -87,16 +87,16 @@ bool ProgramMemory::parsing(std::string srcCodeString) {
 bool ProgramMemory::parseLine(std::string lineToParse) {
   std::string regex;
   regex = "^\\s*(";
-  regex += "(?!((ADD)|(SUB)|(DIV)|(MULT)|(HALT)|(JUMP)|(JGTZ)|(WRITE)|(READ)|(STORE)|(LOAD)))";  // Check the label is not a reserved word
-  regex += "[A-Z][A-Z0-9_]*[[:blank:]]*:";
+    regex += "(?!((ADD)|(SUB)|(DIV)|(MULT)|(HALT)|(JUMP)|(JGTZ)|(WRITE)|(READ)|(STORE)|(LOAD)))";  // Check the label is not a reserved word
+    regex += "[A-Z][A-Z0-9_]*[[:blank:]]*:";
   regex += ")?[[:blank:]]*";  // Labels must be at the beginning of the line and not start with a number.
   regex += "(";
-  regex += "((ADD|SUB|DIV|MULT)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";  // Arithmetic instruction
-  regex += "(HALT)|";                                                    // HALT
-  regex += "((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9_]*)|";             // JUMP
-  regex += "((WRITE|READ)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";                  // InputOutput
-  regex += "(STORE\\s*(([0-9]+)|(\\*[0-9]+)))|";                         // Store
-  regex += "(LOAD\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))";                 // Load
+    regex += "((ADD|SUB|DIV|MULT)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";  // Arithmetic instruction
+    regex += "(HALT)|";                                                    // HALT
+    regex += "((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9_]*)|";            // JUMP
+    regex += "(WRITE\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";               // InputOutput
+    regex += "((STORE|READ)\\s*(([0-9]+)|(\\*[0-9]+)))|";                  // Store and read cannot use inmediates
+    regex += "(LOAD\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))";                 // Load
   regex += ")";
   regex += "[[:blank:]]*\\n";
 
@@ -120,10 +120,10 @@ bool ProgramMemory::checkForLabel(std::string test, int numberOfLine) {
     std::string aux = test.substr(0, test.find(':'));
     aux.erase(std::remove(aux.begin(), aux.end(), ' '), aux.end());  //  Delete ' ' from string
     // Put in the hash, if thow error already exists
-    if (labels_[aux] == 0) {
+    if (!labels_.count(aux)) {
       labels_[aux] = numberOfLine;
     } else {
-      std::string exception = "The label" + aux + " already exists\n";
+      std::string exception = "The label: " + aux + " already exists\n";
       throw std::runtime_error(exception);
     }
     return true;
@@ -250,15 +250,33 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case WRITE:
       result = new Write(tapeFileOut_, operand);
       break;
-    case JUMP:
+    case JUMP: {
+      std::map<std::string, int>::iterator it = labels_.find(test);
+      if(it == labels_.end()){
+        std::string exception = "The label: " + test + " doesn`t exists\n";
+        throw std::runtime_error(exception);
+      }
       result = new Jump(labels_[test]);
+    }
       break;
-    case JZERO:
+    case JZERO: {
+      std::map<std::string, int>::iterator it = labels_.find(test);
+      if(it == labels_.end()){
+        std::string exception = "The label: " + test + " doesn`t exists\n";
+        throw std::runtime_error(exception);
+      }
       result = new Jzero(labels_[test]);
+    }
       break;
-    case JGTZ:
+    case JGTZ: {
+      std::map<std::string, int>::iterator it = labels_.find(test);
+      if(it == labels_.end()){
+        std::string exception = "The label: " + test + " doesn`t exists\n";
+        throw std::runtime_error(exception);
+      }
       result = new Jgtz(labels_[test]);
       break;
+    }
     case HALT:
       result = new Halt();
       break;
