@@ -18,7 +18,7 @@
 #include "../../instructions/arithmeticInstructions/div/div.h"
 #include "../../instructions/arithmeticInstructions/mult/mult.h"
 #include "../../instructions/arithmeticInstructions/sub/sub.h"
-#include "../../instructions/inputOutpuInstructions/halt/halt.h"
+#include "../../instructions/halt/halt.h"
 #include "../../instructions/inputOutpuInstructions/read/read.h"
 #include "../../instructions/inputOutpuInstructions/write/write.h"
 #include "../../instructions/instruction.h"

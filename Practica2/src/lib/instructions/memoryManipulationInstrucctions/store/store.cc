@@ -14,6 +14,6 @@
 Store::Store(Operand* operand) : MemoryManipulationInstrucction(operand) {}
 
 int Store::function(DataMemory& registers) {
-  registers.writeValue(operand_->getValue(registers), registers.at(0));
+  registers.writeValue(operand_->getIndex(registers), registers.at(0));
   return 0;
 }

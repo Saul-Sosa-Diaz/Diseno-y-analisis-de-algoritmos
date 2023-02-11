@@ -15,7 +15,7 @@ Write::Write(TapeFile* file, Operand* operand) : InputOutputInstruction(file, op
 
 int Write::function(DataMemory& registers) {
   if (operand_->getIndex(registers) == 0) {
-    std::string exception = "Trying to access register 0 with a READ operation";
+    std::string exception = "Trying to access register 0 with a WRITE operation\n";
     throw std::runtime_error(exception);
   }
   file_->addNewItemToBuffer(registers.at(operand_->getIndex(registers)));

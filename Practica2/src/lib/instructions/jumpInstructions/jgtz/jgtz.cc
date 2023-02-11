@@ -14,7 +14,7 @@
 Jgtz::Jgtz(int lineOfLabel) : JumpInstruction(lineOfLabel) {}
 
 int Jgtz::function(DataMemory& registers) {
-  int result = 0;
+  int result = -1;
   if (registers.at(0) > 0) {
     result = lineOfLabel_;
   }

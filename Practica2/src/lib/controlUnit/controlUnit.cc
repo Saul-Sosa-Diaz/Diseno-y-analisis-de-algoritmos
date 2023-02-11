@@ -35,8 +35,11 @@ void ControlUnit::run() {
       instruction->function(*dataMemory_);
       return;
     } else if (instruction->getType() == jump) {
-      PC_ = instruction->function(*dataMemory_);
-      continue;
+      int testJump = instruction->function(*dataMemory_); // Check that the jump is performed
+      if (testJump != -1) {
+        PC_ = testJump;
+        continue;
+      } 
     } else  {
       instruction->function(*dataMemory_);
     }

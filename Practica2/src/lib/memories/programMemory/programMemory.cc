@@ -32,8 +32,6 @@ ProgramMemory::ProgramMemory(std::string nameOfTheFileWithProgram, std::string n
  */
 void ProgramMemory::load() {
   FileProgram program(nameOfTheFileWithProgram_);
-  std::cout << program.getSrcCode();
-
   if (parsing(program.getSrcCode())) { // Check the syntax of the program and create the labels
     std::stringstream srcCode(program.getSrcCode());
     std::string test;
@@ -90,13 +88,13 @@ bool ProgramMemory::parseLine(std::string lineToParse) {
   std::string regex;
   regex = "^\\s*(";
   regex += "(?!((ADD)|(SUB)|(DIV)|(MULT)|(HALT)|(JUMP)|(JGTZ)|(WRITE)|(READ)|(STORE)|(LOAD)))";  // Check the label is not a reserved word
-  regex += "[A-Z][A-Z0-9]*[[:blank:]]*:";
+  regex += "[A-Z][A-Z0-9_]*[[:blank:]]*:";
   regex += ")?[[:blank:]]*";  // Labels must be at the beginning of the line and not start with a number.
   regex += "(";
   regex += "((ADD|SUB|DIV|MULT)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";  // Arithmetic instruction
   regex += "(HALT)|";                                                    // HALT
-  regex += "((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9]*)|";             // JUMP
-  regex += "((WRITE|READ)\\s*(([0-9]+)|(\\*[0-9]+)))|";                  // InputOutput
+  regex += "((JUMP|JGTZ|JZERO)[[:blank:]]*[A-Z][A-Z0-9_]*)|";             // JUMP
+  regex += "((WRITE|READ)\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))|";                  // InputOutput
   regex += "(STORE\\s*(([0-9]+)|(\\*[0-9]+)))|";                         // Store
   regex += "(LOAD\\s*((=[0-9]+)|([0-9]+)|(\\*[0-9]+)))";                 // Load
   regex += ")";
@@ -262,7 +260,7 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
       result = new Jgtz(labels_[test]);
       break;
     case HALT:
-      result = new Halt(tapeFileOut_);
+      result = new Halt();
       break;
   }
   return result;

@@ -11,10 +11,9 @@
 
 #include "halt.h"
 
-Halt::Halt(TapeFile* file) : InputOutputInstruction(file, NULL){};
+Halt::Halt() : Instruction(halt, NULL){};
 
 int Halt::function(DataMemory& registers) {
-  file_->addNewItemToBuffer(registers.at(0));
-  file_->write();
+  std::cout << "\033[1;32mThe program ran without problems.\n";
   return 0;
 }

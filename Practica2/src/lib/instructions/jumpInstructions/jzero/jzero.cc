@@ -14,7 +14,7 @@
 Jzero::Jzero(int lineOfLabel) : JumpInstruction(lineOfLabel) {}
 
 int Jzero::function(DataMemory& registers) {
-  int result = 0;
+  int result = -1;
   if (registers.at(0) == 0) {
     result = lineOfLabel_;
   }

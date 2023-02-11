@@ -15,7 +15,7 @@ Read::Read(TapeFile* file, Operand* operand) : InputOutputInstruction(file, oper
 
 int Read::function(DataMemory& registers) {
   if (operand_->getIndex(registers) == 0) {
-    std::string exception = "Trying to access register 0 with a READ operation";
+    std::string exception = "Trying to access register 0 with a READ operation\n";
     throw std::runtime_error(exception);
   }
   registers.writeValue(operand_->getIndex(registers), file_->getItem());

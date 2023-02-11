@@ -45,8 +45,8 @@ mult.o: ../src/lib/instructions/arithmeticInstructions/mult/mult.cc
 sub.o: ../src/lib/instructions/arithmeticInstructions/sub/sub.cc
 	g++ -g -c ../src/lib/instructions/arithmeticInstructions/sub/sub.cc
 
-halt.o: ../src/lib/instructions/inputOutpuInstructions/halt/halt.cc
-	g++ -g -c ../src/lib/instructions/inputOutpuInstructions/halt/halt.cc
+halt.o: ../src/lib/instructions/halt/halt.cc
+	g++ -g -c ../src/lib/instructions/halt/halt.cc
 
 read.o: ../src/lib/instructions/inputOutpuInstructions/read/read.cc
 	g++ -g -c ../src/lib/instructions/inputOutpuInstructions/read/read.cc
