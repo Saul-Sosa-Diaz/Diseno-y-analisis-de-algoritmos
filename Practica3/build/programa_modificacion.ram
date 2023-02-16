@@ -1,0 +1,38 @@
+
+# Escriba un programa RAM que lea dos valores enteros de la cinta de entrada y escriba en la cinta de salida el resultado de la operación módulo 
+# (resto de la división entera) del mayor valor entre el menor valor. Puede modificar su máquina RAM como sea necesario, pero no debe ampliarse su repertorio de instrucciones. 
+# Use comentarios de línea para documentar su código RAM y, tras comprobar que se ejecute correctamente, súbalo a esta tarea.
+				read 2
+				read 3
+				load 2
+				sub 3
+				jgtz primero_mayor
+				jump segundo_mayor
+
+primero_mayor:	load 2
+								div 3
+								store 6
+								load 3
+								mult 6
+								store 7
+								load 2
+								sub 7
+								store 8
+								write 8
+								jump fin
+
+
+segundo_mayor:	load 3
+								div 2
+								store 6
+								load 2
+								mult 6
+								store 7
+								load 3
+								sub 7
+								store 8
+								write 8
+								jump fin
+
+fin: halt
+			
