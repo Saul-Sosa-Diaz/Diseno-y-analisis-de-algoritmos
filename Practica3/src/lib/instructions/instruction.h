@@ -26,9 +26,14 @@ class Instruction {
  public:
   Instruction(type type, Operand* operand) {type_ = type; operand_ = operand; };
   virtual int function(DataMemory&) = 0;
+  virtual std::string to_s() const = 0;
   type getType() { return type_; }
+  std::string getTypeDebug();
+
+  friend std::ostream &operator<<(std::ostream &output, const Instruction*);
 
  protected:
   type type_;
   Operand* operand_;
 };
+

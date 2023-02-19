@@ -18,3 +18,7 @@ int Mult::function(DataMemory& registers) {
   registers.setValue(temp);
   return 0;
 }
+
+std::string Mult::to_s() const {
+  return "Mult " + operand_->to_s(); 
+}

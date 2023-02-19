@@ -17,6 +17,7 @@ class InmediateOperand : public Operand {
   InmediateOperand(double index) : Operand(index, inmediate){};
   int getValue(const DataMemory&);
   int getIndex(const DataMemory&);
+  std::string to_s() const;
 
  private:
 };

@@ -17,6 +17,8 @@ class DirectOperand : public Operand {
   DirectOperand(int index) : Operand(index, direct){};
   int getValue(const DataMemory&);
   int getIndex(const DataMemory&);
+  std::string to_s() const;
 
  private:
 };
+

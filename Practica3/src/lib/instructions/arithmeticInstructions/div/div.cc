@@ -18,3 +18,7 @@ int Div::function(DataMemory& registers) {
   registers.setValue(temp);
   return 0;
 }
+
+std::string Div::to_s() const {
+  return "Div " + operand_->to_s(); 
+}

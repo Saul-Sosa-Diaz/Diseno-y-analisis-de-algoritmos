@@ -24,7 +24,9 @@ class Operand {
   }
   virtual int getValue(const DataMemory&) = 0;
   virtual int getIndex(const DataMemory&) = 0;
+  int getIndexDebug() { return index_; }
   typeOfOperand getType() { return type_; }
+  virtual std::string to_s() const = 0;
 
  protected:
   int index_;

@@ -16,4 +16,5 @@ class Jzero : public JumpInstruction {
  public:
   Jzero(int lineOfLabel);
   int function(DataMemory&);
+  std::string to_s() const;
 };

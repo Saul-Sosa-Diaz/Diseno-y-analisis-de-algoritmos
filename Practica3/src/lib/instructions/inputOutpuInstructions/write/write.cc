@@ -28,3 +28,7 @@ int Write::function(DataMemory& registers) {
   file_->write();
   return 0;
 }
+
+std::string Write::to_s() const {
+  return "Write " + operand_->to_s(); 
+}

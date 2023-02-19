@@ -21,3 +21,7 @@ int Read::function(DataMemory& registers) {
   registers.writeValue(operand_->getIndex(registers), file_->getItem());
   return 0;
 }
+
+std::string Read::to_s() const {
+  return "Read " + operand_->to_s(); 
+}

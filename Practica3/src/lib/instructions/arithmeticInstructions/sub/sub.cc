@@ -18,3 +18,7 @@ int Sub::function(DataMemory& registers) {
   registers.setValue(temp);
   return 0;
 }
+
+std::string Sub::to_s() const {
+  return "Sub " + operand_->to_s(); 
+}

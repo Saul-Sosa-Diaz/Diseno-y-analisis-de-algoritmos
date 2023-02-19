@@ -16,6 +16,7 @@ class Store : public MemoryManipulationInstrucction {
  public:
   Store(Operand* operand);
   int function(DataMemory&);
+  std::string to_s() const;
 
  private:
 };

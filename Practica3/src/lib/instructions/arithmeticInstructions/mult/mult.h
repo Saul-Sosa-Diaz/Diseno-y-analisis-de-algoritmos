@@ -15,5 +15,6 @@ class Mult : public ArithmeticInstruction {
  public:
   Mult(Operand* operand);
   int function(DataMemory&);
+  std::string to_s() const;
  private:
 };

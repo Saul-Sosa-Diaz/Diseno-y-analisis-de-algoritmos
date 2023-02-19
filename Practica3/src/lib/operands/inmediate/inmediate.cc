@@ -17,3 +17,7 @@ int InmediateOperand::getValue(const DataMemory& registers) {
  int InmediateOperand::getIndex(const DataMemory& registers) {
   return index_;
  };
+
+std::string InmediateOperand::to_s() const{
+  return "="+std::to_string(index_);
+}

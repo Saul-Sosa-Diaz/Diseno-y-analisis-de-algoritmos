@@ -15,5 +15,6 @@ class Sub : public ArithmeticInstruction {
  public:
   Sub(Operand* operand);
   int function(DataMemory&);
+  std::string to_s() const;
  private:
 };

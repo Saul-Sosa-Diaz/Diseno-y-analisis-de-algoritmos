@@ -18,3 +18,7 @@ int Add::function(DataMemory& registers) {
   registers.setValue(temp);
   return 0;
 }
+
+std::string Add::to_s() const {
+  return "Add " + operand_->to_s(); 
+}

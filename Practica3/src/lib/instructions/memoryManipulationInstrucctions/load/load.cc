@@ -19,3 +19,7 @@ int Load::function(DataMemory& registers) {
   registers.setValue(operand_->getValue(registers));
   return 0;
 }
+
+std::string Load::to_s() const {
+  return "Load " + operand_->to_s(); 
+}

@@ -9,17 +9,21 @@
  *
  */
 #pragma once
-#include "../memories/programMemory/programMemory.h"
+#include <stdlib.h>
+
 #include "../memories/dataMemory/dataMemory.h"
+#include "../memories/programMemory/programMemory.h"
 
 class ControlUnit {
  public:
-  ControlUnit(ProgramMemory*, DataMemory*);
+  ControlUnit(ProgramMemory*, DataMemory*, int debugmode = 0);
   void run();
+  void info(const Instruction* instruction);
 
  private:
   int PC_;
   ProgramMemory* programMemory_;
   DataMemory* dataMemory_;
   int numberOfInstructions_;
+  int debugMode_;
 };

@@ -20,3 +20,7 @@ int Jzero::function(DataMemory& registers) {
   }
   return result;
 }
+
+std::string Jzero::to_s() const {
+  return "Jzero numberOfLabel(" + std::to_string(lineOfLabel_) + ")"; 
+}

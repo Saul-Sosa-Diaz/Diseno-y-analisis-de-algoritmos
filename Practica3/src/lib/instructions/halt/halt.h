@@ -16,4 +16,5 @@ class Halt : public Instruction {
  public:
   Halt();
   int function(DataMemory&);
+  std::string to_s() const;
 };

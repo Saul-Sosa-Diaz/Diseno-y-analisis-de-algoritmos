@@ -16,3 +16,7 @@ Jump::Jump(int lineOfLabel) : JumpInstruction(lineOfLabel) {}
 int Jump::function(DataMemory& registers) {
   return lineOfLabel_;
 }
+
+std::string Jump::to_s() const {
+  return "Jump numberOfLabel(" + std::to_string(lineOfLabel_) + ")"; 
+}

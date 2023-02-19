@@ -18,3 +18,7 @@ int IndirectOperand::getValue(const DataMemory& registers) {
 int IndirectOperand::getIndex(const DataMemory& registers) {
   return registers.at(index_);
 }
+
+std::string IndirectOperand::to_s() const{
+  return "*" + std::to_string(index_);
+}

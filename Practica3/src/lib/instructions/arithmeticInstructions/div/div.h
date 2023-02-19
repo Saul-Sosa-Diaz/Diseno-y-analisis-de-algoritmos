@@ -15,5 +15,6 @@ class Div : public ArithmeticInstruction {
  public:
   Div(Operand* operand);
   int function(DataMemory&);
+  std::string to_s() const;
  private:
 };

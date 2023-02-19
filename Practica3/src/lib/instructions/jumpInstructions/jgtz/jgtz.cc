@@ -20,3 +20,7 @@ int Jgtz::function(DataMemory& registers) {
   }
   return result;
 }
+
+std::string Jgtz::to_s() const {
+  return "Jgtz numberOfLabel(" + std::to_string(lineOfLabel_) + ")"; 
+}

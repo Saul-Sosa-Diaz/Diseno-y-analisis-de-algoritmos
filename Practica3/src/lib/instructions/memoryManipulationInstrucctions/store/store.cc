@@ -17,3 +17,7 @@ int Store::function(DataMemory& registers) {
   registers.writeValue(operand_->getIndex(registers), registers.at(0));
   return 0;
 }
+
+std::string Store::to_s() const {
+  return "Store " + operand_->to_s(); 
+}

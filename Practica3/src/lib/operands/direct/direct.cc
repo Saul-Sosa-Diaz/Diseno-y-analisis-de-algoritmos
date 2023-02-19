@@ -17,3 +17,7 @@ int DirectOperand::getValue(const DataMemory& registers) {
 int DirectOperand::getIndex(const DataMemory& registers) {
   return index_;
 }
+
+std::string DirectOperand::to_s() const {
+  return std::to_string(index_);
+}
