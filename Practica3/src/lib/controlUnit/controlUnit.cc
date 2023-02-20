@@ -66,7 +66,7 @@ void ControlUnit::run() {
  */
 void ControlUnit::info(const Instruction* instruction) {
   system("clear");
-  std::cout << "Instruction executing:\n\t" << instruction << std::endl;
+  std::cout << "Instruction executing:\n  " << instruction << std::endl << std::endl;
   std::cout << "Data Memory:\n" <<  *dataMemory_ << std::endl;
   // std::cout << "Program Memory:\n\t" <<  programMemory_ << std::endl;
   std::cout << std::endl << "Press enter to continue:" << std::endl ;
