@@ -199,7 +199,7 @@ Operand* ProgramMemory::getOperand(std::string test) {
   std::regex indirect("\\*[0-9]+\\n");
   std::regex inmediate("=[0-9]+\\n");
   std::regex direct("[0-9]+\\n");
-
+  test.erase(std::remove(test.begin(), test.end(), ' '), test.end());  //  Delete ' ' from string
   if (std::regex_match(test, indirect)) {
     test = test.substr(test.find('*') + 1, test.size());
     return new IndirectOperand(stoi(test));
@@ -285,6 +285,6 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
 }
 
 std::ostream &operator<<(std::ostream &output, const ProgramMemory &programMemory) { 
-  output << "Tape in: " << programMemory.tapeFileIn_->to_s() << std::endl ; //<< "Tape out:\n  " << programMemory.tapeFileOut_->to_s();
+  output << "  Tape in: " << programMemory.tapeFileIn_->to_s() << std::endl << "  Tape out: " << programMemory.tapeFileOut_->to_s() << std::endl;
   return output;
 }

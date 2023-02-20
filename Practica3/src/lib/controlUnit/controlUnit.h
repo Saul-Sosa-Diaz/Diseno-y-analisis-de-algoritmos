@@ -18,7 +18,6 @@ class ControlUnit {
  public:
   ControlUnit(ProgramMemory*, DataMemory*, int debugmode = 0);
   void run();
-  void info(const Instruction* instruction);
 
  private:
   int PC_;

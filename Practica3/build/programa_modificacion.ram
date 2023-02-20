@@ -3,9 +3,7 @@
 # (resto de la división entera) del mayor valor entre el menor valor. Puede modificar su máquina RAM como sea necesario, pero no debe ampliarse su repertorio de instrucciones. 
 # Use comentarios de línea para documentar su código RAM y, tras comprobar que se ejecute correctamente, súbalo a esta tarea.
 				read 2
-				read 3
-				read 4
-				read 5
+				read 3       
 				load 2
 				sub 3
 				jgtz primero_mayor

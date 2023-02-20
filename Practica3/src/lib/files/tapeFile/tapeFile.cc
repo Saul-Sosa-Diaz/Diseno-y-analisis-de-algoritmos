@@ -16,6 +16,7 @@ TapeFile::TapeFile(std::string name) : File(name) {
   std::regex legalTapeFileOut(".*\\.out");
   std::vector<int> buffer;
   buffer_ = buffer;
+  tapeOut_ = buffer;
   if (!std::regex_match(name, legalTapeFileIn) && !std::regex_match(name, legalTapeFileOut)) {  // Comprobar que es un archivo legal
     std::string exception = "\033[1;31mThe file with the program RAM doesn´t match with: namein.in or nameout.out\033[0m\n";
     throw std::runtime_error(exception);
@@ -23,13 +24,12 @@ TapeFile::TapeFile(std::string name) : File(name) {
   in_ = std::regex_match(name, legalTapeFileIn) ? true : false;  // Comprobar si es de entrada o salida
   readHead_ = in_ ? 0 : -1;
   finished_ = false;
-  if(in_) {
+  if (in_) {
     read();
-  } 
+  }
 };
 
 int TapeFile::read() {
-  
   if (in_) {  // Solo leer si el fichero es de entrada
     std::fstream filein;
     filein.open(name_, std::ios_base::in);
@@ -54,8 +54,8 @@ int TapeFile::read() {
 
 /**
  * @brief Writes to the output file the buffer and then clears it.
- * 
- * @return int 
+ *
+ * @return int
  */
 int TapeFile::write() {
   if (!in_) {  // Solo escribir si el fichero es de salida
@@ -64,6 +64,7 @@ int TapeFile::write() {
     if (fileOut.is_open()) {
       for (int i = 0; i < buffer_.size(); i++) {
         fileOut << buffer_[i] << " ";
+        tapeOut_.push_back(buffer_[i]);
       }
     } else {
       std::string info_error;
@@ -81,8 +82,8 @@ int TapeFile::write() {
 
 /**
  * @brief Adds an element to the buffer
- * 
- * @param newItem 
+ *
+ * @param newItem
  */
 void TapeFile::addNewItemToBuffer(int newItem) {
   buffer_.push_back(newItem);
@@ -90,8 +91,8 @@ void TapeFile::addNewItemToBuffer(int newItem) {
 
 /**
  * @brief Returns the element pointed to by the tape head
- * 
- * @return int 
+ *
+ * @return int
  */
 int TapeFile::getItem() {
   if (finished_) {  // Attempting to read from the input tape when there are no more items.
@@ -100,32 +101,41 @@ int TapeFile::getItem() {
   }
   int result = buffer_[readHead_];
   readHead_++;
-  if(readHead_ == buffer_.size() - 1) { // The elements on the input conveyor have been completed.
+  if (readHead_ == buffer_.size()) {  // The elements on the input conveyor have been completed.
     finished_ = true;
   }
   return result;
 }
 
-
 /**
  * @brief Returns a string with the input and output file information, cyan shows the read and write head.
- * 
- * @return std::string 
+ *
+ * @return std::string
  */
 std::string TapeFile::to_s() {
   std::string result = "[";
-  if (in_) {
+  if (in_) {  // In file
     for (int i = 0; i < buffer_.size(); i++) {
       if (i == readHead_) {
         result += "\033[1;36m" + std::to_string(buffer_[i]) + "\033[0m ";
-      } else if( i == buffer_.size() - 1 && finished_ ) {  // The tape is finished and cannot advance any further.
-        result += "\033[1;36m" + std::to_string(buffer_[i]) + "\033[0m ";
+      } else if (i == buffer_.size() - 1 && finished_) {  // The tape is finished and cannot advance any further.
+        result += "\033[1;36m" + std::to_string(buffer_[i]) + "\033[0m";
+      } else if (i == buffer_.size() - 1) {  // The tape is finished and cannot advance any further.
+        result += std::to_string(buffer_[i]);
       } else {
         result += std::to_string(buffer_[i]) + " ";
       }
     }
+  } else {
+    for (int i = 0; i < tapeOut_.size(); i++) {
+      if (i == tapeOut_.size() - 1) {  // The tape is finished and cannot advance any further.
+        result += "\033[1;36m" + std::to_string(tapeOut_[i]) + "\033[0m";
+      } else {
+        result += std::to_string(tapeOut_[i]) + " ";
+      }
+    }
   }
-  
-  result += "\b]";
+
+  result += "]";
   return result;
 }

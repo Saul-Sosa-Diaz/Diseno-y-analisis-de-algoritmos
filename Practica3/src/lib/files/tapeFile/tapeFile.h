@@ -25,6 +25,7 @@ class TapeFile : public File {
 
  protected:
   std::vector<int> buffer_;
+  std::vector<int> tapeOut_; // Elementos que se han impreso en la salida.
   int readHead_;
   bool in_;
   bool finished_; // No ha acabado de leer todavía
