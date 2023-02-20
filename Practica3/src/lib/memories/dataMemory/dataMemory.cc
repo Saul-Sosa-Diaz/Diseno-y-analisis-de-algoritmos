@@ -13,6 +13,7 @@
 
 DataMemory::DataMemory(int numberOfRegisters) {
   content_.resize(numberOfRegisters);
+  reducedSize_ = 0;
   load();
 }
 
@@ -32,5 +33,18 @@ void DataMemory::setValue(int newValue) {
 }
 
 void DataMemory::writeValue(int index, int value) {
+  if (index > reducedSize_) {
+    reducedSize_ = index;
+  }
   content_[index] = value;
+}
+
+std::ostream &operator<<(std::ostream &output, const DataMemory &dataMemory) {
+  tabulate::Table registers;
+  registers.add_row(tabulate::Table::Row_t{"Registers","Data"});
+  for (int i = 0; i <= dataMemory.reducedSize_; i++) {
+    registers.add_row(tabulate::Table::Row_t{"R"+std::to_string(i),std::to_string(dataMemory.content_[i])});
+  }
+  output << registers;
+  return output;
 }

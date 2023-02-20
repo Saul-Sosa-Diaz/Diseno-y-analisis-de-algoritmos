@@ -28,7 +28,6 @@ class Instruction {
   virtual int function(DataMemory&) = 0;
   virtual std::string to_s() const = 0;
   type getType() { return type_; }
-  std::string getTypeDebug();
 
   friend std::ostream &operator<<(std::ostream &output, const Instruction*);
 

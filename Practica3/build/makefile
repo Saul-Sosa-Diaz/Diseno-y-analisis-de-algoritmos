@@ -1,7 +1,7 @@
 all: simulador
 
-simulador: utils.o main.o dataMemory.o jgtz.o jump.o jzero.o add.o div.o mult.o sub.o halt.o read.o write.o load.o store.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o jumpInstruction.o instruction.o
-	g++ -g -o simulador main.o utils.o dataMemory.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o add.o div.o mult.o sub.o halt.o read.o write.o jgtz.o jump.o jzero.o load.o store.o jumpInstruction.o instruction.o
+simulador: utils.o main.o dataMemory.o jgtz.o jump.o jzero.o add.o div.o mult.o sub.o halt.o read.o write.o load.o store.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o instruction.o
+	g++ -g -o simulador main.o utils.o dataMemory.o controlUnit.o fileProgram.o tapeFile.o programMemory.o indirect.o direct.o inmediate.o add.o div.o mult.o sub.o halt.o read.o write.o jgtz.o jump.o jzero.o load.o store.o instruction.o
 
 main.o: ../src/main.cc
 	g++ -g -c ../src/main.cc
@@ -68,9 +68,6 @@ load.o: ../src/lib/instructions/memoryManipulationInstrucctions/load/load.cc
 
 store.o: ../src/lib/instructions/memoryManipulationInstrucctions/store/store.cc
 	g++ -g -c ../src/lib/instructions/memoryManipulationInstrucctions/store/store.cc
-
-jumpInstruction.o: ../src/lib/instructions/jumpInstructions/jumpInstruction.cc
-	g++ -g -c ../src/lib/instructions/jumpInstructions/jumpInstruction.cc
 
 instruction.o: ../src/lib/instructions/instruction.cc
 	g++ -g -c ../src/lib/instructions/instruction.cc
