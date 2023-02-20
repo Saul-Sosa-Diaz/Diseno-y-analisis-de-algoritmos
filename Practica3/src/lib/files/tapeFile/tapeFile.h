@@ -21,9 +21,11 @@ class TapeFile : public File {
   int write();
   void addNewItemToBuffer(int);
   int getItem();
+  std::string to_s();
 
  protected:
   std::vector<int> buffer_;
   int readHead_;
   bool in_;
+  bool finished_; // No ha acabado de leer todavía
 };

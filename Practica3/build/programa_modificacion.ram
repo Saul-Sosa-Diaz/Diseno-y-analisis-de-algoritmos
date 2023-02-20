@@ -4,6 +4,8 @@
 # Use comentarios de línea para documentar su código RAM y, tras comprobar que se ejecute correctamente, súbalo a esta tarea.
 				read 2
 				read 3
+				read 4
+				read 5
 				load 2
 				sub 3
 				jgtz primero_mayor

@@ -69,7 +69,7 @@ bool ProgramMemory::parsing(std::string srcCodeString) {
     if (parseLine(test)) {  // The instruction can be constructed
       checkForLabel(test, numberOfLine);
     } else {
-      std::string exception = "File " + nameOfTheFileWithProgram_ + " has a syntax error in the line " + std::to_string(numberOfLine) + ": ";
+      std::string exception = "\033[1;31mFile " + nameOfTheFileWithProgram_ + " has a syntax error in the line " + std::to_string(numberOfLine) + ": ";
       exception += test + "\n";
       throw std::runtime_error(exception);
     }
@@ -123,7 +123,7 @@ bool ProgramMemory::checkForLabel(std::string test, int numberOfLine) {
     if (!labels_.count(aux)) {
       labels_[aux] = numberOfLine;
     } else {
-      std::string exception = "The label: " + aux + " already exists\n";
+      std::string exception = "\033[1;31mThe label: " + aux + " already exists\n";
       throw std::runtime_error(exception);
     }
     return true;
@@ -253,7 +253,7 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case JUMP: {
       std::map<std::string, int>::iterator it = labels_.find(test);
       if(it == labels_.end()){
-        std::string exception = "The label: " + test + " doesn`t exists\n";
+        std::string exception = "\033[1;31mThe label: " + test + " doesn`t exists\n";
         throw std::runtime_error(exception);
       }
       result = new Jump(labels_[test]);
@@ -262,7 +262,7 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case JZERO: {
       std::map<std::string, int>::iterator it = labels_.find(test);
       if(it == labels_.end()){
-        std::string exception = "The label: " + test + " doesn`t exists\n";
+        std::string exception = "\033[1;31mThe label: " + test + " doesn`t exists\n";
         throw std::runtime_error(exception);
       }
       result = new Jzero(labels_[test]);
@@ -271,7 +271,7 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
     case JGTZ: {
       std::map<std::string, int>::iterator it = labels_.find(test);
       if(it == labels_.end()){
-        std::string exception = "The label: " + test + " doesn`t exists\n";
+        std::string exception = "\033[1;31mThe label: " + test + " doesn`t exists\n";
         throw std::runtime_error(exception);
       }
       result = new Jgtz(labels_[test]);
@@ -282,4 +282,9 @@ Instruction* ProgramMemory::getInstruction(std::string test, SpecificOperator op
       break;
   }
   return result;
+}
+
+std::ostream &operator<<(std::ostream &output, const ProgramMemory &programMemory) { 
+  output << "Tape in: " << programMemory.tapeFileIn_->to_s() << std::endl ; //<< "Tape out:\n  " << programMemory.tapeFileOut_->to_s();
+  return output;
 }

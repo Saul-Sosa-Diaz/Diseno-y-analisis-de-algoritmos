@@ -23,7 +23,7 @@ void DataMemory::load() {
 
 int DataMemory::at(int index) const {
   if (index < 0 || index >= content_.size()) {
-    throw std::runtime_error("Attempt to access incorrect memory address");
+    throw std::runtime_error("\033[1;31mAttempt to access incorrect memory address");
   }
   return content_[index];
 }

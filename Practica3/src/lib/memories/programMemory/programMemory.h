@@ -62,6 +62,8 @@ class ProgramMemory : public Memory<Instruction*> {
   TapeFile* getTapeFileOut() { return tapeFileOut_;}
   std::vector<Instruction*> getContent() { return content_; }
 
+  friend std::ostream &operator<<(std::ostream &output, const ProgramMemory&);
+
  private:
   std::string nameOfTheFileWithProgram_;
   TapeFile* tapeFileIn_;

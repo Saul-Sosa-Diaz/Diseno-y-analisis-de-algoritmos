@@ -16,7 +16,7 @@ FileProgram::FileProgram(std::string name) : File(name) {
   srcCode_ = "";
   numberOfLines_ = 0;
   if (!std::regex_match(name, nameProgramRam)) {
-    std::string exception = "The file with the program RAM doesn´t match with: namein.ram\n";
+    std::string exception = "\033[1;31mThe file with the program RAM doesn´t match with: namein.ram\n";
     throw std::runtime_error(exception);
   }
   read();
@@ -38,7 +38,7 @@ int FileProgram::read() {
     }
   } else {
     std::string info_error;
-    info_error = name_ + " cannot be opened";
+    info_error = "\033[1;31m" + name_ + " cannot be opened";
     throw std::system_error(errno, std::system_category(), info_error);
   }
   filein.close();
