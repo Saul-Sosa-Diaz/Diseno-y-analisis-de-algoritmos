@@ -1,0 +1,79 @@
+# Generación del vector de números aleatorios
+# vector1 = [36,16,96,18,3,96]
+# print(vector1)
+# vector2 = [76,65,40,86,76,42]
+# print(vector2)
+# result = 0
+# for i in range (0,6):
+#    result += vector1[i]*vector2[i]
+# print(result)
+
+
+				load =3
+				store 2
+				# Tamaño de los vectores
+				load =6
+				store 25
+lee1:		load 25
+				jzero fin1
+				sub =1
+				store 25
+				read 1
+				load 1
+				store *2
+				load 2
+				add =1
+				store 2
+				jump lee1
+
+fin1:		load =6
+				store 25
+				load 2
+				add =1
+				store 2
+
+lee2:		load 25
+				jzero fin2
+				sub =1
+				store 25
+				read 1
+				load 1
+				store *2
+				load 2
+				add =1
+				store 2
+				jump lee2
+
+fin2:		load =6
+				store 25
+				load 2
+				add =1
+				store 2
+
+operar:	load =0
+				#resultado
+				store 22
+				# Cuidado aqui donde empizan los vectores
+				load =3
+				store 23
+				load =10
+				store 24
+
+for:	load 25
+			jzero finfor
+			sub =1
+			store 25
+			load *23
+			mult *24
+			add 22
+			store 22
+			load 23
+			add =1
+			store 23
+			load 24
+			add =1
+			store 24
+			jump for
+
+finfor:		write 22	
+				halt

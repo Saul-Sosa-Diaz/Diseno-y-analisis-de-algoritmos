@@ -1,4 +1,3 @@
-
 # Escriba un programa RAM que lea dos valores enteros de la cinta de entrada y escriba en la cinta de salida el resultado de la operación módulo 
 # (resto de la división entera) del mayor valor entre el menor valor. Puede modificar su máquina RAM como sea necesario, pero no debe ampliarse su repertorio de instrucciones. 
 # Use comentarios de línea para documentar su código RAM y, tras comprobar que se ejecute correctamente, súbalo a esta tarea.
