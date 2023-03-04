@@ -17,13 +17,14 @@ class QuickSort(DaC):
         i += 1
       while problem[r] >= pivot and i < r:
         r -= 1
+
       if (i > r):
         break
       # swap
       aux = problem[i]
       problem[i] = problem[r]
       problem[r] = aux
-    
+
     # swap
     aux = problem[i]
     problem[i] = problem[len(problem) - 1]
@@ -45,7 +46,6 @@ class QuickSort(DaC):
   def Combine(self, s1: list, s2: list):
     result = s1 + s2
     return result
-
 
 def main():
   try:

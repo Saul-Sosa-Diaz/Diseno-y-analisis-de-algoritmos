@@ -1,10 +1,10 @@
-import random
+from utils import menu
 
 def main():
-  for i in range(0,10):
-    n = random.randint(2,1000)
-    randomlist = random.sample(range(-1000, 1000), 10)
-    print(randomlist)
+  menu()
 
+def main():
+  menu()
+  
 if "__main__" == __name__:
   main()

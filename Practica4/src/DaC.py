@@ -1,4 +1,4 @@
-from utils import install
+from install_function import install
 from abc import ABC, abstractclassmethod
 
 try:
