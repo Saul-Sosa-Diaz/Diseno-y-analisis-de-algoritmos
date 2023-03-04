@@ -1,5 +1,5 @@
 from utils import install
-from abc import ABC, abstractclassmethod 
+from abc import ABC, abstractclassmethod
 
 try:
     import typeguard
@@ -13,12 +13,12 @@ class DaC(ABC):
       pass
 
     @typeguard.typechecked
-    def Solve(self, problem : list , n : int ):
+    def Solve(self, problem : list):
       if self.Small(problem):
         return self.SolveSmall(problem)
-      r = self.Divide(problem, n)
-      s1 = self.Solve(r[0], n//2)
-      s2 = self.Solve(r[1], n//2)
+      r = self.Divide(problem)
+      s1 = self.Solve(r[0])
+      s2 = self.Solve(r[1])
       t = self.Combine(s1,s2)
       return t
  
@@ -29,7 +29,7 @@ class DaC(ABC):
     
     @abstractclassmethod
     @typeguard.typechecked
-    def Divide(self, problem : list, n : int):
+    def Divide(self, problem : list):
       pass
 
     @abstractclassmethod
@@ -43,19 +43,19 @@ class DaC(ABC):
       pass
 
 
-class MergeSort(DaC):
-   
+class MergeSort(DaC): 
   def Small(self, problem: list):
     return True if len(problem) <= 2 else False
     
-  def Divide(self, problem: list, n: int):
+  def Divide(self, problem: list):
     result = []
     divide1 = []
     divide2 = []
-    for i in range(0, n//2):
+    for i in range(0, len(problem)//2):
       divide1.append(problem[i])
     result.append(divide1)
-    for i in range(n//2, n):
+
+    for i in range(len(problem)//2, len(problem)):
       divide2.append(problem[i])
     result.append(divide2)
 
@@ -95,54 +95,4 @@ class MergeSort(DaC):
     return result
 
 
-class QuickSort(DaC):
 
-  def Small(self, problem: list):
-    return True if len(problem) == 1 else False
-
-  def Divide(self, problem: list, n: int):
-    result = []
-    divide1 = []
-    divide2 = []
-    pivot = problem[len(problem) - 1]
-    i = 0
-    r = len(problem) - 1
-    while True:
-      while problem[i] < pivot:
-        i += 1
-      while problem[r] > pivot:
-        r -= 1
-      if (i >= r):
-        break
-      # swap
-      aux = problem[i]
-      problem[i] = problem[r]
-      problem[r] = aux
-
-    # swap
-    aux = problem[i]
-    problem[i] = problem[r]
-    problem[r] = aux
-
-    divide1 = problem[:r]
-    divide2 = problem[r:]
-    result.append(divide1)
-    result.append(divide2)
-
-    return result
-
-  def SolveSmall(self, problem: list):
-    return problem
-
-  def Combine(self, s1: list, s2: list):
-    result =  s1 + s2
-    
-    return result
-
-def main():   
-  a = MergeSort()
-  v = [847, 166, 525, 342, 839, 965, 159, 961, 414, 337]
-  print(a.Solve(v,len(v)))
-
-if __name__ == "__main__":
-  main()
