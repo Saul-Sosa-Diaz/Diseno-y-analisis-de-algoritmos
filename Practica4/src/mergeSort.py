@@ -53,9 +53,13 @@ class MergeSort(DaC):
 
 
 def main():
-  a = MergeSort()
-  v = [847, 166, 525, 342, 839, 965, 159, 961, 414, 337]
-  print(a.Solve(v))
+  try:
+    a = MergeSort()
+    v = [78, 49, 694, 26, 297, 798, 634, 748, 569, 846]
+    print(a.Solve(v))
+  except Exception as e:
+    print(str(e))
+
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from DaC import DaC
 
 class QuickSort(DaC):
   def Small(self, problem: list):
-    return True if len(problem) == 1 else False
+    return True if len(problem) <= 2 else False
 
   def Divide(self, problem: list):
     result = []
@@ -12,22 +12,24 @@ class QuickSort(DaC):
     i = 0
     r = len(problem) - 1
 
-    while True:
+    if all(elem == problem[0] for elem in problem):
+        result.append(problem)
+        result.append([])
+        return result
+
+    while i < r:
       while problem[i] < pivot:
         i += 1
       while problem[r] > pivot:
         r -= 1
-      if (i >= r):
+      if (i > r):
         break
       # swap
       aux = problem[i]
       problem[i] = problem[r]
       problem[r] = aux
+      
 
-    # swap
-    aux = problem[i]
-    problem[i] = problem[r]
-    problem[r] = aux
 
     divide1 = problem[:r]
     divide2 = problem[r:]
@@ -45,9 +47,12 @@ class QuickSort(DaC):
 
 
 def main():
-  a = QuickSort()
-  v = [847, 166, 525, 342, 839, 965, 159, 961, 414, 337]
-  print(a.Solve(v))
+  try:
+    a = QuickSort()
+    v = [1,2,1,3]
+    print(a.Solve(v))
+  except Exception as e:
+    print(str(e))
 
 
 if __name__ == "__main__":
