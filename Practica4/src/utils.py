@@ -16,9 +16,9 @@ def menu():
     mergeSort = MergeSort()
     quickSort = QuickSort()
     table = []
-    for i in range(0, 60):
-        n = random.randint(2, 1000)
-        randomlist = random.sample(range(-1000, 1000), n)
+    for i in range(0, 10):
+        n = random.randint(1000, 4000)
+        randomlist = random.sample(range(-10000, 10000), n)
 
         start_time1 = time.perf_counter()
         mergeSort.Solve(randomlist)

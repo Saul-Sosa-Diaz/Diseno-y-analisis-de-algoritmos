@@ -2,7 +2,7 @@ from DaC import DaC
 
 class MergeSort(DaC):
   def Small(self, problem: list):
-    return True if len(problem) <= 2 else False
+    return True if len(problem) <= 1 else False
 
   def Divide(self, problem: list):
     result = []
@@ -19,11 +19,6 @@ class MergeSort(DaC):
     return result
 
   def SolveSmall(self, problem: list):
-    if (len(problem) == 2):
-      if (problem[0] > problem[1]):
-        aux = problem[0]
-        problem[0] = problem[1]
-        problem[1] = aux
     return problem
 
   def Combine(self, s1: list, s2: list):
