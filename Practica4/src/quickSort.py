@@ -1,17 +1,29 @@
 from DaC import DaC
 
 class QuickSort(DaC):
+  '''
+  A class that inherits from the DaC class and provides an implementation of the Quick Sort algorithm.
+  '''
   def Small(self, problem: list):
     return True if len(problem) <= 1 else False
 
+
+
   def Divide(self, problem: list):
+    '''
+    Divide a problem into two smaller problems based on a pivot element.
+    
+    :param problem: A list of integers representing the problem to be divided.
+    :type problem: list
+    :return: A list of two lists representing the smaller problems.
+    :rtype: list
+    '''
     result = []
     divide1 = []
     divide2 = []
     pivot = problem[len(problem) - 1]
     i = 0
     r = len(problem) - 1
-
     while i < r:
       while problem[i] <= pivot and i < r:
         i += 1
@@ -29,6 +41,7 @@ class QuickSort(DaC):
     aux = problem[i]
     problem[i] = problem[len(problem) - 1]
     problem[len(problem) - 1] = aux
+    # If the problem only has 2 elements and are equal.
     if r <= 0 and len(problem) == 2:
       divide1 = [problem[0]]
       divide2 = [problem[1]]
@@ -40,8 +53,12 @@ class QuickSort(DaC):
 
     return result
 
+
+
   def SolveSmall(self, problem: list):
     return problem
+
+
 
   def Combine(self, s1: list, s2: list):
     result = s1 + s2

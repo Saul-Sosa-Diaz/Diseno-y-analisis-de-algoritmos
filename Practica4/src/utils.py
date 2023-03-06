@@ -10,7 +10,12 @@ except ImportError:
     install('tabulate')
     import tabulate
 
-def menu():
+def menu() -> None:
+    '''
+    Benchmarks the performance of Merge Sort and Quick Sort algorithms 
+    by generating random lists of integers and measuring the time taken by each algorithm to sort them.
+    '''
+
     result_merge = []
     result_quicksort = []
     mergeSort = MergeSort()
