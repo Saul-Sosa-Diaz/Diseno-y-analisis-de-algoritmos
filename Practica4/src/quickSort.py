@@ -53,15 +53,14 @@ class QuickSort(DaC):
 
     return result
 
-
-
   def SolveSmall(self, problem: list):
     return problem
 
 
-
-  def Combine(self, s1: list, s2: list):
-    result = s1 + s2
+  def Combine(self, s1: list):
+    result = []
+    for i in s1:
+      result += i
     return result
 
 def main():

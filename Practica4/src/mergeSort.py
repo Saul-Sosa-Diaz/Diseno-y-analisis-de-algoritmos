@@ -39,46 +39,44 @@ class MergeSort(DaC):
 
 
 
-  def Combine(self, s1: list, s2: list):
+  def Combine(self, s):
     '''
-    Combines two sorted lists, s1 and s2, into a single sorted list and returns it.
+    Combines two sorted lists, s, into a single sorted list and returns it.
 
-    :param s1: The first sorted list to be combined.
-    :type s1: list
-    :param s2: The second sorted list to be combined.
-    :type s2: list
-    :return: A sorted list that contains all the elements of s1 and s2.
+    :param s: The first sorted list to be combined.
+    :type s: list
+    :return: A sorted list that contains all the elements of s.
     :rtype: list
     '''
 
-    result = [0] * (len(s1)+len(s2))
+    result = [0] * (len(s[0])+len(s[1]))
     i = 0
     j = 0
-    for k in range(0, len(s1)+len(s2)):
+    for k in range(0, len(s[0])+len(s[1])):
       # The first list is finished
-      if i >= len(s1):
+      if i >= len(s[0]):
         # As long as there are still items in the second list, they are added to the resulting list.
-        while j < len(s2):
-          result[k] = s2[j]
+        while j < len(s[1]):
+          result[k] = s[1][j]
           j += 1
           k += 1
         break
 
       # The second list is finished
-      elif j >= len(s2):
+      elif j >= len(s[1]):
         # As long as there are still items in the fist list, they are added to the resulting list.
-        while i < len(s1):
-          result[k] = s1[i]
+        while i < len(s[0]):
+          result[k] = s[0][i]
           i += 1
           k += 1
         break
 
       # Put the smaller of the two elements in the resulting list, then move up one position
-      elif s1[i] < s2[j]:
-        result[k] = s1[i]
+      elif s[0][i] < s[1][j]:
+        result[k] = s[0][i]
         i += 1
       else:
-        result[k] = s2[j]
+        result[k] = s[1][j]
         j += 1
     return result
 

@@ -26,9 +26,10 @@ class DaC(ABC):
       if self.Small(problem):
         return self.SolveSmall(problem)
       r = self.Divide(problem)
-      s1 = self.Solve(r[0])
-      s2 = self.Solve(r[1])
-      t = self.Combine(s1,s2)
+      solutions = []
+      for i in r:
+        solutions.append(self.Solve(i))
+      t = self.Combine(solutions)
       return t
  
     @abstractclassmethod
@@ -71,14 +72,12 @@ class DaC(ABC):
 
     @abstractclassmethod
     @typeguard.typechecked
-    def Combine(self, s1: list, s2: list):
+    def Combine(self, s: list):
       '''
       Combines the solutions to two subproblems into a solution to the original problem.
 
-      :param s1: The solution to the first subproblem.
-      :type s1: list
-      :param s2: The solution to the second subproblem.
-      :type s2: list
+      :param s: The solution to the first subproblem.
+      :type s: list
       :return: The combined solution.
       '''
       pass
