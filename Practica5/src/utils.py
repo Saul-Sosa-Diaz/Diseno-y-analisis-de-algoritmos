@@ -32,8 +32,8 @@ def debug_mode() -> None:
     algoritm_to_use = None
     while True:
         print("Enter the algorithm to resolve the program(", ', '.join(list(algorithms.keys())), "):")
-        algorit = input().lower().strip()
-
+        algorit = input().lower().replace(" ", "")
+        print(algorit)
         if algorit in algorithms:
             break
         print(bcolors.FAIL + "That is not a correct value, the correct values are: " + bcolors.ENDC,
@@ -43,12 +43,14 @@ def debug_mode() -> None:
         algoritm_to_use = MergeSort()
     else:
         algoritm_to_use = QuickSort()
-    randomlist = random.sample(range(-10000, 10000), n)
-    print(bcolors.OKCYAN + "The problem is: ", randomlist, bcolors.ENDC)
+    randomlist = []
+    for i in range(0, n):
+        randomlist.append(random.randint(-100000,100000))
+    print(bcolors.OKCYAN + "The problem is: " + bcolors.ENDC, randomlist)
     start_time = time.perf_counter()
     solution = algoritm_to_use.Solve(randomlist)
     end_time = time.perf_counter()
-    print( "The solution is: ", solution)
+    print(bcolors.OKCYAN + "The solution is: " + bcolors.ENDC, solution)
     print(bcolors.OKGREEN + "The time it has taken is: ",
           end_time - start_time,  bcolors.ENDC +"\n")
 
@@ -65,7 +67,9 @@ def normal_mode() -> None:
     table = []
     for i in range(0, 10):
         n = random.randint(1000, 4000)
-        randomlist = random.sample(range(-10000, 10000), n)
+        randomlist = []
+        for i in range(0, n):
+            randomlist.append(random.randint(-100000, 100000))
 
         start_time1 = time.perf_counter()
         mergeSort.Solve(randomlist)
