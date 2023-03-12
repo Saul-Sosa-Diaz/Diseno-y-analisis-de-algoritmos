@@ -14,7 +14,7 @@ class DaC(ABC):
     def __init__(self) -> None:
       pass
 
-    @typeguard.typechecked
+   
     def Solve(self, problem : list):
       '''
         Solves a problem using the divide and conquer approach.
@@ -33,7 +33,6 @@ class DaC(ABC):
       return t
  
     @abstractclassmethod
-    @typeguard.typechecked
     def Small(self, problem : list):
       '''
         Determines whether a problem is small enough to be solved without dividing.
@@ -46,7 +45,6 @@ class DaC(ABC):
       pass
     
     @abstractclassmethod
-    @typeguard.typechecked
     def Divide(self, problem : list):
       '''
         Divides a problem into subproblems.
@@ -59,7 +57,6 @@ class DaC(ABC):
       pass
 
     @abstractclassmethod
-    @typeguard.typechecked
     def SolveSmall(self, problem : list):
       '''
         Solves a small problem directly, without dividing.
@@ -71,7 +68,6 @@ class DaC(ABC):
       pass
 
     @abstractclassmethod
-    @typeguard.typechecked
     def Combine(self, s: list):
       '''
       Combines the solutions to two subproblems into a solution to the original problem.

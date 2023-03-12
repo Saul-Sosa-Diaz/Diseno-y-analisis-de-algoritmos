@@ -17,6 +17,9 @@ algorithms = {
     "quicksort": 1
 }
 
+
+
+
 def debug_mode() -> None:
     '''
     It enters debug mode, prompts the user for a positive problem size, 
@@ -54,12 +57,14 @@ def debug_mode() -> None:
     print(bcolors.OKGREEN + "The time it has taken is: ",
           end_time - start_time,  bcolors.ENDC +"\n")
 
+
+
+
 def normal_mode() -> None:
     '''
     Benchmarks the performance of Merge Sort and Quick Sort algorithms 
     by generating random lists of integers and measuring the time taken by each algorithm to sort them.
     '''
-
     result_merge = []
     result_quicksort = []
     mergeSort = MergeSort()
@@ -94,6 +99,9 @@ def normal_mode() -> None:
             sum(result_merge) / len(result_merge))
     print("The average of Quick Sort is: ", sum(
         result_quicksort) / len(result_quicksort))
+
+
+
 
 def menu() -> None:
     
