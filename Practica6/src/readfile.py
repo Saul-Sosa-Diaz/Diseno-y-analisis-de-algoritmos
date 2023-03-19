@@ -2,6 +2,7 @@ import os
 import glob
 from install import install
 from colors import bcolors
+import re
 
 try:
     import numpy as np
@@ -17,11 +18,13 @@ def readFile(file):
               bcolors.FAIL + "Error in File: " + os.path.basename(file) + " -> The number of nodes in a network cannot be negative." + bcolors.ENDC)
         matrix = np.zeros((numNodes,numNodes))
         currentNode = 1
-
         while (currentNode <= numNodes):
             i = 0
-            while i < numNodes - currentNode: 
-                value = int(fileContent.readline().split()[-1]) #Coger el último elemento
+            while i < numNodes - currentNode: # Evitar las líneas vacías
+                line = fileContent.readline().strip()
+                while not line:
+                    line = fileContent.readline().strip()
+                value = int(line.split()[-1]) #Coger el último elemento
                 matrix[currentNode - 1, i + currentNode] = value
                 i += 1
             currentNode += 1
@@ -33,6 +36,7 @@ def readFile(file):
                 j += 1
         return matrix
 
+
 def readFiles(path):
     problems = []
     files = glob.glob(os.path.join(path, "*"))
@@ -41,8 +45,9 @@ def readFiles(path):
           problems.append(readFile(file))
         except Exception as e:
           print(str(e) + " This file will not be considered.")
-
           continue
+    print(problems)
+    return problems
 
 if "__main__" == __name__:
   readFiles(r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica6\problems")
