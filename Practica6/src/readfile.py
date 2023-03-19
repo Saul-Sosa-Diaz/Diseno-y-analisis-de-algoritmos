@@ -39,15 +39,16 @@ def readFile(file):
 
 def readFiles(path):
     problems = []
+    result_files = []
     files = glob.glob(os.path.join(path, "*"))
     for file in files:
         try:
           problems.append(readFile(file))
+          result_files.append(os.path.basename(file))
         except Exception as e:
           print(str(e) + " This file will not be considered.")
           continue
-    print(problems)
-    return problems
+    return problems, result_files
 
 if "__main__" == __name__:
   readFiles(r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica6\problems")

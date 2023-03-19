@@ -9,5 +9,8 @@ class TSP(ABC):
       pass
 
     @abstractclassmethod
-    def solve(self, problem : list):
+    def Solve(self, problem : list):
       pass
+
+    def Set_exceeded(self, exceeded):
+       self.__exceeded = exceeded

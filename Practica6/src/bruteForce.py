@@ -4,12 +4,14 @@ import itertools
 import time
 
 
-class bruteForce(TSP):
-  def __init__(self) -> None:
+class BruteForce(TSP):
+  def __init__(self, exceeded=60) -> None:
     self.__value = 0
     self.__time = 0
+    self.__path = None
+    self.__exceeded = exceeded
 
-  def solve(self, matrix):
+  def Solve(self, matrix):
     value = 0
     start_time = time.perf_counter()
     # Get the number of destinations in the distance matrix
@@ -23,8 +25,9 @@ class bruteForce(TSP):
     # Generate all possible permutations of destinations
     for path in itertools.permutations(destinations):
       actual_time = time.perf_counter()
-      if (actual_time - start_time) > 60:
+      if (actual_time - start_time) > self.__exceeded:
         end_time = time.perf_counter()
+        self.__path = best_path
         self.__time = end_time - start_time
         value = best_distance
         self.__value = value
@@ -43,6 +46,7 @@ class bruteForce(TSP):
     
     end_time = time.perf_counter()
     self.__time = end_time - start_time
+    self.__path = best_path
     value = best_distance
     self.__value = value
     return value
@@ -50,12 +54,12 @@ class bruteForce(TSP):
 
 def main():
   try:
-    a = bruteForce()
+    a = BruteForce()
     v = np.array([[0., 25., 10., 15.],
                   [25., 0., 10., 45.],
                   [10., 10., 0., 5.],
                   [15., 45., 5., 0.]])
-    print(a.solve(v))
+    print(a.Solve(v))
 
   except Exception as e:
     print(str(e))
