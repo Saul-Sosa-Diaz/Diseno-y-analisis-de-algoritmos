@@ -1,4 +1,5 @@
 from abc import ABC, abstractclassmethod
+import time 
 
 class TSP(ABC):
     '''
