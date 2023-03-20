@@ -2,7 +2,6 @@ import os
 import glob
 from install import install
 from colors import bcolors
-import re
 
 try:
     import numpy as np

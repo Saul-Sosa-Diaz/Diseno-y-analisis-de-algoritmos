@@ -37,8 +37,6 @@ def generator():
 def menu() -> None:  
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', type=float, help='Limit Run time in seconds')
-    parser.add_argument('-g', action='store_true',
-                        help='Generate random instance of the problem')
     parser.add_argument(
         '-d', type=str, help='Path to the directory with the problems')
     args = parser.parse_args()
@@ -52,20 +50,16 @@ def menu() -> None:
 
     problems = []
     names = []
-    if args.g:
+
+    if not args.d:
         print('Generating random instance of the problem...')
-        problems,names = generator()
-        
+        problems, names = generator()
+    elif not os.path.isdir(args.d):
+        print('The path provided is not a valid directory')
+        exit()
     else:
-        if not args.d:
-            print('You need a path to the directory')
-            exit()
-        elif not os.path.isdir(args.d):
-            print('The path provided is not a valid directory')
-            exit()
-        else:
-            directory_path = args.d
-            problems, names = readFiles(directory_path)
+        directory_path = args.d
+        problems, names = readFiles(directory_path)
     table = []
     
     for i, problem in enumerate(problems):
@@ -75,14 +69,12 @@ def menu() -> None:
             bcolors.ENDC if bf.Get_time() > 60 else bf.Get_time()*1000 # Brute force time in ms
         row.append(timebf)
         row.append(bf.Get_path())
-
         #Dynamic programming
         row.append(dp.Solve(problem))  # Dynamic programming value
         timedp = bcolors.WARNING + "Excessive" + \
             bcolors.ENDC if dp.Get_time() > 60 else dp.Get_time() * 1000  # Dynamic programming force time in ms
         row.append(timedp)
         row.append(dp.Get_path())
-
         #Greedy
         row.append(greedy.Solve(problem))  # Greedy force value
         timegreedy = bcolors.WARNING + "Excessive" + \
@@ -93,6 +85,9 @@ def menu() -> None:
     
     print(tabulate.tabulate(table, headers=[
         "Name", "Brute force Value", "Brute force time (ms)", "Brute force path", "Dynamic programming Value", "Dynamic programming time (ms)", "Dynamic programming path", "greedy Value", "greedy time (ms)", "greedy path"], tablefmt="github", stralign="center"))
+
+
+
 
 if "__main__" == __name__:
   menu()
