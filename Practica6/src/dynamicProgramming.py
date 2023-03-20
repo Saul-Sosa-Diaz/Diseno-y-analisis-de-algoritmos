@@ -75,8 +75,6 @@ class DP(TSP):
     self.__value = value
     return value
 
-
-
   def Set_exceeded(self, exceeded):
     self.__exceeded = exceeded
 
