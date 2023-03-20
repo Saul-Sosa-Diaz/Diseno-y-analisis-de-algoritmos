@@ -5,6 +5,9 @@ import time
 
 
 class BruteForce(TSP):
+  '''
+  A class that inherits from the TSP And solves the problem by brute force.
+  '''
 
   def __init__(self, exceeded=60) -> None:
     self.__value = 0
@@ -53,6 +56,7 @@ class BruteForce(TSP):
     self.__value = value
     return value
 
+
   def Set_exceeded(self, exceeded):
     self.__exceeded = exceeded
 
@@ -60,11 +64,16 @@ class BruteForce(TSP):
   def Get_path(self):
     return super().Get_path(self.__path)
 
+
   def Get_value(self):
     return self.__value
 
+
   def Get_time(self):
     return self.__time
+
+
+
 
 def main():
   try:

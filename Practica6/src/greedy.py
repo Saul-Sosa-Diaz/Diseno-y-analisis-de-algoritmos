@@ -3,21 +3,24 @@ import numpy as np
 import time
 
 class Greedy(TSP):
+  '''
+  A class that inherits from the TSP And solves the problem by greedy algorithm.
+  '''
+
   def __init__(self, exceeded = 60) -> None:
     self.__value = 0
     self.__time = 0
-    self.__visited = [False] * 4
     self.__path = []
     self.__exceeded = exceeded
   
   def Solve(self, matrix):
-    self.__visited = [False] * 4
+    visited = [False] * len(matrix[0])
     value = 0
     start_time = time.perf_counter()
     actualNode = 0
-    self.__visited[0] = True
+    visited[0] = True
     path = [0]
-    while (not all(self.__visited)):
+    while (not all(visited)):
       actual_time = time.perf_counter()
 
       # Si se pasa del tiempo establecido
@@ -31,14 +34,14 @@ class Greedy(TSP):
       min = float('inf')
       index_smallest_element = 0
       while i < len(matrix[actualNode]):
-        if matrix[actualNode,i] < min and self.__visited[i] == False:
+        if matrix[actualNode,i] < min and visited[i] == False:
           min = matrix[actualNode,i]
           index_smallest_element = i
         i += 1
 
       value += min
       actualNode = index_smallest_element
-      self.__visited[actualNode] = True
+      visited[actualNode] = True
       path.append(actualNode)
     
     end_time = time.perf_counter()

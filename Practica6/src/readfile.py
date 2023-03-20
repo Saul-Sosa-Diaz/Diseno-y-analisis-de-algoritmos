@@ -10,6 +10,9 @@ except ImportError:
     import numpy as np
 
 def readFile(file):
+    '''
+    Reads a text file and constructs its corresponding distance matrix.
+    '''
     with open(file, "r") as fileContent:
         numNodes = int(fileContent.readline())
         if numNodes < 0:
@@ -19,15 +22,15 @@ def readFile(file):
         currentNode = 1
         while (currentNode <= numNodes):
             i = 0
-            while i < numNodes - currentNode: # Evitar las líneas vacías
+            while i < numNodes - currentNode: # Avoid blank lines
                 line = fileContent.readline().strip()
                 while not line:
                     line = fileContent.readline().strip()
-                value = int(line.split()[-1]) #Coger el último elemento
+                value = int(line.split()[-1]) # Pick last element
                 matrix[currentNode - 1, i + currentNode] = value
                 i += 1
             currentNode += 1
-        # Completar la matriz en la diagonal inferior
+        # Complete the matrix in the lower triangle
         for i in range(0, numNodes):
             j = 0
             while j < i:
@@ -37,6 +40,9 @@ def readFile(file):
 
 
 def readFiles(path):
+    '''
+    Reads all files in a directory and outputs their respective arrays and names.
+    '''
     problems = []
     result_files = []
     files = glob.glob(os.path.join(path, "*"))

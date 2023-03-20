@@ -15,10 +15,16 @@ except ImportError:
 
 
 def generator():
+    '''
+    Generates 10 random instances to solve, returns two lists, 
+    the first with the distance matrices of the problems and their names.
+    '''
     problems = []
     names = []
     for i in range(0,10):
         matrix= np.random.randint(50, size=(4, 4))
+
+        # Fill in the lower triangle with the same numbers as in the upper triangle.
         for k in range(0, 4):
             j = 0
             while j <= k:
@@ -34,28 +40,32 @@ def generator():
 
 
 
-def menu() -> None:  
+def menu() -> None:
+    '''
+    Manages and displays the results of problems solved with dynamic programming, brute force and greedy.
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', type=float, help='Limit Run time in seconds')
-    parser.add_argument(
-        '-d', type=str, help='Path to the directory with the problems')
+    parser.add_argument('-d', type=str, help='Path to the directory with the problems')
     args = parser.parse_args()
     greedy = Greedy()
     bf = BruteForce()
     dp = DP()
-    if args.t:
-        greedy.Set_exceeded(args.t)
-        bf.Set_exceeded(args.t)
-        dp.Set_exceeded(args.t)
-
     problems = []
     names = []
 
+    # Indicate to the algorithm a maximum time
+    if args.t: 
+        greedy.Set_exceeded(args.t)
+        bf.Set_exceeded(args.t)
+        dp.Set_exceeded(args.t)
+    
+    # Indicate the path to the folder with the problems
     if not args.d:
         print('Generating random instance of the problem...')
         problems, names = generator()
     elif not os.path.isdir(args.d):
-        print('The path provided is not a valid directory')
+        print(bcolors.FAIL + 'The path provided is not a valid directory' + bcolors.ENDC)
         exit()
     else:
         directory_path = args.d
@@ -64,23 +74,27 @@ def menu() -> None:
     
     for i, problem in enumerate(problems):
         row = [names[i]]
-        row.append(bf.Solve(problem)) # Brute force value
-        timebf = bcolors.WARNING + "Excessive" + \
-            bcolors.ENDC if bf.Get_time() > 60 else bf.Get_time()*1000 # Brute force time in ms
-        row.append(timebf)
+        # Brute force
+        row.append(bf.Solve(problem)) # value
+        timeBf = bcolors.WARNING + "Excessive" + \
+            bcolors.ENDC if bf.Get_time() > 60 else bf.Get_time()*1000 # Time in ms
+        row.append(timeBf)
         row.append(bf.Get_path())
         #Dynamic programming
-        row.append(dp.Solve(problem))  # Dynamic programming value
-        timedp = bcolors.WARNING + "Excessive" + \
-            bcolors.ENDC if dp.Get_time() > 60 else dp.Get_time() * 1000  # Dynamic programming force time in ms
-        row.append(timedp)
+        
+        row.append(dp.Solve(problem))  # Value
+        timeDp = bcolors.WARNING + "Excessive" + \
+            bcolors.ENDC if dp.Get_time() > 60 else dp.Get_time() * 1000  # Time in ms
+        row.append(timeDp)
         row.append(dp.Get_path())
+        
         #Greedy
-        row.append(greedy.Solve(problem))  # Greedy force value
-        timegreedy = bcolors.WARNING + "Excessive" + \
-            bcolors.ENDC if greedy.Get_time() > 60 else greedy.Get_time() * 1000  # Greedy force time in ms
-        row.append(timegreedy)
+        row.append(greedy.Solve(problem))  # Value
+        timeGreedy = bcolors.WARNING + "Excessive" + \
+            bcolors.ENDC if greedy.Get_time() > 60 else greedy.Get_time() * 1000  # Time in ms
+        row.append(timeGreedy)
         row.append(greedy.Get_path())
+
         table.append(row)
     
     print(tabulate.tabulate(table, headers=[

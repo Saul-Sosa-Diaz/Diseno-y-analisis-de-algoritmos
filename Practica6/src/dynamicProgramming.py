@@ -4,12 +4,15 @@ import time
 
 
 class DP(TSP):
-
+  '''
+  A class that inherits from the TSP And solves the problem by dynammic programming.
+  '''
   def __init__(self, exceeded=60) -> None:
     self.__value = 0
     self.__time = 0
     self.__path = None
     self.__exceeded = exceeded
+
 
   def Solve(self, matrix):
     value = 0
@@ -40,7 +43,7 @@ class DP(TSP):
     # Minimum distance from A to A through all B, C and D
     ga_bcd = min(matrix[0, 1] + gb_cd, matrix[0, 2] +
                  gc_bd, matrix[0, 3] + gd_bc)
-    # get path
+    #Get path
     path = []
     if (matrix[0, 1] + gb_cd < matrix[0, 2] + gc_bd and matrix[0, 1] + gb_cd < matrix[0, 3] + gd_bc):
       path.insert(0,1)
@@ -75,14 +78,18 @@ class DP(TSP):
     self.__value = value
     return value
 
+
   def Set_exceeded(self, exceeded):
     self.__exceeded = exceeded
+
 
   def Get_value(self):
     return self.__value
 
+
   def Get_time(self):
     return self.__time
+
 
   def Get_path(self):
     return super().Get_path(self.__path)
