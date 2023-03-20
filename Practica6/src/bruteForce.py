@@ -5,11 +5,17 @@ import time
 
 
 class BruteForce(TSP):
+
+
+
   def __init__(self, exceeded=60) -> None:
     self.__value = 0
     self.__time = 0
     self.__path = None
     self.__exceeded = exceeded
+
+
+
 
   def Solve(self, matrix):
     value = 0
@@ -50,6 +56,9 @@ class BruteForce(TSP):
     value = best_distance
     self.__value = value
     return value
+
+
+
 
 
 def main():
