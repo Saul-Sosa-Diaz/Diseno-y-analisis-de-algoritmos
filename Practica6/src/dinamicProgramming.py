@@ -80,7 +80,11 @@ class DP(TSP):
   def Set_exceeded(self, exceeded):
     self.__exceeded = exceeded
 
+  def Get_value(self):
+    return self.__value
 
+  def Get_time(self):
+    return self.__time
 
   def Get_path(self):
     return super().Get_path(self.__path)

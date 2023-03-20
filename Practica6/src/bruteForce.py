@@ -60,7 +60,11 @@ class BruteForce(TSP):
   def Get_path(self):
     return super().Get_path(self.__path)
 
+  def Get_value(self):
+    return self.__value
 
+  def Get_time(self):
+    return self.__time
 
 def main():
   try:
