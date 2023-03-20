@@ -40,7 +40,34 @@ class DP(TSP):
     # Minimum distance from A to A through all B, C and D
     ga_bcd = min(matrix[0, 1] + gb_cd, matrix[0, 2] +
                  gc_bd, matrix[0, 3] + gd_bc)
+    # get path
+    path = []
+    if (matrix[0, 1] + gb_cd < matrix[0, 2] + gc_bd):
+      path.insert(0,1)
+      if matrix[1, 2] + gc_d < matrix[1, 3] + gd_c:
+        path.insert(0, 2)
+        path.insert(0, 3)
+      else:
+        path.insert(0, 3)
+        path.insert(0, 2)
+    elif(matrix[0, 2] + gc_bd < matrix[0, 3] + gd_bc):
+      path.insert(0, 2)
+      if matrix[2, 1] + gb_d < matrix[2, 3] + gd_b:
+        path.insert(0, 1)
+        path.insert(0, 3)
+      else:
+        path.insert(0, 3)
+        path.insert(0, 1)
+    else:
+      path.insert(0, 3)
+      if matrix[3, 1] + gb_c < matrix[3, 2] + gc_b:
+        path.insert(0, 1)
+        path.insert(0, 2)
+      else:
+        path.insert(0, 2)
+        path.insert(0, 1)
 
+    path.insert(0,0)
     end_time = time.perf_counter()
     self.__time = end_time - start_time
     value = ga_bcd
