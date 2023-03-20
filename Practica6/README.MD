@@ -6,7 +6,8 @@
 Para la presente práctica se pide la creación de un software que, mediante el uso de herencia, resuelva el TSP de 3 formas diferentes;
  * Mediante un algoritmo de fuerza bruta. Esto implica probar todas las posibles combinaciones y devolver aquella que retorna mejores resultados.
  * Mediante un algoritmo voraz (no exacto). En este algoritmo, se parte de un nodo y en cada momento se elige la ciudad más cercana a la que se pueda desplazar (es decir, por la que no haya pasado ya).
- * Mediante un algoritmo de programación dinámica. Deben diseñar este algoritmo de cara a la práctica.
+ * Mediante un algoritmo de programación dinámica. Deben diseñar este algoritmo de cara a la práctica.  
+
 El problema del viajante de comercio o Travelling Salesman Problem (TSP) es un problema NP-Duro altamente conocido en la literatura científica. Existe un comercial que parte de uno de los nodos y para el que se debe obtener la ruta que cumpla lo siguiente:
  * Debe pasar por todos los nodos del grafo exactamente una vez.
  * Debe volver al nodo de origen.
