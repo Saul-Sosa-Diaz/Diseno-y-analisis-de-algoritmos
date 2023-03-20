@@ -11,6 +11,7 @@ class Greedy(TSP):
     self.__exceeded = exceeded
   
   def Solve(self, matrix):
+    self.__visited = [False] * 4
     value = 0
     start_time = time.perf_counter()
     actualNode = 0
