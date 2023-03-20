@@ -6,15 +6,11 @@ import time
 
 class BruteForce(TSP):
 
-
-
   def __init__(self, exceeded=60) -> None:
     self.__value = 0
     self.__time = 0
     self.__path = None
     self.__exceeded = exceeded
-
-
 
 
   def Solve(self, matrix):
@@ -57,7 +53,12 @@ class BruteForce(TSP):
     self.__value = value
     return value
 
+  def Set_exceeded(self, exceeded):
+    self.__exceeded = exceeded
 
+
+  def Get_path(self):
+    return super().Get_path(self.__path)
 
 
 
@@ -69,6 +70,7 @@ def main():
                   [10., 10., 0., 5.],
                   [15., 45., 5., 0.]])
     print(a.Solve(v))
+    print(a.Get_path())
 
   except Exception as e:
     print(str(e))

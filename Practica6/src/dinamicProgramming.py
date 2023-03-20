@@ -68,11 +68,24 @@ class DP(TSP):
         path.insert(0, 1)
 
     path.insert(0,0)
+    self.__path = path
     end_time = time.perf_counter()
     self.__time = end_time - start_time
     value = ga_bcd
     self.__value = value
     return value
+
+
+
+  def Set_exceeded(self, exceeded):
+    self.__exceeded = exceeded
+
+
+
+  def Get_path(self):
+    return super().Get_path(self.__path)
+
+
 
 
 def main():
@@ -83,6 +96,7 @@ def main():
                   [10., 10., 0., 5.],
                   [15., 45., 5., 0.]])
     print(a.Solve(v))
+    print(a.Get_path())
 
   except Exception as e:
     print(str(e))
