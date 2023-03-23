@@ -18,8 +18,9 @@ algoritmo K-Means.
 
 
 ## Ejecución
+**El programa generará una instancia aleatoria por defecto. Si se quisiera cambiar habría que indicarle el parámetro -d**  
 El fichero `main` está en la carpeta /src, para ejecutar el programa ejecute el siguiente programa:
-*El programa generará una instancia aleatoria por defecto. Si se quisiera cambiar habría que indicarle el parámetro -d*
+
 ```BASH
 python3 ./src/main.py
 ```
