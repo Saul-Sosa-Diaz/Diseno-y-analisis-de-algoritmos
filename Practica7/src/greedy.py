@@ -6,8 +6,9 @@ import numpy as np
 class greedy(Algorithm):
 
   @typeguard.typechecked
-  def __init__(self, problem : Problem) -> None:
+  def __init__(self, problem : Problem, k : int = 3) -> None:
     self.__problem = problem
+    self.__k = k
   
   def Solve(self):
     """
@@ -18,16 +19,16 @@ class greedy(Algorithm):
     5: until(Ningún punto cambie de cluster)"""
 
     # Generar centroides alatorios
-    centroids = random.sample(range(0, self.__problem.GetNumOfPoints()), 3) #Aquí va una k
+    centroids = random.sample(range(0, self.__problem.GetNumOfPoints()), self.__k) 
     aux = []
     for i in centroids:
       aux.append(self.__problem.GetPoints()[i])
     centroids = aux
     cluster = []
-    newClusters = [[]for i in range(0, 3)]  # aqui va k
+    newClusters = [[]for i in range(0, self.__k)]  
     newCentroids = []
     while True:
-      for i in range(3):  # aqui va k
+      for i in range(self.__k):  
         newClusters[i] = []
       for j in range(0, self.__problem.GetNumOfPoints()):
         min = float('inf')
@@ -47,7 +48,7 @@ class greedy(Algorithm):
         cluster = newClusters
         centroids = newCentroids
     
-    for i in range(0, 3): #Aqui va k
+    for i in range(0, self.__k): 
       print("Cluster", i, "length:" , len(cluster[i]))
 
 
@@ -55,7 +56,7 @@ def main():
   try:
     problem = Problem(
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
-    a = greedy(problem)
+    a = greedy(problem,3)
     a.Solve()
 
 
