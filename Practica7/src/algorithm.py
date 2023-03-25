@@ -31,6 +31,8 @@ class Algorithm:
 
 
     def CalculateCentroids(self, cluster: list):
+      if (len(cluster) == 0):
+         return
       centroid = np.zeros(len(cluster[0]))
       for point in cluster:
         centroid += point
