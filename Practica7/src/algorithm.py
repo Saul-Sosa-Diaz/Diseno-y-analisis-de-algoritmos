@@ -1,7 +1,7 @@
 from colors import bcolors
 from install import install
+import numpy as np
 import math
-from abc import ABC, abstractclassmethod
 
 try:
     import typeguard
@@ -10,11 +10,11 @@ except ImportError:
     import typeguard
 
 
-class Algorithm(ABC):
+class Algorithm:
     def __init__(self) -> None:
         pass
 
-    @typeguard.typechecked
+    
     def EuclideanDistance(self, p1 : list, p2 : list):
       # Verify that the points belong to the same vector space
       if len(p1) != len(p2):
@@ -27,7 +27,15 @@ class Algorithm(ABC):
         acc += (p1[i]-p2[i])**2
       acc = math.sqrt(acc)
       return acc
+    
 
+
+    def CalculateCentroids(self, cluster: list):
+      centroid = np.zeros(len(cluster[0]))
+      for point in cluster:
+        centroid += point
+      centroid /= len(cluster)
+      return centroid
 
 def main():
   try:
@@ -35,6 +43,7 @@ def main():
     p1 = [7.8, 0.1, 6.6]
     p2 = [9.2, 1.2, 9.7]
     print(a.EuclideanDistance(p1,p2))
+  
 
   except Exception as e:
     print(str(e))

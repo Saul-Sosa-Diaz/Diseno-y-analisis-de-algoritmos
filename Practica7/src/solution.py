@@ -1,8 +1,4 @@
-from TSP import TSP
 import numpy as np
-import itertools
-import time
-
 
 class Solution:
 
