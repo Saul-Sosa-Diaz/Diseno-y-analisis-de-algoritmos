@@ -1,3 +1,13 @@
+"""
+File: greedy.py
+Author: Saúl Sosa Díaz
+Date: 25/03/2023
+Description: Implementation of the K-Means algorithm for solving a clustering problem.
+This implementation generates random centroids and assigns points to the cluster of the closest centroid.
+Then, the centroids of each cluster are recalculated and the process is repeated until no further changes are made to the clusters.
+Finally, the length of each cluster is printed.
+"""
+
 from algorithm import *
 import random 
 from problem import Problem
@@ -11,34 +21,40 @@ class greedy(Algorithm):
     self.__k = k
   
   def Solve(self):
-    """
-    1: Seleccionar K puntos como centroides iniciales
-    2: repeat
-    3: Construir K clusters asignando cada punto al centroide más cercano
-    4: Recalcular los centroides de cada cluster
-    5: until(Ningún punto cambie de cluster)"""
+    '''
+    This function implements the K-Means algorithm for solving a clustering problem.
 
-    # Generar centroides alatorios
+    In this implementation, random centroids are generated and points are assigned to the cluster of the closest centroid.
+    Then, the centroids of each cluster are recalculated and the process is repeated until no further changes are made to the clusters.
+    Finally, the length of each cluster is printed.
+    '''
+
+    # Generate alatory centroids
     centroids = random.sample(range(0, self.__problem.GetNumOfPoints()), self.__k) 
     aux = []
     for i in centroids:
       aux.append(self.__problem.GetPoints()[i])
     centroids = aux
+
     cluster = []
     newClusters = [[]for i in range(0, self.__k)]  
     newCentroids = []
     while True:
+      # Reset the new cluters
       for i in range(self.__k):  
         newClusters[i] = []
+      
       for j in range(0, self.__problem.GetNumOfPoints()):
         min = float('inf')
         minIndex = -1
+        # For each point the centroids are traversed and pushed into the cluster of the centroid that is closest to it
         for i, centroid in enumerate(centroids):
           if min > self.EuclideanDistance(self.__problem.GetPoints()[j], centroid):
             minIndex = i
             min = self.EuclideanDistance(self.__problem.GetPoints()[j], centroid)
         newClusters[minIndex].append(self.__problem.GetPoints()[j])
 
+      # New centroids are calculated
       for i in newClusters:
         newCentroids.append(self.CalculateCentroids(i))
       
@@ -50,6 +66,7 @@ class greedy(Algorithm):
     
     for i in range(0, self.__k): 
       print("Cluster", i, "length:" , len(cluster[i]))
+
 
 
 def main():
