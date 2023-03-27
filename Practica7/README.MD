@@ -27,6 +27,10 @@ python3 ./src/main.py
 
 ## Opciones del programa
  * -f < Ruta al fichero con las coordenadas de los puntos > -> Sirve para indicar el fichero con las coordenadas de los puntos.
+ * -o < Nombre del fichero de salida donde se volcarán los datos > -> Sirve para indicar el fichero con las coordenadas donde se guardarán los datos.
+ * -k < Numero de clusters > -> Inidica el número de clusters que los algoritmos tendrán en cuenta. 3 Por defecto
+ * -c < Cardinalidad de la lista de candidatos > -> Inidica la cardinalidad de la lista de candidatos.
+ 3 por defecto.
 
 
 ## Ayuda
