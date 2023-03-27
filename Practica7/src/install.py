@@ -1,11 +1,17 @@
+"""
+File: install.py
+Author: Saúl Sosa Díaz
+Date: 23/12/2022
+Description: Contains a function named "install" which installs a package using the pip package manager if the user chooses to install it.
+"""
+
 import sys
 import subprocess
 
 def install(package):
     '''
-    Make sure that the package is installed regardless of the machine running the program.
-    Parameters:
-    package (string): Name of the package to install.
+    If the user wants to install the package, install it. If not, raise an error
+    @param package - The name of the package to install.
     '''
     opcion = input("Do you want to install the package: " +
                    package + "? (Y/N): ")

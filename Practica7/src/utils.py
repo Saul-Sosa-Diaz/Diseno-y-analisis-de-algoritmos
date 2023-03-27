@@ -1,3 +1,12 @@
+"""
+File: utils.py
+Author: Saúl Sosa Díaz
+Date: 25/03/2023
+Description: The code is a Python script that implements a menu to solve clustering problems using two algorithms: Greedy and GRASP. 
+The menu takes as input a file with the points of the problem and allows to specify the number of clusters and the cardinality for the GRASP algorithm. 
+The solution of the problem is displayed on the screen or written to an output file.
+"""
+
 import argparse
 from problem import *
 from grasp import GRASP
@@ -8,7 +17,9 @@ from colors import bcolors
 
 def menu() -> None:
     '''
+    Manages program parameters, creates problems, solves them and displays the solution.
     '''
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', type=str, help='Path to the file with the points')
     parser.add_argument(
@@ -39,7 +50,6 @@ def menu() -> None:
         nameOfProblem = os.path.basename(file_path)
     
     # Number of clusters by default.
-    print(args.k)
     if not args.k and args.k != 0:
         greedy = Greedy(problem)
         # Cardinality not indicated
@@ -66,7 +76,8 @@ def menu() -> None:
                 raise Exception(
                     bcolors.FAIL + "Error in K argument cannot be negative." + bcolors.ENDC)
             grasp = GRASP(problem, k, c)
-        
+
+    #Resolve the algorithms    
     SSEGreedy, timeGreedy = greedy.Solve()
     SSEGrasp, timeGrasp = grasp.Solve()
 

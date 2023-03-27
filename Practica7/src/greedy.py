@@ -13,19 +13,15 @@ import random
 from problem import Problem
 import numpy as np
 
+# This class implements the K-Means algorithm for solving a clustering problem
 class Greedy(Algorithm):
 
   @typeguard.typechecked
   def __init__(self, problem : Problem, k : int = 3) -> None:
     '''
-      Initializes a new instance of the Greedy class.
-
-      Args:
-          problem (Problem): An instance of the Problem class containing the data for the problem.
-          k (int, optional): The number of clusters to create. Defaults to 3.
-
-      Returns:
-          None.
+    This function initializes the Class Greedy.
+    @param {Problem} problem - The problem to be solved.
+    @param {int} [k=3] - The number of clusters to create.
     '''
     self.__problem = problem
     self.__k = k
@@ -34,13 +30,11 @@ class Greedy(Algorithm):
 
   def Solve(self):
     '''
-    This function implements the K-Means algorithm for solving a clustering problem.
-
-    In this implementation, random centroids are generated and points are assigned to the cluster of the closest centroid.
-    Then, the centroids of each cluster are recalculated and the process is repeated until no further changes are made to the clusters.
-    Finally, the length of each cluster is printed.
+    The function generates random centroids, then it calculates the distance between each point and
+    each centroid, and then it assigns each point to the closest centroid. Then it calculates the new
+    centroids and it repeats the process until the clusters don't change
+    @returns The SSE and the time it took to run the algorithm.
     '''
-
     startTime = time.perf_counter()
     # Generate aleatory centroids
     centroids = random.sample(range(0, self.__problem.GetNumOfPoints()), self.__k) 

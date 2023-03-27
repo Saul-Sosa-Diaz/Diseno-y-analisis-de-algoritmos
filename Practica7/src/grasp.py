@@ -17,18 +17,24 @@ class GRASP(Algorithm):
 
   @typeguard.typechecked
   def __init__(self, problem: Problem, k: int = 3, cardinality: int = 3) -> None:
+    '''
+    This function initializes the Class GRASP.
+    @param {Problem} problem - The problem to be solved.
+    @param {int} [k=3] - The number of clusters to create.
+    @param {int} [cardinality=3] - The number of items in each subset.
+    '''
     self.__problem = problem
     self.__k = k
     self.__cardinality = cardinality
 
   def Solve(self):
     '''
-    This function implements the K-Means algorithm for solving a clustering problem.
-
-    In this implementation, random centroids are generated and points are assigned to the cluster of the closest centroid.
-    Then, the centroids of each cluster are recalculated and the process is repeated until no further changes are made to the clusters.
-    Finally, the length of each cluster is printed.
+    The function generates random centroids, then it calculates the distance from each point to each
+    centroid, then it creates a CRL with the cardinality indicated by the user and an element is
+    randomly selected. Then, the new centroids are calculated and the SSE is returned
+    @returns The SSE and the time it took to run the algorithm.
     '''
+    
     
     startTime = time.perf_counter()
     # Generate aleatory centroids
@@ -84,6 +90,9 @@ class GRASP(Algorithm):
 
       endTime = time.perf_counter()
       return sse, (endTime - startTime)
+
+
+
 
 def test():
   try:
