@@ -41,6 +41,7 @@ class Greedy(Algorithm):
     Finally, the length of each cluster is printed.
     '''
 
+    startTime = time.perf_counter()
     # Generate aleatory centroids
     centroids = random.sample(range(0, self.__problem.GetNumOfPoints()), self.__k) 
     aux = []
@@ -54,6 +55,7 @@ class Greedy(Algorithm):
     newCentroids = []
 
     while True:
+      newCentroids.clear()
       # Reset the new cluters
       for i in range(self.__k):  
         newClusters[i] = []
@@ -73,22 +75,25 @@ class Greedy(Algorithm):
         newCentroids.append(self.CalculateCentroids(i))
       
       if newClusters == cluster:
+        centroids = newCentroids
         break
       else:
         cluster = newClusters
-        centroids = newCentroids
-    
-    for i in range(0, self.__k): 
-      print("Cluster", i, "length:" , len(cluster[i]))
+        centroids = list(newCentroids)
+        
+    sse = self.SSE(cluster, centroids)
+
+    endTime = time.perf_counter()
+    return sse, (endTime - startTime)
 
 
 
-def main():
+def test():
   try:
     problem = Problem(
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
     a = Greedy(problem, 4)
-    a.Solve()
+    print(a.Solve())
 
 
   except Exception as e:
@@ -96,6 +101,6 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  test()
 
 

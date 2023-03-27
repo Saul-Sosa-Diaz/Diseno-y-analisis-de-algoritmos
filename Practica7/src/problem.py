@@ -15,8 +15,8 @@ class Problem:
     # Generar una matriz aleatoria con elementos redondeados a 2 decimales
       print(bcolors.OKBLUE +
             'Generating random instance of the problem...' + bcolors.ENDC)
-      rows = np.random.randint(low=2, high=15)
-      columns = np.random.randint(low=3, high=10)
+      rows = np.random.randint(low=5, high=15)
+      columns = np.random.randint(low=2, high=10)
       coordenateOfPoints = np.round(np.random.uniform(
           low=0.0, high=10.0, size=(rows, columns)), decimals=2)
       print(coordenateOfPoints)

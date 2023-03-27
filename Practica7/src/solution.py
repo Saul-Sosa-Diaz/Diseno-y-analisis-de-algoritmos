@@ -2,13 +2,21 @@ import numpy as np
 
 class Solution:
 
-  def __init__(self) -> None:
-    pass
+  def __init__(self, clusters, centroids, SSE, CPU) -> None:
+    self.__clusters = clusters
+    self.__centroids = centroids
+    self.__SSE = SSE
+    self.__CPU = CPU
+
+  def PrintSolution(self):
+    for i,cluster in enumerate(0, self.__solution):
+      print("Cluster", i, "length:", len(cluster))
 
 
 
 
-def main():
+
+def test():
   try:
     a = Solution()
     v = np.array([[0., 25., 10., 15.],
@@ -21,4 +29,4 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  test()

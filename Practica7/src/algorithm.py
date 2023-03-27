@@ -1,7 +1,16 @@
+"""
+File: algorith.py
+Author: Saúl Sosa Díaz
+Date: 25/03/2023
+Description: Implementation of some algorithms commonly used in data science, including the calculation of 
+Euclidean distance between two points in a vector space and the calculation of centroids for clusters of points.
+"""
+
 from colors import bcolors
 from install import install
 import numpy as np
 import math
+import time
 
 try:
     import typeguard
@@ -11,11 +20,24 @@ except ImportError:
 
 
 class Algorithm:
+    ''' 
+      This class implements some algorithms commonly used in data science.
+    '''
     def __init__(self) -> None:
         pass
 
     
     def EuclideanDistance(self, p1 : list, p2 : list):
+      '''
+        This function calculates the Euclidean distance between two points in a vector space.
+        Args:
+            p1 (list): List representing the first point.
+            p2 (list): List representing the second point.
+        Returns:
+            float: The Euclidean distance between the two points.
+        Raises:
+            Exception: If the two points do not have the same number of dimensions.
+      '''
       # Verify that the points belong to the same vector space
       if len(p1) != len(p2):
          raise Exception(bcolors.FAIL + 
@@ -31,6 +53,13 @@ class Algorithm:
 
 
     def CalculateCentroids(self, cluster: list):
+      '''
+        This function calculates the centroid of a cluster of points.
+        Args:
+            cluster (list): A list of points in the same cluster.
+        Returns:
+            numpy.ndarray: A numpy array representing the centroid of the cluster.
+      '''
       if (len(cluster) == 0):
          return
       centroid = np.zeros(len(cluster[0]))
@@ -38,8 +67,15 @@ class Algorithm:
         centroid += point
       centroid /= len(cluster)
       return centroid
+    
+    def SSE(self, clusters, centroids):
+      result = 0
+      for i in range(0, len(centroids)):
+        for j in clusters[i]:
+          result += (self.EuclideanDistance(centroids[i],j))**2
+      return result
 
-def main():
+def test():
   try:
     a = Algorithm()
     p1 = [7.8, 0.1, 6.6]
@@ -52,4 +88,4 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  test()
