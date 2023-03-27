@@ -10,6 +10,12 @@ def menu() -> None:
     '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', type=str, help='Path to the file with the points')
+    parser.add_argument(
+        '-o', type=str, help='Name of the output file where the solution will be dumped')
+    parser.add_argument(
+        '-k', type=int, help='Modify the number of clusters of the default algorithms.')
+    parser.add_argument(
+        '-c', type=int, help='Modify the cardinality of the grasp CLR')
     args = parser.parse_args()
     problem = None
 
