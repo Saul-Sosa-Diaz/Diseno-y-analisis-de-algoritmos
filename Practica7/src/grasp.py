@@ -47,7 +47,7 @@ class GRASP(Algorithm):
         plt.scatter(x, y, color=colores[i])
     
     for color,i in enumerate(servicePoints):
-      plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, c=colores[color], marker='*')
+      plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, color=colores[color], marker='*')
     # Mostrar el gráfico
     plt.show()
 
@@ -92,7 +92,7 @@ class GRASP(Algorithm):
 
     # Crear los clusters y agregar los puntos de servicio a ellos
     clusters = [[]for i in range(0, self.__k)]
-    
+
     for index, indexPoints in enumerate(servicePoints):
       clusters[index].append(self.__problem.GetPoints()[indexPoints]) 
 
@@ -119,7 +119,6 @@ class GRASP(Algorithm):
       # Añadir el punto al cluster más cercano
       clusters[indexAddToCluster].append(point)
 
-    print(clusters)
     self.ShowPlot(clusters, servicePoints)
     endTime = time.perf_counter()
     return (endTime - startTime)
