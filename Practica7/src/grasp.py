@@ -11,6 +11,7 @@ from algorithm import *
 import random
 from problem import Problem
 import matplotlib.pyplot as plt
+import colorsys
 
 
 class GRASP(Algorithm):
@@ -33,18 +34,28 @@ class GRASP(Algorithm):
     
 
 
-  def ShowPlot(self, clusters, servicePoints):
+  def ShowPlot(self, clusters, servicePoints, points):
     colores = []
-    for i in range(len(clusters)):
-        r = random.random()
-        g = random.random()
-        b = random.random()
-        colores.append((r, g, b))
+    n = len(clusters)
+    hue_values = [i/n for i in range(n)]
+    random.shuffle(hue_values)
+
+    for hue in hue_values:
+        saturation = random.uniform(0.5, 1.0)
+        value = random.uniform(0.5, 1.0)
+        rgb = colorsys.hsv_to_rgb(hue, saturation, value)
+        colores.append(rgb)
+    j = 0
+    for point in points:
+        plt.text(point[0], point[1] + 0.5, str(j),
+                fontsize=12, ha='center', va='center')
+        j += 1
     # Crear un gráfico de dispersión para cada conjunto de puntos
     for i, puntos in enumerate(clusters):
         x = [p[0] for p in puntos]
         y = [p[1] for p in puntos]
-        plt.scatter(x, y, color=colores[i])
+        plt.scatter(x, y, color=colores[i] )
+        
     
     for color,i in enumerate(servicePoints):
       plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, color=colores[color], marker='*')
@@ -63,6 +74,8 @@ class GRASP(Algorithm):
     # Generate first random service point
     servicePoints.append(random.randint(0, self.__problem.GetNumOfPoints() - 1))
     points = self.__problem.GetPoints().copy()
+
+    # Generando los puntos de servicio
     for i in range(0,self.__k - 1): # se le resta uno porque ya se ha metido inicialmente el aleatorio.
       distances = []
       dict = {}
@@ -70,7 +83,8 @@ class GRASP(Algorithm):
         value = 0
         for j in range(0, len(servicePoints)):
           value += self.EuclideanDistance(point, points[servicePoints[j]])
-  
+
+        # Para que no vuelva a elegir un punto de servicio que ya haya escogido
         if (k in servicePoints):
           value = -1
         distances.append(value)
@@ -78,7 +92,9 @@ class GRASP(Algorithm):
         dict[value] = pointIndex
         # The CRL is created with the cardinality indicated by the user and an element is randomly selected. 
       
+      # Filtrar los puntos que ya se han metido en la solucion
       distances = [x for x in distances if x != -1]
+      # Crear la lista con los |LRC| ultimos
       lcr = sorted(distances)[-self.__cardinality:]
       randomElection = random.choice(lcr)
       servicePoints.append(dict[randomElection])
@@ -92,15 +108,14 @@ class GRASP(Algorithm):
 
     # Crear los clusters y agregar los puntos de servicio a ellos
     clusters = [[]for i in range(0, self.__k)]
-
     for index, indexPoints in enumerate(servicePoints):
       clusters[index].append(self.__problem.GetPoints()[indexPoints]) 
-
+    """
     # permutación de los índices de la lista original
     indices = np.random.permutation(len(points))
     # evitar que los puntos se inspeccionen siempre en el mismo orden
     points = points[indices]
-    
+    """
     # Por cada punto mirar que cluster tiene más cerca
     for point in points:
       indexAddToCluster = 0 # Es el indice del cluster que tiene menor distancia
@@ -119,7 +134,8 @@ class GRASP(Algorithm):
       # Añadir el punto al cluster más cercano
       clusters[indexAddToCluster].append(point)
 
-    self.ShowPlot(clusters, servicePoints)
+    print(self.P_Median(clusters))
+    self.ShowPlot(clusters, servicePoints, points)
     endTime = time.perf_counter()
     return (endTime - startTime)
 
@@ -130,7 +146,7 @@ def test():
   try:
     problem = Problem(
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
-    a = GRASP(problem, 4)
+    a = GRASP(problem, 3)
     a.Solve()
 
   except Exception as e:

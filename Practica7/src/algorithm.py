@@ -74,6 +74,16 @@ class Algorithm:
         for j in clusters[i]:
           result += (self.EuclideanDistance(centroids[i],j))**2
       return result
+    
+    def P_Median(self, clusters):
+      result = 0
+      for cluster in clusters:
+        servicePoint = cluster[0]
+        for point in cluster[1:]:
+          result += self.EuclideanDistance(servicePoint, point)
+      
+      return result
+    
 
 def test():
   try:
