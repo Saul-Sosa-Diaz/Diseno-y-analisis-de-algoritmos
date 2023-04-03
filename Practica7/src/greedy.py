@@ -11,7 +11,8 @@ Finally, the length of each cluster is printed.
 from algorithm import *
 import random 
 from problem import Problem
-import numpy as np
+import matplotlib.pyplot as plt
+import colorsys
 
 # This class implements the K-Means algorithm for solving a clustering problem
 class Greedy(Algorithm):
@@ -25,7 +26,38 @@ class Greedy(Algorithm):
     '''
     self.__problem = problem
     self.__k = k
+
   
+  
+  def ShowPlot(self, clusters, servicePoints):
+    """
+    It takes a list of clusters and a list of service points and plots them on a graph
+    @param clusters - A list of lists of points. Each list of points represents a cluster.
+    @param servicePoints - The list of service points.
+    """
+    # Generate enough colors
+    colors = []
+    n = len(clusters)
+    hue_values = [i/n for i in range(n)]
+    random.shuffle(hue_values)
+    for hue in hue_values:
+        saturation = random.uniform(0.5, 1.0)
+        value = random.uniform(0.5, 1.0)
+        rgb = colorsys.hsv_to_rgb(hue, saturation, value)
+        colors.append(rgb)
+
+    j = 0
+    # Create a scatter plot for each set of points
+    for i, point in enumerate(clusters):
+        x = [p[0] for p in point]
+        y = [p[1] for p in point]
+        plt.scatter(x, y, color=colors[i])
+
+    for color, i in enumerate(servicePoints):
+      plt.scatter(i[0], i[1], s=100, color=colors[color], marker='*')
+    # Show the graph
+    plt.show()
+
 
 
   def Solve(self):
@@ -76,8 +108,11 @@ class Greedy(Algorithm):
         centroids = list(newCentroids)
         
     sse = self.SSE(cluster, centroids)
-
     endTime = time.perf_counter()
+
+    # Show the points on the graph.
+    # self.ShowPlot(cluster, centroids)
+
     return sse, (endTime - startTime)
 
 
@@ -87,7 +122,7 @@ def test():
     problem = Problem(
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
     a = Greedy(problem, 4)
-    print(a.Solve())
+    a.Solve()
 
 
   except Exception as e:
