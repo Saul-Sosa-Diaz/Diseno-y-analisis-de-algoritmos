@@ -31,6 +31,7 @@ class GRASP(Algorithm):
     self.__problem = problem
     self.__k = k
     self.__cardinality = cardinality
+    self.__solution = None
     
 
 
@@ -71,6 +72,48 @@ class GRASP(Algorithm):
       plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, color=colors[color], marker='*')
     # Show the graph
     plt.show()
+
+
+  def CreateClusters(self, points, servicePoints):
+    """
+    It takes a list of points and a list of service points and returns a list of clusters
+    @param points - the points to be clustered
+    @param servicePoints - The points that are already in the clusters.
+    @returns The clusters are being returned.
+    """
+    # Create the clusters and add the service points to them
+    clusters = [[]for i in range(0, self.__k)]
+    for index, indexPoints in enumerate(servicePoints):
+      clusters[index].append(self.__problem.GetPoints()[indexPoints])
+
+    # Avoid always inspecting the points in the same order
+    indices = np.random.permutation(len(points))
+    points = points[indices]
+
+    # For each point look at which cluster is closer
+    for point in points:
+      # It is the index of the cluster that has the smallest distance to the actual point
+      indexAddToCluster = 0
+      # It is the distance from the nearest cluster to the actual point
+      distMin = float('inf')
+      # Calculate the cluster that is closest to the actual point.
+      for index, cluster in enumerate(clusters):
+        localMin = float('inf')
+        # Calculate the minimum distance from the point to all points in the cluster.
+        for pointInCluster in cluster:
+          value = self.EuclideanDistance(point, pointInCluster)
+          if (localMin > value):
+            localMin = value
+
+        if (distMin > localMin):
+          distMin = localMin
+          indexAddToCluster = index
+
+      # Add the point to the nearest cluster
+      clusters[indexAddToCluster].append(point)
+    
+    return clusters
+
 
 
 
@@ -121,45 +164,16 @@ class GRASP(Algorithm):
     actual point, then it adds the point to the nearest cluster, then it returns the P-Median and the time it took to execute the algorithm.
     @returns The P-Median is being returned, time it took to execute the algorithm.
     """
-
     startTime = time.perf_counter()
 
     points = self.__problem.GetPoints().copy()
-
     servicePoints = self.GeneratePointsOfServices(points)
 
     # Separating service points from demand points
     points = np.delete(points, servicePoints, axis=0)
 
-    # Create the clusters and add the service points to them
-    clusters = [[]for i in range(0, self.__k)]
-    for index, indexPoints in enumerate(servicePoints):
-      clusters[index].append(self.__problem.GetPoints()[indexPoints]) 
-
-    # Avoid always inspecting the points in the same order
-    indices = np.random.permutation(len(points))
-    points = points[indices]
+    clusters = self.CreateClusters(points, servicePoints)
     
-    # For each point look at which cluster is closer
-    for point in points:
-      indexAddToCluster = 0  # It is the index of the cluster that has the smallest distance to the actual point
-      distMin = float('inf')  # It is the distance from the nearest cluster to the actual point
-      # Calculate the cluster that is closest to the actual point.
-      for index,cluster in enumerate(clusters):        
-        localMin = float('inf') 
-        # Calculate the minimum distance from the point to all points in the cluster.
-        for pointInCluster in cluster:
-          value = self.EuclideanDistance(point, pointInCluster)
-          if (localMin > value):
-            localMin = value
-
-        if (distMin > localMin):
-          distMin = localMin
-          indexAddToCluster = index
-
-      # Add the point to the nearest cluster
-      clusters[indexAddToCluster].append(point)
-
     endTime = time.perf_counter()
     return self.P_Median(clusters), (endTime - startTime)
 

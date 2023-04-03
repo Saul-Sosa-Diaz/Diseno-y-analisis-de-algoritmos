@@ -109,7 +109,6 @@ class Greedy(Algorithm):
         
     sse = self.SSE(cluster, centroids)
     endTime = time.perf_counter()
-
     # Show the points on the graph.
     # self.ShowPlot(cluster, centroids)
 
