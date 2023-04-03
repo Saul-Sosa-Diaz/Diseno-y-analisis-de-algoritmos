@@ -74,6 +74,7 @@ class GRASP(Algorithm):
     plt.show()
 
 
+
   def CreateClusters(self, points, servicePoints):
     """
     It takes a list of points and a list of service points and returns a list of clusters
@@ -113,7 +114,6 @@ class GRASP(Algorithm):
       clusters[indexAddToCluster].append(point)
     
     return clusters
-
 
 
 
@@ -173,7 +173,8 @@ class GRASP(Algorithm):
     points = np.delete(points, servicePoints, axis=0)
 
     clusters = self.CreateClusters(points, servicePoints)
-    
+
+    self.__solution = servicePoints
     endTime = time.perf_counter()
     return self.P_Median(clusters), (endTime - startTime)
 

@@ -6,7 +6,17 @@ class LocalSearchSwap(LocalSearch):
     super().__init__(baseSolution, numberOfPoints)
   
   def Search(self):
-    pass
+    baseSolution = self.GetBaseSolution()
+    playground = self.GetPlayground() 
+    for element in playground[self.GetNumberOfClusters():]:
+      for indexOfSolution, pointOfService in enumerate(baseSolution):
+        pointOfService = baseSolution.pop(indexOfSolution)
+        baseSolution.insert(indexOfSolution, element)
+        # Operacion
+        
+        baseSolution.pop(indexOfSolution)
+        baseSolution.insert(indexOfSolution, pointOfService)
+
 
 
 def test():
@@ -15,7 +25,7 @@ def test():
 
     print(a.GetBaseSolution())
     print(a.GetNumberOfClusters())
-    print(a.GetPlayground())
+    a.Search()
 
   except Exception as e:
     print(str(e))

@@ -6,7 +6,16 @@ class LocalSearchInsert(LocalSearch):
     super().__init__(baseSolution, numberOfPoints)
 
   def Search(self):
-    pass
+    baseSolution = self.GetBaseSolution()
+    playground = self.GetPlayground() 
+    for element in playground[self.GetNumberOfClusters():]:
+      baseSolution.append(element)
+      # operaciones
+
+      baseSolution.pop()
+      
+
+      
 
 
 def test():
@@ -15,7 +24,7 @@ def test():
 
     print(a.GetBaseSolution())
     print(a.GetNumberOfClusters())
-    print(a.GetPlayground())
+    a.Search()
 
   except Exception as e:
     print(str(e))

@@ -6,8 +6,13 @@ class LocalSearchDelete(LocalSearch):
     super().__init__(baseSolution, numberOfPoints)
   
   def Search(self):
-    baseSolution
+    baseSolution = self.GetBaseSolution()
+    for indexOfSolution, pointOfService in enumerate(baseSolution):
+      pointOfService = baseSolution.pop(indexOfSolution)
+      # Operacion
 
+
+      baseSolution.insert(indexOfSolution, pointOfService)
 
 
 def test():
@@ -16,7 +21,7 @@ def test():
 
     print(a.GetBaseSolution())
     print(a.GetNumberOfClusters())
-    print(a.GetPlayground())
+    a.Search()
 
   except Exception as e:
     print(str(e))
