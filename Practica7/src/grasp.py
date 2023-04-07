@@ -31,6 +31,7 @@ class GRASP(Algorithm):
     self.__problem = problem
     self.__k = k
     self.__cardinality = cardinality
+    self.__pmedian = None
     self.__solution = None
     
 
@@ -83,7 +84,7 @@ class GRASP(Algorithm):
     @returns The clusters are being returned.
     """
     # Create the clusters and add the service points to them
-    clusters = [[]for i in range(0, self.__k)]
+    clusters = [[]for i in range(0, len(servicePoints))]
     for index, indexPoints in enumerate(servicePoints):
       clusters[index].append(self.__problem.GetPoints()[indexPoints])
 
@@ -161,8 +162,8 @@ class GRASP(Algorithm):
     The function generates the service points, then it separates the service points from the demand
     points, then it creates the clusters and adds the service points to them, then it avoids always
     inspecting the points in the same order, then it calculates the cluster that is closest to the
-    actual point, then it adds the point to the nearest cluster, then it returns the P-Median and the time it took to execute the algorithm.
-    @returns The P-Median is being returned, time it took to execute the algorithm.
+    actual point, then it adds the point to the nearest cluster, then it returns the time it took to execute the algorithm.
+    @returns time it took to execute the algorithm.
     """
     startTime = time.perf_counter()
 
@@ -175,8 +176,120 @@ class GRASP(Algorithm):
     clusters = self.CreateClusters(points, servicePoints)
 
     self.__solution = servicePoints
+
     endTime = time.perf_counter()
-    return self.P_Median(clusters), (endTime - startTime)
+    self.__pmedian = self.P_Median(clusters)
+    return (endTime - startTime)
+
+
+  def SearchInsert(self):
+    """
+    This function searches for the optimal solution to a problem by iteratively adding new elements to
+    the solution and evaluating the resulting p-median value.
+    """
+    if not self.__solution:
+      raise Exception(
+          bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
+ 
+    baseSolution = self.__solution
+    minPmedian = self.__pmedian
+    i = 0
+    playground = []
+    while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
+      if i not in baseSolution:
+        playground.append(i)
+      i += 1
+
+    for element in playground:
+      baseSolution.append(element)
+      # Operacion
+      clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
+      pmedian = self.P_Median(clusters)
+      if pmedian < minPmedian:
+        min = baseSolution.copy()
+        minPmedian = pmedian
+
+      baseSolution.pop()
+
+    self.__pmedian = minPmedian
+    self.__solution = min
+    print(self.__solution)
+    print(self.__pmedian)
+
+
+  def SearchDelete(self):
+    """
+    This function searches for and deletes points of service from a solution, and updates the solution
+    and pmedian accordingly.
+    """
+    if not self.__solution:
+      raise Exception(
+          bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
+    
+    baseSolution = self.__solution
+    min = baseSolution.copy()
+    minPmedian = self.__pmedian
+    while True:
+      for indexOfSolution, pointOfService in enumerate(baseSolution):
+        pointOfService = baseSolution.pop(indexOfSolution)
+        
+        # Operacion
+        clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
+        pmedian = self.P_Median(clusters)
+        if pmedian < minPmedian:
+            min = baseSolution.copy()
+            minPmedian = pmedian
+
+        baseSolution.insert(indexOfSolution, pointOfService)
+
+      if min == baseSolution:
+        break
+      baseSolution = min
+
+    self.__pmedian = minPmedian
+    self.__solution = baseSolution
+
+
+
+  def SearchSwap(self):
+    """
+    The function SearchSwap implements a local search algorithm to improve a solution obtained by the
+    GRASP algorithm by swapping facilities and searching for a better solution.
+    """
+    if not self.__solution:
+      raise Exception(bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
+    
+    baseSolution = self.__solution
+    minPmedian = self.__pmedian
+    while True:
+      i = 0
+      playground = []
+      while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
+        if i not in baseSolution:
+          playground.append(i)
+        i += 1
+
+      for element in playground:
+        for indexOfSolution, pointOfService in enumerate(baseSolution):
+          pointOfService = baseSolution.pop(indexOfSolution)
+          baseSolution.insert(indexOfSolution, element)
+          # Operacion
+          clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
+          pmedian = self.P_Median(clusters)
+          if pmedian < minPmedian:
+            min = baseSolution.copy()
+            minPmedian = pmedian
+
+          baseSolution.pop(indexOfSolution)
+          baseSolution.insert(indexOfSolution, pointOfService)
+      
+      if min == baseSolution:
+        break
+      baseSolution = min
+
+    self.__pmedian = minPmedian
+    self.__solution = baseSolution
+
 
 
 
