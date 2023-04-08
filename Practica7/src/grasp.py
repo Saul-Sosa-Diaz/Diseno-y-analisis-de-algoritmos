@@ -184,8 +184,9 @@ class GRASP(Algorithm):
 
   def SearchInsert(self):
     """
-    This function searches for the optimal solution to a problem by iteratively adding new elements to
-    the solution and evaluating the resulting p-median value.
+    This function performs a search and insert algorithm to find the optimal solution for a p-median
+    problem.
+    Stop conditions are when the error is 0 or when the error is improved by less than 30%.
     """
     if not self.__solution:
       raise Exception(
@@ -193,28 +194,33 @@ class GRASP(Algorithm):
  
     baseSolution = self.__solution
     minPmedian = self.__pmedian
+    previousPmedian = float('inf')
+
     i = 0
     playground = []
     while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
       if i not in baseSolution:
         playground.append(i)
       i += 1
+    while True:
+      for element in playground:
+        baseSolution.append(element)
+        # Operacion
+        clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
+        pmedian = self.P_Median(clusters)
+        if pmedian < minPmedian:
+          min = baseSolution.copy()
+          minPmedian = pmedian
+        baseSolution.pop()
 
-    for element in playground:
-      baseSolution.append(element)
-      # Operacion
-      clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-      pmedian = self.P_Median(clusters)
-      if pmedian < minPmedian:
-        min = baseSolution.copy()
-        minPmedian = pmedian
+      if previousPmedian == 0 or (previousPmedian - minPmedian) / previousPmedian <= 0.3:
+        break
 
-      baseSolution.pop()
+      baseSolution = min
+      previousPmedian = minPmedian
 
     self.__pmedian = minPmedian
     self.__solution = min
-    print(self.__solution)
-    print(self.__pmedian)
 
 
   def SearchDelete(self):
@@ -300,6 +306,7 @@ def test():
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
     a = GRASP(problem, 3)
     print(a.Solve())
+    a.SearchInsert()
 
   except Exception as e:
     print(str(e))
