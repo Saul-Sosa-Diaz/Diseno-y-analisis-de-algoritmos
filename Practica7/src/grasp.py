@@ -179,7 +179,7 @@ class GRASP(Algorithm):
     self.SearchSwap()
 
     endTime = time.perf_counter()
-    return (endTime - startTime)
+    return self.__solution,self.__pmedian,(endTime - startTime)
 
 
 
@@ -268,6 +268,7 @@ class GRASP(Algorithm):
       raise Exception(bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
     
     baseSolution = self.__solution
+    min = baseSolution.copy()
     minPmedian = self.__pmedian
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
 
