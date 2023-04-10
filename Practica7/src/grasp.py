@@ -157,7 +157,7 @@ class GRASP(Algorithm):
   
 
 
-  def Solve(self):
+  def Grasp(self):
     """
     The function generates the service points, then it separates the service points from the demand
     points, then it creates the clusters and adds the service points to them, then it avoids always
@@ -167,19 +167,20 @@ class GRASP(Algorithm):
     """
     startTime = time.perf_counter()
 
+    # Constructive phase
     points = self.__problem.GetPoints().copy()
     servicePoints = self.GeneratePointsOfServices(points)
-
-    # Separating service points from demand points
     points = np.delete(points, servicePoints, axis=0)
-
     clusters = self.CreateClusters(points, servicePoints)
-
     self.__solution = servicePoints
+    self.__pmedian = self.P_Median(clusters)
+
+    # Improvement phase
+    self.SearchSwap()
 
     endTime = time.perf_counter()
-    self.__pmedian = self.P_Median(clusters)
     return (endTime - startTime)
+
 
 
   def SearchInsert(self):
@@ -201,7 +202,9 @@ class GRASP(Algorithm):
     while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
       if i not in baseSolution:
         playground.append(i)
+
       i += 1
+
     while True:
       for element in playground:
         baseSolution.append(element)
@@ -213,7 +216,7 @@ class GRASP(Algorithm):
           minPmedian = pmedian
         baseSolution.pop()
 
-      if previousPmedian == 0 or (previousPmedian - minPmedian) / previousPmedian <= 0.3:
+      if previousPmedian == 0 or (previousPmedian - minPmedian) / previousPmedian <= 0.3: # stopping criteria
         break
 
       baseSolution = min
@@ -238,7 +241,6 @@ class GRASP(Algorithm):
     while True:
       for indexOfSolution, pointOfService in enumerate(baseSolution):
         pointOfService = baseSolution.pop(indexOfSolution)
-        
         # Operacion
         clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
         pmedian = self.P_Median(clusters)
@@ -267,13 +269,10 @@ class GRASP(Algorithm):
     
     baseSolution = self.__solution
     minPmedian = self.__pmedian
+    playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
+
     while True:
-      i = 0
-      playground = []
-      while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
-        if i not in baseSolution:
-          playground.append(i)
-        i += 1
+      playground = list(set(playgroundSet) - set(baseSolution))
 
       for element in playground:
         for indexOfSolution, pointOfService in enumerate(baseSolution):
@@ -299,14 +298,12 @@ class GRASP(Algorithm):
 
 
 
-
 def test():
   try:
     problem = Problem(
         r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
     a = GRASP(problem, 3)
-    print(a.Solve())
-    a.SearchInsert()
+    print(a.Grasp())
 
   except Exception as e:
     print(str(e))
