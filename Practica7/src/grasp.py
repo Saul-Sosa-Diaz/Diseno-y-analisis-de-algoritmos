@@ -12,6 +12,7 @@ import random
 from problem import Problem
 import matplotlib.pyplot as plt
 import colorsys
+import os
 
 
 class GRASP(Algorithm):
@@ -179,7 +180,7 @@ class GRASP(Algorithm):
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
 
-    return servicePoints , self.__pmedian, (endTime - startTime)
+    return servicePoints , round(self.__pmedian,2), (endTime - startTime)
 
 
 
@@ -301,8 +302,7 @@ class GRASP(Algorithm):
 
 def test():
   try:
-    problem = Problem(
-        r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
+    problem = Problem(os.path.join(".", "problems", "prob1.txt"))
     a = GRASP(problem, 3)
     print(a.Grasp())
 

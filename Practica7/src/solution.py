@@ -77,7 +77,7 @@ class Solution:
     table = None
 
     if cardinality == None:  # Print kmeans
-      table = [[nameOutFile,
+      table = [[nameInFile,
                 clusters,
                 numberOfPoints,
                 numberOfClusters,
@@ -97,7 +97,7 @@ class Solution:
         writer.writerow(table[0])
 
     else:  # Print GRASP
-      table = [[nameOutFile,
+      table = [[nameInFile,
                 clusters,
                numberOfPoints,
                numberOfClusters,

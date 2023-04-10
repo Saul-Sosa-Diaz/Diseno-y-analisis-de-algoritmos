@@ -13,6 +13,7 @@ import random
 from problem import Problem
 import matplotlib.pyplot as plt
 import colorsys
+import os
 
 # This class implements the K-Means algorithm for solving a clustering problem
 class Greedy(Algorithm):
@@ -119,8 +120,7 @@ class Greedy(Algorithm):
 
 def test():
   try:
-    problem = Problem(
-        r"E:\Cosas\universidad\tercero\Diseno-y-analisis-de-algoritmos\Practica7\problems\prob1.txt")
+    problem = Problem(os.path.join(".", "problems", "prob1.txt"))
     a = Greedy(problem, 4)
     a.Solve()
 

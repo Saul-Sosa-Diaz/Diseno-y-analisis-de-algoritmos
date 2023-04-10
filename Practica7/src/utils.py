@@ -94,10 +94,10 @@ def menu() -> None:
     else:
         # Gready
         solution.PrintSolutionInFile(
-            args.o, nameOfProblem, centroids, problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
+            args.o, centroids, nameOfProblem,  problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
         #GRASP
         solution.PrintSolutionInFile(
-            args.o, nameOfProblem, pointOfservices, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
+            args.o, pointOfservices, nameOfProblem,  problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
 
 
 if "__main__" == __name__:
