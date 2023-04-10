@@ -111,8 +111,9 @@ class Greedy(Algorithm):
     endTime = time.perf_counter()
     # Show the points on the graph.
     # self.ShowPlot(cluster, centroids)
+    centroids = [list(np.round(i, 2)) for i in centroids]
 
-    return sse, (endTime - startTime)
+    return centroids, sse, (endTime - startTime)
 
 
 

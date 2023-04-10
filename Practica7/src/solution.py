@@ -24,7 +24,7 @@ class Solution:
     '''
     pass
 
-  def PrintSolution(self, nameOfFile, numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
+  def PrintSolution(self, nameOfFile, clusters ,numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
     '''
     It prints a table with the results of the algorithm
     @param nameOfFile - The name of the file that contains the data points.
@@ -37,15 +37,17 @@ class Solution:
     table = None
     if cardinality == None: # Print kmeans
       table = [[nameOfFile, 
+                clusters, 
               numberOfPoints,
               numberOfClusters,
               SSE,
               CPU]
               ]
       print(tabulate.tabulate(table, headers=[
-          "Problem", "m", "k", "SSE", "CPU"], tablefmt="github", stralign="center"))
+          "Problem", "Centroids","m", "k", "SSE", "CPU"], tablefmt="github", stralign="center"))
     else: # Print GRASP
       table = [[nameOfFile,
+                clusters,
                numberOfPoints,
                numberOfClusters,
                cardinality,
@@ -53,11 +55,11 @@ class Solution:
                CPU]
                ]
       print(tabulate.tabulate(table, headers=[
-          "Problem", "m", "k", "|LRC|" ,"SSE", "CPU"], tablefmt="github", stralign="center"))
+          "Problem", "Point of services","m", "k", "|LRC|" ,"P-Median", "CPU"], tablefmt="github", stralign="center"))
     
 
 
-  def PrintSolutionInFile(self, nameOutFile ,nameInFile, numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
+  def PrintSolutionInFile(self, nameOutFile, clusters ,nameInFile, numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
     '''
     It takes in a bunch of parameters, and writes them to a CSV file. 
     
@@ -75,7 +77,8 @@ class Solution:
     table = None
 
     if cardinality == None:  # Print kmeans
-      table = [[nameInFile,
+      table = [[nameOutFile,
+                clusters,
                 numberOfPoints,
                 numberOfClusters,
                 SSE,
@@ -86,7 +89,7 @@ class Solution:
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "m", "k", "SSE", "CPU"]
+            "Problem", "Centroids", "m", "k", "SSE", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)
@@ -94,7 +97,8 @@ class Solution:
         writer.writerow(table[0])
 
     else:  # Print GRASP
-      table = [[nameInFile,
+      table = [[nameOutFile,
+                clusters,
                numberOfPoints,
                numberOfClusters,
                cardinality,
@@ -106,7 +110,7 @@ class Solution:
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "m", "k", "|LRC|", "SSE", "CPU"]
+            "Problem", "Point of services", "m", "k", "|LRC|", "P-Median", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)

@@ -78,26 +78,26 @@ def menu() -> None:
             grasp = GRASP(problem, k, c)
 
     #Resolve the algorithms    
-    SSEGreedy, timeGreedy = greedy.Solve()
-    SSEGrasp, timeGrasp = grasp.Solve()
-
+    centroids,SSEGreedy, timeGreedy = greedy.Solve()
+    pointOfservices,SSEGrasp, timeGrasp = grasp.Grasp()
+    
     if not args.o:
         print()
         # Gready
         solution.PrintSolution(
-            nameOfProblem, problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
+            nameOfProblem, centroids, problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
         print()
         # Grasp
         solution.PrintSolution(
-            nameOfProblem, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
+            nameOfProblem, pointOfservices, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
         print()
     else:
         # Gready
         solution.PrintSolutionInFile(
-            args.o, nameOfProblem, problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
+            args.o, nameOfProblem, centroids, problem.GetNumOfPoints(), SSEGreedy, timeGreedy, k)
         #GRASP
         solution.PrintSolutionInFile(
-            args.o, nameOfProblem, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
+            args.o, nameOfProblem, pointOfservices, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
 
 
 if "__main__" == __name__:

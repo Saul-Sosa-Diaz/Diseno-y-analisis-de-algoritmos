@@ -159,11 +159,9 @@ class GRASP(Algorithm):
 
   def Grasp(self):
     """
-    The function generates the service points, then it separates the service points from the demand
-    points, then it creates the clusters and adds the service points to them, then it avoids always
-    inspecting the points in the same order, then it calculates the cluster that is closest to the
-    actual point, then it adds the point to the nearest cluster, then it returns the time it took to execute the algorithm.
-    @returns time it took to execute the algorithm.
+    The Grasp function performs a constructive and improvement phase to find a solution to a problem,
+    and returns the solution, pmedian, and the time taken to execute the function.
+    @returns a list containing the solution, pmedian, and the time taken to execute the function.
     """
     startTime = time.perf_counter()
 
@@ -179,7 +177,9 @@ class GRASP(Algorithm):
     self.SearchSwap()
 
     endTime = time.perf_counter()
-    return self.__solution,self.__pmedian,(endTime - startTime)
+    servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
+
+    return servicePoints , self.__pmedian, (endTime - startTime)
 
 
 
