@@ -56,12 +56,11 @@ class GRASP(Algorithm):
         value = random.uniform(0.5, 1.0)
         rgb = colorsys.hsv_to_rgb(hue, saturation, value)
         colors.append(rgb)
-   
     # Order in which the dots were added to the clusters
     j = 0
     for point in points:
         plt.text(point[0], point[1] + 0.5, str(j),
-                fontsize=12, ha='center', va='center')
+                 fontsize=12, ha='center', va='center')
         j += 1
     # Create a scatter plot for each set of points
     for i, point in enumerate(clusters):
@@ -89,31 +88,22 @@ class GRASP(Algorithm):
     for index, indexPoints in enumerate(servicePoints):
       clusters[index].append(self.__problem.GetPoints()[indexPoints])
 
-    # Avoid always inspecting the points in the same order
-    indices = np.random.permutation(len(points))
-    points = points[indices]
-
     # For each point look at which cluster is closer
-    for point in points:
-      # It is the index of the cluster that has the smallest distance to the actual point
-      indexAddToCluster = 0
-      # It is the distance from the nearest cluster to the actual point
-      distMin = float('inf')
+    for index,point in enumerate(points):
+      if index in servicePoints:
+        continue
+      
       # Calculate the cluster that is closest to the actual point.
-      for index, cluster in enumerate(clusters):
-        localMin = float('inf')
-        # Calculate the minimum distance from the point to all points in the cluster.
-        for pointInCluster in cluster:
-          value = self.EuclideanDistance(point, pointInCluster)
-          if (localMin > value):
-            localMin = value
-
-        if (distMin > localMin):
-          distMin = localMin
-          indexAddToCluster = index
+      min = float('inf')
+      clusterIndex = 0
+      for index, pointOfService in enumerate(servicePoints):
+        value = self.EuclideanDistance(point, points[pointOfService])
+        if (min > value):
+          min = value
+          clusterIndex = index
 
       # Add the point to the nearest cluster
-      clusters[indexAddToCluster].append(point)
+      clusters[clusterIndex].append(point)
     
     return clusters
 
@@ -128,28 +118,25 @@ class GRASP(Algorithm):
     @returns The service points are returned.
     """
     servicePoints = []
-    # Generate first random service point
+    # Generate a random point.
     servicePoints.append(random.randint(0, self.__problem.GetNumOfPoints() - 1))
-    # K service points are generated, we subtract 1 because one has been chosen at random and is already within the solution.
     for i in range(0, self.__k - 1):
-      distances = []
       dict = {}
-      for k, point in enumerate(points):
-        value = 0
-        for j in range(0, len(servicePoints)):
-          value += self.EuclideanDistance(point, points[servicePoints[j]])
-
-        # Do not choose again a service point that you have already chosen.
-        if (k in servicePoints):
-          value = -1
-
-        distances.append(value)
-        pointIndex = k
-        dict[value] = pointIndex
-        
-      # Filter out the points that have already been included in the solution
-      distances = [x for x in distances if x != -1]
-      # The CRL is created with the cardinality indicated by the user and an element is randomly selected.
+      distances = []
+      # The distance from each point to the solution is calculated.
+      for index, point in enumerate(points):
+        # The distance from a point to a set is the smallest distance.
+        minDistance = float('inf')
+        value = float('inf')
+        if index not in servicePoints:
+          for servicePoint in servicePoints:
+              value = self.EuclideanDistance(point,  points[servicePoint])
+              if (minDistance > value):
+                minDistance = value
+          distances.append(minDistance)
+          dict[minDistance] = index
+      
+      # The list of candidates is calculated and one is chosen at random.
       lcr = sorted(distances)[-self.__cardinality:]
       randomElection = random.choice(lcr)
       servicePoints.append(dict[randomElection])
@@ -167,11 +154,11 @@ class GRASP(Algorithm):
     startTime = time.perf_counter()
 
     # Constructive phase
-    points = self.__problem.GetPoints().copy()
-    servicePoints = self.GeneratePointsOfServices(points)
-    points = np.delete(points, servicePoints, axis=0)
-    clusters = self.CreateClusters(points, servicePoints)
-    self.__solution = servicePoints
+    points = self.__problem.GetPoints()
+    servicePointsIndex = self.GeneratePointsOfServices(points)
+    clusters = self.CreateClusters(points, servicePointsIndex)
+    self.ShowPlot(clusters,servicePointsIndex,points)
+    self.__solution = servicePointsIndex
     self.__pmedian = self.P_Median(clusters)
 
     # Improvement phase
@@ -179,6 +166,7 @@ class GRASP(Algorithm):
 
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
+    
 
     return servicePoints , round(self.__pmedian,2), (endTime - startTime)
 
@@ -304,6 +292,7 @@ def test():
   try:
     problem = Problem(os.path.join(".", "problems", "prob1.txt"))
     a = GRASP(problem, 3)
+    
     print(a.Grasp())
 
   except Exception as e:
