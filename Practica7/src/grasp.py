@@ -32,7 +32,7 @@ class GRASP(Algorithm):
     self.__problem = problem
     self.__k = k
     self.__cardinality = cardinality
-    self.__pmedian = None
+    self.__objetiveValue = None
     self.__solution = None
     
 
@@ -73,7 +73,36 @@ class GRASP(Algorithm):
       plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, color=colors[color], marker='*')
     # Show the graph
     plt.show()
+  
 
+  def UpdateSolution(self, servicePoints, objetiveValue):
+    """
+    This function updates the solution and objective value of a given problem instance.
+    @param servicePoints - It is a list or array that represents the updated solution for a given
+    problem. In the context of this code snippet, it is likely that the problem involves finding the
+    optimal locations for service points or facilities.
+    @param objetiveValue - The objective value is a numerical value that represents the quality or
+    effectiveness of the solution. In the context of this code, it likely represents the total
+    distance or cost of the solution. The lower the objective value, the better the solution.
+    """
+    self.__solution = servicePoints
+    self.__objetiveValue = objetiveValue
+
+
+
+
+  def ObjetiveFunction(self, clusters):
+    """
+    This function calculates the objective function value for a given set of clusters by adding the
+    P_Median value and penalty factor, in this case 10, and multiplied by the number of elements in the cluster.
+    @param clusters - The "clusters" parameter is a list of lists, where each inner list represents a
+    cluster of data points. The objective function is being calculated for these clusters.
+    @returns a value that is the sum of the result of the P_Median function applied to the clusters
+    parameter and 10 times the length of the clusters parameter.
+    """
+    value = self.P_Median(clusters)
+    value += 10 * len(clusters)
+    return value
 
 
   def CreateClusters(self, points, servicePoints):
@@ -157,18 +186,16 @@ class GRASP(Algorithm):
     points = self.__problem.GetPoints()
     servicePointsIndex = self.GeneratePointsOfServices(points)
     clusters = self.CreateClusters(points, servicePointsIndex)
-    self.ShowPlot(clusters,servicePointsIndex,points)
-    self.__solution = servicePointsIndex
-    self.__pmedian = self.P_Median(clusters)
+    objetiveValue = self.ObjetiveFunction(clusters)
+    self.UpdateSolution(servicePointsIndex, objetiveValue)
 
     # Improvement phase
-    self.SearchSwap()
+    self.SearchDelete()
 
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
     
-
-    return servicePoints , round(self.__pmedian,2), (endTime - startTime)
+    return servicePoints , round(self.__objetiveValue,2), (endTime - startTime)
 
 
 
@@ -183,36 +210,31 @@ class GRASP(Algorithm):
           bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
  
     baseSolution = self.__solution
-    minPmedian = self.__pmedian
-    previousPmedian = float('inf')
-
+    bestObjetiveValue = self.__objetiveValue
+    min = baseSolution.copy()
     i = 0
     playground = []
     while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
       if i not in baseSolution:
         playground.append(i)
-
       i += 1
-
     while True:
       for element in playground:
         baseSolution.append(element)
         # Operacion
         clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-        pmedian = self.P_Median(clusters)
-        if pmedian < minPmedian:
+        objetiveValue = self.ObjetiveFunction(clusters)
+        if objetiveValue < bestObjetiveValue:
           min = baseSolution.copy()
-          minPmedian = pmedian
+          bestObjetiveValue = objetiveValue
         baseSolution.pop()
 
-      if previousPmedian == 0 or (previousPmedian - minPmedian) / previousPmedian <= 0.3: # stopping criteria
+      if min == baseSolution: # stopping criteria
         break
-
       baseSolution = min
-      previousPmedian = minPmedian
 
-    self.__pmedian = minPmedian
-    self.__solution = min
+    self.UpdateSolution(min, bestObjetiveValue)
+
 
 
   def SearchDelete(self):
@@ -226,25 +248,24 @@ class GRASP(Algorithm):
     
     baseSolution = self.__solution
     min = baseSolution.copy()
-    minPmedian = self.__pmedian
+    bestObjetiveValue = self.__objetiveValue
     while True:
       for indexOfSolution, pointOfService in enumerate(baseSolution):
         pointOfService = baseSolution.pop(indexOfSolution)
         # Operacion
         clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-        pmedian = self.P_Median(clusters)
-        if pmedian < minPmedian:
+        objetiveValue = self.ObjetiveFunction(clusters)
+        if objetiveValue < bestObjetiveValue:
             min = baseSolution.copy()
-            minPmedian = pmedian
+            bestObjetiveValue = objetiveValue
 
         baseSolution.insert(indexOfSolution, pointOfService)
 
-      if min == baseSolution:
+      if min == baseSolution or len(baseSolution) == 2 :
         break
       baseSolution = min
 
-    self.__pmedian = minPmedian
-    self.__solution = baseSolution
+    self.UpdateSolution(baseSolution, bestObjetiveValue)
 
 
 
@@ -258,7 +279,7 @@ class GRASP(Algorithm):
     
     baseSolution = self.__solution
     min = baseSolution.copy()
-    minPmedian = self.__pmedian
+    bestObjetiveValue = self.__objetiveValue
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
 
     while True:
@@ -270,10 +291,10 @@ class GRASP(Algorithm):
           baseSolution.insert(indexOfSolution, element)
           # Operacion
           clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-          pmedian = self.P_Median(clusters)
-          if pmedian < minPmedian:
+          bestObjetiveValue = self.ObjetiveFunction(clusters)
+          if bestObjetiveValue < bestObjetiveValue:
             min = baseSolution.copy()
-            minPmedian = pmedian
+            bestObjetiveValue = bestObjetiveValue
 
           baseSolution.pop(indexOfSolution)
           baseSolution.insert(indexOfSolution, pointOfService)
@@ -282,8 +303,8 @@ class GRASP(Algorithm):
         break
       baseSolution = min
 
-    self.__pmedian = minPmedian
-    self.__solution = baseSolution
+    self.UpdateSolution(baseSolution, bestObjetiveValue)
+
 
 
 
