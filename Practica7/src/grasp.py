@@ -45,6 +45,10 @@ class GRASP(Algorithm):
         else:
           row.append(self.EuclideanDistance(points[i],points[j]))
       self.__distanceMatrix.append(row)
+    
+    self.__pointDictionary = {}
+    for i, point in enumerate(points):
+      self.__pointDictionary[str(point)] = i
 
 
 
@@ -85,6 +89,12 @@ class GRASP(Algorithm):
     # Show the graph
     plt.show()
   
+  
+
+  def IndexTraductor(self, point):
+    return self.__pointDictionary[str(point)]
+
+
 
   def UpdateSolution(self, servicePoints, objetiveValue, clusters):
     """
@@ -158,11 +168,6 @@ class GRASP(Algorithm):
     @param points - The points that are to be considered for the solution.
     @returns The service points are returned.
     """
-    # Crear matriz de distancia
-
-
-
-
     servicePoints = []
     # Generate a random point.
     servicePoints.append(random.randint(0, self.__problem.GetNumOfPoints() - 1))
@@ -170,17 +175,17 @@ class GRASP(Algorithm):
       dict = {}
       distances = []
       # The distance from each point to the solution is calculated.
-      for index, point in enumerate(points):
+      for indexPoint, point in enumerate(points):
         # The distance from a point to a set is the smallest distance.
         minDistance = float('inf')
         value = float('inf')
-        if index not in servicePoints:
+        if indexPoint not in servicePoints:
           for servicePoint in servicePoints:
-              value = self.EuclideanDistance(point,  points[servicePoint])
+              value = self.__distanceMatrix[indexPoint][servicePoint]
               if (minDistance > value):
                 minDistance = value
           distances.append(minDistance)
-          dict[minDistance] = index
+          dict[minDistance] = indexPoint
       
       # The list of candidates is calculated and one is chosen at random.
       lcr = sorted(distances)[-self.__cardinality:]
@@ -207,12 +212,26 @@ class GRASP(Algorithm):
     self.UpdateSolution(servicePointsIndex, objetiveValue, clusters)
 
     # Improvement phase
-    self.SearchDelete(self.__solution)
+    self.SearchInsert(self.__solution)
 
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
     
     return servicePoints , round(self.__objetiveValue,2), (endTime - startTime)
+
+
+
+  def CreateClustersInsert(self, clusters, newSolution):
+    clusters = clusters.copy()
+    IndiceNuevoPunto = newSolution[-1]
+    clusters.append([self.__problem.GetPoints()[IndiceNuevoPunto]])
+    for i, cluster in enumerate(clusters[:-1]):
+      for indexPoint,punto in enumerate(cluster[1:]):
+        if self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])] > self.__distanceMatrix[self.IndexTraductor(punto)][IndiceNuevoPunto]:
+          clusters[-1].append(punto)
+          clusters[i].pop(indexPoint)
+
+    return clusters
 
 
 
@@ -226,6 +245,7 @@ class GRASP(Algorithm):
     bestObjetiveValue = float('inf')
     min = baseSolution.copy()
     bestClusters = None
+    clusters = self.CreateClusters(self.__problem.GetPoints(), solution)
     i = 0
     playground = []
     while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
@@ -236,12 +256,12 @@ class GRASP(Algorithm):
     for element in playground:
       baseSolution.append(element)
       # Operacion
-      clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-      objetiveValue = self.ObjetiveFunction(clusters)
+      NewClusters = self.CreateClustersInsert(clusters, baseSolution)
+      objetiveValue = self.ObjetiveFunction(NewClusters)
       if objetiveValue < bestObjetiveValue:
         min = baseSolution.copy()
         bestObjetiveValue = objetiveValue
-        bestClusters = clusters
+        bestClusters = NewClusters
       baseSolution.pop()
 
     self.UpdateSolution(min, bestObjetiveValue, bestClusters) 
@@ -257,11 +277,12 @@ class GRASP(Algorithm):
     for punto in puntosHuerfanos:
       minDist = float('inf')
       indexCluster = -1
-      for index,cluster in enumerate(clusters):
-        dist = self.EuclideanDistance(punto, cluster[0])
+      for index, cluster in enumerate(clusters):
+        dist = self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])]
         if minDist > dist:
           minDist = dist
           indexCluster = index
+          
       clusters[indexCluster].append(punto)
     return clusters
 
@@ -276,19 +297,20 @@ class GRASP(Algorithm):
     min = newSolution.copy()
     clusters = self.CreateClusters(self.__problem.GetPoints(), newSolution)
     bestObjetiveValue = float('inf')
-    
-    for indexOfSolution, pointOfService in enumerate(newSolution):
-      pointOfService = newSolution.pop(indexOfSolution)
-      # Operacion
-      newClusters = self.CreateClustersDelete(clusters, solution, newSolution)
-      objetiveValue = self.ObjetiveFunction(newClusters)
-      if objetiveValue < bestObjetiveValue:
-          min = newSolution.copy()
-          bestObjetiveValue = objetiveValue
+    if self.__k > 2:
+      for indexOfSolution, pointOfService in enumerate(newSolution):
+        pointOfService = newSolution.pop(indexOfSolution)
+        # Operacion
+        newClusters = self.CreateClustersDelete(clusters, solution, newSolution)
+        objetiveValue = self.ObjetiveFunction(newClusters)
+        if objetiveValue < bestObjetiveValue:
+            min = newSolution.copy()
+            bestObjetiveValue = objetiveValue
 
-      newSolution.insert(indexOfSolution, pointOfService)
+        newSolution.insert(indexOfSolution, pointOfService)
     
-    self.UpdateSolution(min, bestObjetiveValue, newClusters)
+      self.UpdateSolution(min, bestObjetiveValue, newClusters)
+
     return min
 
 
