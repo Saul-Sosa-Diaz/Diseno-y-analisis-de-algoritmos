@@ -87,6 +87,7 @@ class GRASP(Algorithm):
     """
     self.__solution = servicePoints
     self.__objetiveValue = objetiveValue
+    self.__k = len(servicePoints)
 
 
 
@@ -190,7 +191,7 @@ class GRASP(Algorithm):
     self.UpdateSolution(servicePointsIndex, objetiveValue)
 
     # Improvement phase
-    self.SearchDelete()
+    self.GVNS()
 
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
@@ -199,17 +200,13 @@ class GRASP(Algorithm):
 
 
 
-  def SearchInsert(self):
+  def SearchInsert(self, solution):
     """
     This function performs a search and insert algorithm to find the optimal solution for a p-median
     problem.
     Stop conditions are when the error is 0 or when the error is improved by less than 30%.
     """
-    if not self.__solution:
-      raise Exception(
-          bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
- 
-    baseSolution = self.__solution
+    baseSolution = solution
     bestObjetiveValue = self.__objetiveValue
     min = baseSolution.copy()
     i = 0
@@ -234,19 +231,17 @@ class GRASP(Algorithm):
       baseSolution = min
 
     self.UpdateSolution(min, bestObjetiveValue)
+    return baseSolution
 
 
 
-  def SearchDelete(self):
+  def SearchDelete(self, solution):
     """
     This function searches for and deletes points of service from a solution, and updates the solution
     and pmedian accordingly.
     """
-    if not self.__solution:
-      raise Exception(
-          bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
     
-    baseSolution = self.__solution
+    baseSolution = solution
     min = baseSolution.copy()
     bestObjetiveValue = self.__objetiveValue
     while True:
@@ -266,25 +261,23 @@ class GRASP(Algorithm):
       baseSolution = min
 
     self.UpdateSolution(baseSolution, bestObjetiveValue)
+    return baseSolution
 
 
 
-  def SearchSwap(self):
+  def SearchSwap(self, solution):
     """
     The function SearchSwap implements a local search algorithm to improve a solution obtained by the
     GRASP algorithm by swapping facilities and searching for a better solution.
     """
-    if not self.__solution:
-      raise Exception(bcolors.FAIL + "Error in GRASP -> Solve has not yet been executed. No solution exists." + bcolors.ENDC)
     
-    baseSolution = self.__solution
+    baseSolution = solution
     min = baseSolution.copy()
     bestObjetiveValue = self.__objetiveValue
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
 
     while True:
       playground = list(set(playgroundSet) - set(baseSolution))
-
       for element in playground:
         for indexOfSolution, pointOfService in enumerate(baseSolution):
           pointOfService = baseSolution.pop(indexOfSolution)
@@ -304,7 +297,51 @@ class GRASP(Algorithm):
       baseSolution = min
 
     self.UpdateSolution(baseSolution, bestObjetiveValue)
+    return baseSolution
 
+  def Shaking(self, solution, k):
+    posibles = set(range(0, self.__problem.GetNumOfPoints()))
+    for i in range(0, k):
+      for j in range(0, i):
+          no_usados = posibles.difference(solution)
+          solution[j] = random.choice(list(no_usados))
+    
+    return solution
+
+  def Search(self, solution):
+    l = 0
+    while l <= 2:
+      if l == 0:
+        solution = self.SearchSwap(solution)
+        if self.__solution == solution:
+          l +=1
+      elif l == 1:
+        solution = self.SearchInsert(solution)
+        if self.__solution == solution:
+          l += 1
+        else:
+          l = 0
+      else:
+        solution = self.SearchDelete(solution)
+        if self.__solution == solution:
+          l += 1
+        else:
+          l = 0
+    
+
+
+  def GVNS(self):
+    k = 0
+    bestActualSolution = self.__solution
+    actualSolution = bestActualSolution.copy()
+    while k <= self.__k - 1:
+      actualSolution = self.Shaking(actualSolution,k)
+      self.Search(actualSolution)
+      if bestActualSolution == self.__solution:
+        k += 1
+      else: 
+        bestActualSolution = self.__solution
+        k = 0
 
 
 
