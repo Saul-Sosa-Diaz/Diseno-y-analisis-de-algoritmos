@@ -102,7 +102,7 @@ class GRASP(Algorithm):
     parameter and 10 times the length of the clusters parameter.
     """
     value = self.P_Median(clusters)
-    value += 10 * len(clusters)
+    value += 5 * len(clusters)
     return value
 
 
@@ -301,7 +301,7 @@ class GRASP(Algorithm):
 
   def Shaking(self, solution, k):
     posibles = set(range(0, self.__problem.GetNumOfPoints()))
-    for i in range(0, k):
+    for i in range(1, k + 2):
       for j in range(0, i):
           no_usados = posibles.difference(solution)
           solution[j] = random.choice(list(no_usados))
@@ -332,15 +332,14 @@ class GRASP(Algorithm):
 
   def GVNS(self):
     k = 0
-    bestActualSolution = self.__solution
-    actualSolution = bestActualSolution.copy()
+    actualSolution = self.__solution.copy()
     while k <= self.__k - 1:
       actualSolution = self.Shaking(actualSolution,k)
       self.Search(actualSolution)
-      if bestActualSolution == self.__solution:
+      if actualSolution == self.__solution:
         k += 1
       else: 
-        bestActualSolution = self.__solution
+        actualSolution = self.__solution
         k = 0
 
 
@@ -349,7 +348,7 @@ class GRASP(Algorithm):
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "prob1.txt"))
-    a = GRASP(problem, 3)
+    a = GRASP(problem, 5)
     
     print(a.Grasp())
 
