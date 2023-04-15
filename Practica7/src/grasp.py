@@ -12,6 +12,7 @@ import random
 from problem import Problem
 import matplotlib.pyplot as plt
 import colorsys
+import copy
 import os
 
 
@@ -34,14 +35,15 @@ class GRASP(Algorithm):
     self.__cardinality = cardinality
     self.__objetiveValue = None
     self.__solution = None
-    self.__clusters = None
     points = problem.GetPoints()
     self.__distanceMatrix = []
     for i in range(0, len(points)):
       row = []
       for j in range(0, len(points)):
-        if j <= i:
+        if j == i:
           row.append(float('inf'))
+        elif j < i:
+          row.append(self.EuclideanDistance(points[j], points[i]))
         else:
           row.append(self.EuclideanDistance(points[i],points[j]))
       self.__distanceMatrix.append(row)
@@ -96,7 +98,7 @@ class GRASP(Algorithm):
 
 
 
-  def UpdateSolution(self, servicePoints, objetiveValue, clusters):
+  def UpdateSolution(self, servicePoints, objetiveValue):
     """
     This function updates the solution and objective value of a given problem instance.
     @param servicePoints - It is a list or array that represents the updated solution for a given
@@ -108,7 +110,6 @@ class GRASP(Algorithm):
     """
     self.__solution = servicePoints
     self.__objetiveValue = objetiveValue
-    self.__clusters = clusters
     self.__k = len(servicePoints)
 
 
@@ -123,8 +124,7 @@ class GRASP(Algorithm):
     @returns a value that is the sum of the result of the P_Median function applied to the clusters
     parameter and 10 times the length of the clusters parameter.
     """
-    value = self.P_Median(clusters)
-    value += 6 * len(clusters)
+    value = self.P_Median(clusters) + 4 * len(clusters)
     return value
 
 
@@ -135,27 +135,28 @@ class GRASP(Algorithm):
     @param servicePoints - The points that are already in the clusters.
     @returns The clusters are being returned.
     """
+
     # Create the clusters and add the service points to them
     clusters = [[]for i in range(0, len(servicePoints))]
     for index, indexPoints in enumerate(servicePoints):
       clusters[index].append(self.__problem.GetPoints()[indexPoints])
 
     # For each point look at which cluster is closer
-    for indexPoint,point in enumerate(points):
+    for index, point in enumerate(points):
       if index in servicePoints:
         continue
+
       # Calculate the cluster that is closest to the actual point.
       min = float('inf')
       clusterIndex = 0
       for index, pointOfService in enumerate(servicePoints):
-        value = self.__distanceMatrix[indexPoint][pointOfService]
+        value = self.EuclideanDistance(point, points[pointOfService])
         if (min > value):
           min = value
           clusterIndex = index
 
       # Add the point to the nearest cluster
       clusters[clusterIndex].append(point)
-    
     return clusters
 
 
@@ -193,45 +194,6 @@ class GRASP(Algorithm):
       servicePoints.append(dict[randomElection])
 
     return servicePoints
-  
-
-
-  def Grasp(self):
-    """
-    The Grasp function performs a constructive and improvement phase to find a solution to a problem,
-    and returns the solution, pmedian, and the time taken to execute the function.
-    @returns a list containing the solution, pmedian, and the time taken to execute the function.
-    """
-    startTime = time.perf_counter()
-
-    # Constructive phase
-    points = self.__problem.GetPoints()
-    servicePointsIndex = self.GeneratePointsOfServices(points)
-    clusters = self.CreateClusters(points, servicePointsIndex)
-    objetiveValue = self.ObjetiveFunction(clusters)
-    self.UpdateSolution(servicePointsIndex, objetiveValue, clusters)
-
-    # Improvement phase
-    self.SearchInsert(self.__solution)
-
-    endTime = time.perf_counter()
-    servicePoints = [list(self.__problem.GetPoints()[i]) for i in self.__solution]
-    
-    return servicePoints , round(self.__objetiveValue,2), (endTime - startTime)
-
-
-
-  def CreateClustersInsert(self, clusters, newSolution):
-    clusters = clusters.copy()
-    IndiceNuevoPunto = newSolution[-1]
-    clusters.append([self.__problem.GetPoints()[IndiceNuevoPunto]])
-    for i, cluster in enumerate(clusters[:-1]):
-      for indexPoint,punto in enumerate(cluster[1:]):
-        if self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])] > self.__distanceMatrix[self.IndexTraductor(punto)][IndiceNuevoPunto]:
-          clusters[-1].append(punto)
-          clusters[i].pop(indexPoint)
-
-    return clusters
 
 
 
@@ -241,11 +203,11 @@ class GRASP(Algorithm):
     problem.
     Stop conditions are when the error is 0 or when the error is improved by less than 30%.
     """
-    baseSolution = solution
-    bestObjetiveValue = float('inf')
-    min = baseSolution.copy()
-    bestClusters = None
-    clusters = self.CreateClusters(self.__problem.GetPoints(), solution)
+    baseSolution = copy.deepcopy(solution)
+    clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
+    bestObjetiveValue = self.ObjetiveFunction(clusters)
+    min = copy.deepcopy(baseSolution)
+  
     i = 0
     playground = []
     while len(playground) + len(baseSolution) < self.__problem.GetNumOfPoints():
@@ -256,23 +218,23 @@ class GRASP(Algorithm):
     for element in playground:
       baseSolution.append(element)
       # Operacion
-      NewClusters = self.CreateClustersInsert(clusters, baseSolution)
-      objetiveValue = self.ObjetiveFunction(NewClusters)
+      clusters = self.CreateClusters(self.__problem.GetPoints(), solution)
+      objetiveValue = self.ObjetiveFunction(clusters)
       if objetiveValue < bestObjetiveValue:
-        min = baseSolution.copy()
+        min = copy.deepcopy(baseSolution)
         bestObjetiveValue = objetiveValue
-        bestClusters = NewClusters
+
       baseSolution.pop()
 
-    self.UpdateSolution(min, bestObjetiveValue, bestClusters) 
-    return baseSolution
+    self.UpdateSolution(min, bestObjetiveValue) 
+    return min
 
 
 
   def CreateClustersDelete(self, clusters, solution, newSolution):
-    clusters = clusters.copy()
+    clusters = copy.deepcopy(clusters)
     faltantes = [indice for indice, numero in enumerate(solution) if numero not in newSolution]
-    puntosHuerfanos = clusters[faltantes[0]].copy()
+    puntosHuerfanos = copy.deepcopy(clusters[faltantes[0]])
     clusters.pop(faltantes[0])
     for punto in puntosHuerfanos:
       minDist = float('inf')
@@ -293,10 +255,10 @@ class GRASP(Algorithm):
     This function searches for and deletes points of service from a solution, and updates the solution
     and pmedian accordingly.
     """ 
-    newSolution = solution.copy()
-    min = newSolution.copy()
+    newSolution = copy.deepcopy(solution)
+    min = copy.deepcopy(newSolution)
     clusters = self.CreateClusters(self.__problem.GetPoints(), newSolution)
-    bestObjetiveValue = float('inf')
+    bestObjetiveValue = self.ObjetiveFunction(clusters)
     if self.__k > 2:
       for indexOfSolution, pointOfService in enumerate(newSolution):
         pointOfService = newSolution.pop(indexOfSolution)
@@ -304,12 +266,12 @@ class GRASP(Algorithm):
         newClusters = self.CreateClustersDelete(clusters, solution, newSolution)
         objetiveValue = self.ObjetiveFunction(newClusters)
         if objetiveValue < bestObjetiveValue:
-            min = newSolution.copy()
+            min = copy.deepcopy(newSolution)
             bestObjetiveValue = objetiveValue
 
         newSolution.insert(indexOfSolution, pointOfService)
     
-      self.UpdateSolution(min, bestObjetiveValue, newClusters)
+      self.UpdateSolution(min, bestObjetiveValue)
 
     return min
 
@@ -320,85 +282,126 @@ class GRASP(Algorithm):
     The function SearchSwap implements a local search algorithm to improve a solution obtained by the
     GRASP algorithm by swapping facilities and searching for a better solution.
     """
-    
-    baseSolution = solution
-    min = baseSolution.copy()
-    bestObjetiveValue = float('inf')
+    newSolution = copy.deepcopy(solution)
+    min = copy.deepcopy(newSolution)
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
+    bestClusters = self.CreateClusters(self.__problem.GetPoints(), newSolution)
+    bestObjetiveValue = self.ObjetiveFunction(bestClusters)
 
     while True:
-      playground = list(set(playgroundSet) - set(baseSolution))
+      playground = list(set(playgroundSet) - set(newSolution))
       for element in playground:
-        for indexOfSolution, pointOfService in enumerate(baseSolution):
-          pointOfService = baseSolution.pop(indexOfSolution)
-          baseSolution.insert(indexOfSolution, element)
+        for indexOfSolution, pointOfService in enumerate(newSolution):
+          pointOfService = newSolution.pop(indexOfSolution)
+          newSolution.insert(indexOfSolution, element)
           # Operacion
-          clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-          bestObjetiveValue = self.ObjetiveFunction(clusters)
-          if bestObjetiveValue < bestObjetiveValue:
-            min = baseSolution.copy()
-            bestObjetiveValue = bestObjetiveValue
-
-          baseSolution.pop(indexOfSolution)
-          baseSolution.insert(indexOfSolution, pointOfService)
+          if newSolution != solution:
+            clusters = self.CreateClusters(self.__problem.GetPoints(), newSolution)
+            objetiveValue = self.ObjetiveFunction(clusters)
+            if bestObjetiveValue > objetiveValue:
+              min = copy.deepcopy(newSolution)
+              bestObjetiveValue = objetiveValue
+              bestClusters = clusters
+          newSolution.pop(indexOfSolution)
+          newSolution.insert(indexOfSolution, pointOfService)
       
-      if min == baseSolution:
+      if min == newSolution:
         break
-      baseSolution = min
+      newSolution = min
+      clusters = bestClusters
 
-    self.UpdateSolution(baseSolution, bestObjetiveValue, clusters) # Mal el tema de los clusters
-    return baseSolution
+    self.UpdateSolution(newSolution, bestObjetiveValue)  
+    return newSolution
+
+
 
   def Shaking(self, solution, k):
+    solution_copy = solution.copy()
     posibles = set(range(0, self.__problem.GetNumOfPoints()))
     for i in range(1, k + 2):
       for j in range(0, i):
-          no_usados = posibles.difference(solution)
-          solution[j] = random.choice(list(no_usados))
+          no_usados = posibles.difference(solution_copy)
+          solution_copy[j] = random.choice(list(no_usados))
     
-    return solution
+    return solution_copy
+
+
 
   def Search(self, solution):
     l = 0
     while l <= 2:
       if l == 0:
-        solution = self.SearchSwap(solution)
-        if self.__solution == solution:
-          l +=1
+        solution = self.SearchSwap(solution) 
+        objetiveValueAnterior = copy.deepcopy(self.__objetiveValue)
+        l +=1
       elif l == 1:
         solution = self.SearchInsert(solution)
-        if self.__solution == solution:
+        if objetiveValueAnterior <= self.__objetiveValue:
           l += 1
         else:
+          objetiveValueAnterior = copy.deepcopy(self.__objetiveValue)
           l = 0
       else:
         solution = self.SearchDelete(solution)
-        if self.__solution == solution:
+        if objetiveValueAnterior <= self.__objetiveValue:
           l += 1
         else:
+          objetiveValueAnterior = copy.deepcopy(self.__objetiveValue)
           l = 0
     
 
 
   def GVNS(self):
     k = 0
-    actualSolution = self.__solution.copy()
+    actualSolution = copy.deepcopy(self.__solution)
+    bestSolution = copy.deepcopy(self.__solution)
+    actualObjetiveValue = copy.deepcopy(self.__objetiveValue)
     while k <= self.__k - 1:
       actualSolution = self.Shaking(actualSolution,k)
       self.Search(actualSolution)
-      if actualSolution == self.__solution:
+      if actualObjetiveValue <= self.__objetiveValue:
         k += 1
       else: 
-        actualSolution = self.__solution
+        bestSolution = copy.deepcopy(self.__solution)
+        actualSolution = copy.deepcopy(self.__solution)
+        actualObjetiveValue = copy.deepcopy(self.__objetiveValue)
         k = 0
+    
+    actualSolution = bestSolution
+    actualObjetiveValue
+    self.UpdateSolution(actualSolution, actualObjetiveValue)
 
+  def Grasp(self):
+    """
+    The Grasp function performs a constructive and improvement phase to find a solution to a problem,
+    and returns the solution, pmedian, and the time taken to execute the function.
+    @returns a list containing the solution, pmedian, and the time taken to execute the function.
+    """
+    startTime = time.perf_counter()
 
+    # Constructive phase
+    points = self.__problem.GetPoints()
+    servicePointsIndex = self.GeneratePointsOfServices(points)
+    print(servicePointsIndex)
+    clusters = self.CreateClusters(points, servicePointsIndex)
+    objetiveValue = self.ObjetiveFunction(clusters)
+    self.UpdateSolution(servicePointsIndex, objetiveValue)
+    self.ShowPlot(clusters, servicePointsIndex, points)
+    # Improvement phase
+    self.GVNS()
+       
+    endTime = time.perf_counter()
+    servicePoints = [list(self.__problem.GetPoints()[i])
+                     for i in self.__solution]
+    clusters = self.CreateClusters(points, self.__solution)
+    self.ShowPlot(clusters, self.__solution, points)
+    return servicePoints, round(self.__objetiveValue, 2), (endTime - startTime)
 
 
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "prob1.txt"))
-    a = GRASP(problem, 5)
+    a = GRASP(problem, 7)
     
     print(a.Grasp())
 
