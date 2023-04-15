@@ -44,7 +44,7 @@ class Solution:
               CPU]
               ]
       print(tabulate.tabulate(table, headers=[
-          "Problem", "Centroids","m", "k", "SSE", "CPU"], tablefmt="github", stralign="center"))
+          "Problem", "Centroids","m", "k", "Objetive Value", "CPU"], tablefmt="github", stralign="center"))
     else: # Print GRASP
       table = [[nameOfFile,
                 clusters,
@@ -55,7 +55,7 @@ class Solution:
                CPU]
                ]
       print(tabulate.tabulate(table, headers=[
-          "Problem", "Point of services","m", "k", "|LRC|" ,"P-Median", "CPU"], tablefmt="github", stralign="center"))
+          "Problem", "Point of services", "m", "k", "|LRC|", "Objetive Value", "CPU"], tablefmt="github", stralign="center"))
     
 
 
@@ -89,7 +89,7 @@ class Solution:
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "Centroids", "m", "k", "SSE", "CPU"]
+            "Problem", "Centroids", "m", "k", "Objetive Value", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)
@@ -110,7 +110,7 @@ class Solution:
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "Point of services", "m", "k", "|LRC|", "P-Median", "CPU"]
+            "Problem", "Point of services", "m", "k", "|LRC|", "Objetive Value", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)

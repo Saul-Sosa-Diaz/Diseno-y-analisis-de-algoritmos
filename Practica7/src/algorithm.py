@@ -83,6 +83,7 @@ class Algorithm:
           result += self.EuclideanDistance(servicePoint, point)
       
       return result
+
     
 
 def test():

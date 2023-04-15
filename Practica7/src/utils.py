@@ -11,6 +11,7 @@ import argparse
 from problem import *
 from grasp import GRASP
 from greedy import Greedy
+from math import ceil
 from solution import Solution
 from colors import bcolors
 
@@ -33,7 +34,7 @@ def menu() -> None:
     nameOfProblem = ""
     greedy = None
     grasp = None
-    k = 3
+    k = 2
     c = 3
     solution = Solution()
 
@@ -48,24 +49,28 @@ def menu() -> None:
         file_path = args.f
         problem = Problem(file_path)
         nameOfProblem = os.path.basename(file_path)
+    k = ceil(problem.GetNumOfPoints() * 0.1) 
     
+    if k < 2:
+        k = 2
+        
     # Number of clusters by default.
     if not args.k and args.k != 0:
-        greedy = Greedy(problem)
+        greedy = Greedy(problem, k)
         # Cardinality not indicated
         if not args.c and args.c != 0:
-            grasp = GRASP(problem)
+            grasp = GRASP(problem, k)
         else: 
             c = int(args.c)
             if c < 0:
                 raise Exception(
-                    bcolors.FAIL + "Error in K argument cannot be negative or 0." + bcolors.ENDC)
+                    bcolors.FAIL + "Error in c argument cannot be negative or 0." + bcolors.ENDC)
             grasp = GRASP(problem, cardinality=c)
     else:
         k = int(args.k)
-        if k <= 0:
+        if k <= 2:
             raise Exception(
-                bcolors.FAIL + "Error in K argument cannot be negative." + bcolors.ENDC)
+                bcolors.FAIL + "Error in K argument cannot be less than 2." + bcolors.ENDC)
         greedy = Greedy(problem, k)
         # Cardinality not indicated
         if not args.c and args.c != 0:
@@ -74,7 +79,7 @@ def menu() -> None:
             c = int(args.c)
             if c < 0:
                 raise Exception(
-                    bcolors.FAIL + "Error in K argument cannot be negative." + bcolors.ENDC)
+                    bcolors.FAIL + "Error in c argument cannot be negative." + bcolors.ENDC)
             grasp = GRASP(problem, k, c)
 
     #Resolve the algorithms    

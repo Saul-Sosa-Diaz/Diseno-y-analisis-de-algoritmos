@@ -318,7 +318,7 @@ class GRASP(Algorithm):
   def Shaking(self, solution, k):
     solution_copy = solution.copy()
     posibles = set(range(0, self.__problem.GetNumOfPoints()))
-    for i in range(1, k + 2):
+    for i in range(1, k + 1):
       for j in range(0, i):
           no_usados = posibles.difference(solution_copy)
           solution_copy[j] = random.choice(list(no_usados))
@@ -356,7 +356,7 @@ class GRASP(Algorithm):
     actualSolution = copy.deepcopy(self.__solution)
     bestSolution = copy.deepcopy(self.__solution)
     actualObjetiveValue = copy.deepcopy(self.__objetiveValue)
-    while k <= self.__k - 1:
+    while k <= self.__k:
       actualSolution = self.Shaking(actualSolution,k)
       self.Search(actualSolution)
       if actualObjetiveValue <= self.__objetiveValue:
@@ -371,6 +371,8 @@ class GRASP(Algorithm):
     actualObjetiveValue
     self.UpdateSolution(actualSolution, actualObjetiveValue)
 
+
+
   def Grasp(self):
     """
     The Grasp function performs a constructive and improvement phase to find a solution to a problem,
@@ -382,26 +384,31 @@ class GRASP(Algorithm):
     # Constructive phase
     points = self.__problem.GetPoints()
     servicePointsIndex = self.GeneratePointsOfServices(points)
-    print(servicePointsIndex)
+    #print(servicePointsIndex)
     clusters = self.CreateClusters(points, servicePointsIndex)
     objetiveValue = self.ObjetiveFunction(clusters)
     self.UpdateSolution(servicePointsIndex, objetiveValue)
-    self.ShowPlot(clusters, servicePointsIndex, points)
+    
+    # self.ShowPlot(clusters, servicePointsIndex, points)
     # Improvement phase
     self.GVNS()
-       
+
     endTime = time.perf_counter()
     servicePoints = [list(self.__problem.GetPoints()[i])
                      for i in self.__solution]
     clusters = self.CreateClusters(points, self.__solution)
-    self.ShowPlot(clusters, self.__solution, points)
+    
+    #print(self.__solution)
+    #print(self.ObjetiveFunction(self.CreateClusters(
+    #    self.__problem.GetPoints(), self.__solution)))
+    # self.ShowPlot(clusters, self.__solution, points)
     return servicePoints, round(self.__objetiveValue, 2), (endTime - startTime)
 
 
 def test():
   try:
-    problem = Problem(os.path.join(".", "problems", "prob1.txt"))
-    a = GRASP(problem, 7)
+    problem = Problem(os.path.join(".", "problems", "prob2.txt"))
+    a = GRASP(problem, 2)
     
     print(a.Grasp())
 

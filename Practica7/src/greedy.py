@@ -59,6 +59,27 @@ class Greedy(Algorithm):
     # Show the graph
     plt.show()
 
+  def P_Median(self, clusters, centroids):
+      result = 0
+      for i in range(0, len(centroids)):
+        for j in clusters[i]:
+          result += (self.EuclideanDistance(centroids[i],j))
+      return result
+
+
+
+  def ObjetiveFunction(self, clusters, centroids):
+    """
+    This function calculates the objective function value for a given set of clusters by adding the
+    P_Median value and penalty factor, in this case 4, and multiplied by the number of elements in the cluster.
+    @param clusters - The "clusters" parameter is a list of lists, where each inner list represents a
+    cluster of data points. The objective function is being calculated for these clusters.
+    @returns a value that is the sum of the result of the P_Median function applied to the clusters
+    parameter and 4 times the length of the clusters parameter.
+    """
+    value = self.P_Median(clusters, centroids) + 4 * len(clusters)
+    return value
+
 
 
   def Solve(self):
@@ -108,7 +129,8 @@ class Greedy(Algorithm):
         cluster = newClusters
         centroids = list(newCentroids)
         
-    sse = self.SSE(cluster, centroids)
+    sse = self.ObjetiveFunction(newClusters, centroids)
+   
     endTime = time.perf_counter()
     # Show the points on the graph.
     # self.ShowPlot(cluster, centroids)
