@@ -124,7 +124,7 @@ class GRASP(Algorithm):
     @returns a value that is the sum of the result of the P_Median function applied to the clusters
     parameter and 10 times the length of the clusters parameter.
     """
-    value = self.P_Median(clusters) + 4 * len(clusters)
+    value = self.P_Median(clusters) + 5 * len(clusters)
     return value
 
 
@@ -218,7 +218,7 @@ class GRASP(Algorithm):
     for element in playground:
       baseSolution.append(element)
       # Operacion
-      clusters = self.CreateClusters(self.__problem.GetPoints(), solution)
+      clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
       objetiveValue = self.ObjetiveFunction(clusters)
       if objetiveValue < bestObjetiveValue:
         min = copy.deepcopy(baseSolution)
@@ -318,7 +318,7 @@ class GRASP(Algorithm):
   def Shaking(self, solution, k):
     solution_copy = solution.copy()
     posibles = set(range(0, self.__problem.GetNumOfPoints()))
-    for i in range(1, k + 1):
+    for i in range(1, k - 1):
       for j in range(0, i):
           no_usados = posibles.difference(solution_copy)
           solution_copy[j] = random.choice(list(no_usados))
