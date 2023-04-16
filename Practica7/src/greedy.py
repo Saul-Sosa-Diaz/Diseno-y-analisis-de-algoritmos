@@ -67,7 +67,6 @@ class Greedy(Algorithm):
       return result
 
 
-
   def ObjetiveFunction(self, clusters, centroids):
     """
     This function calculates the objective function value for a given set of clusters by adding the
@@ -77,7 +76,7 @@ class Greedy(Algorithm):
     @returns a value that is the sum of the result of the P_Median function applied to the clusters
     parameter and 4 times the length of the clusters parameter.
     """
-    value = self.P_Median(clusters, centroids) + 4 * len(clusters)
+    value = self.P_Median(clusters, centroids) + 10 * len(clusters)
     return value
 
 
