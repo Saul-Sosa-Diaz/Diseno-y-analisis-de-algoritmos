@@ -53,12 +53,21 @@ class Algorithm:
 
 
     def CalculateCentroids(self, cluster: list):
-      '''
-        This function calculates the centroid of a cluster of points.
-        Args:
-            cluster (list): A list of points in the same cluster.
-        Returns:
-            numpy.ndarray: A numpy array representing the centroid of the cluster.
+      '''This function calculates the centroid of a given cluster of points.
+      
+      Parameters
+      ----------
+      cluster : list
+        The parameter "cluster" is a list of points that belong to a particular cluster. Each point is
+      represented as a list of numerical values, where each value corresponds to a feature or attribute of
+      the point. The function calculates the centroid of the cluster, which is the average of all the
+      points in the
+      
+      Returns
+      -------
+        the centroid of the given cluster, which is calculated by taking the mean of all the points in the
+      cluster.
+      
       '''
       if (len(cluster) == 0):
          return
@@ -68,14 +77,49 @@ class Algorithm:
       centroid /= len(cluster)
       return centroid
     
+
     def SSE(self, clusters, centroids):
+      '''The function calculates the sum of squared errors (SSE) between the centroids and the data points in
+      each cluster.
+
+      Parameters
+      ----------
+      clusters
+        A list of lists where each inner list contains the data points assigned to a particular cluster.
+      centroids
+        A list of centroid points for each cluster in the clustering algorithm.
+
+      Returns
+      -------
+        the sum of squared errors (SSE) for a given set of clusters and their centroids.
+
+      '''
       result = 0
       for i in range(0, len(centroids)):
         for j in clusters[i]:
           result += (self.EuclideanDistance(centroids[i],j))**2
       return result
     
+
+
+
     def P_Median(self, clusters):
+      '''The function calculates the sum of Euclidean distances between the centroid and all other points in
+      each cluster and returns the total sum.
+      
+      Parameters
+      ----------
+      clusters
+        A list of clusters, where each cluster is represented as a list of points. The first point in each
+      cluster is the centroid of that cluster, and the remaining points are the data points assigned to
+      that cluster. The function calculates the P-Median objective function value for the given clusters.
+      
+      Returns
+      -------
+        The function `P_Median` is returning the sum of the Euclidean distances between the centroid of
+      each cluster and all the other points in the same cluster.
+      
+      '''
       result = 0
       for cluster in clusters:
         for point in cluster[1:]:

@@ -20,12 +20,16 @@ class GRASP(Algorithm):
 
   @typeguard.typechecked
   def __init__(self, problem: Problem, k: int = 3, cardinality: int = 3) -> None:
-    '''
-    This function initializes the Class GRASP.
-    @param {Problem} problem - The problem to be solved.
-    @param {int} [k=3] - The number of clusters to create.
-    @param {int} [cardinality=3] - The number of items in each subset.
-    '''
+    """
+    This function initializes a GRASP algorithm with a given problem, number of clusters, and
+    cardinality.
+    @param {Problem} problem - an instance of the Problem class, which represents a clustering problem
+    with a set of points and their distances.
+    @param {int} [k=3] - The number of clusters to be formed in the problem.
+    @param {int} [cardinality=3] - The cardinality parameter represents the maximum number of
+    candidates that will be considered for each iteration of the GRASP algorithm. In other words, it
+    limits the number of solutions that will be generated and evaluated at each iteration.
+    """
     if k > problem.GetNumOfPoints():
         raise Exception(bcolors.FAIL +
                         "Error in GRASP -> The number of clusters cannot exceed the number of points." + bcolors.ENDC +
@@ -94,6 +98,11 @@ class GRASP(Algorithm):
   
 
   def IndexTraductor(self, point):
+    """
+    This function takes a point as input and returns its corresponding index from a point dictionary.
+    @param point - The parameter "point" is a variable that represents a point in a coordinate system.
+    @returns The function `IndexTraductor` is returning yhe index of the point.
+    """
     return self.__pointDictionary[str(point)]
 
 
@@ -118,22 +127,24 @@ class GRASP(Algorithm):
   def ObjetiveFunction(self, clusters):
     """
     This function calculates the objective function value for a given set of clusters by adding the
-    P_Median value and penalty factor, in this case 10, and multiplied by the number of elements in the cluster.
+    P_Median value and penalty factor, in this case 12, and multiplied by the number of elements in the cluster.
     @param clusters - The "clusters" parameter is a list of lists, where each inner list represents a
     cluster of data points. The objective function is being calculated for these clusters.
     @returns a value that is the sum of the result of the P_Median function applied to the clusters
-    parameter and 10 times the length of the clusters parameter.
+    parameter and 12 times the length of the clusters parameter.
     """
-    value = self.P_Median(clusters) + 5 * len(clusters)
+    value = self.P_Median(clusters) + 10 * len(clusters)
     return value
 
 
   def CreateClusters(self, points, servicePoints):
     """
-    It takes a list of points and a list of service points and returns a list of clusters
-    @param points - the points to be clustered
-    @param servicePoints - The points that are already in the clusters.
-    @returns The clusters are being returned.
+    The function creates clusters of points and adds service points to them, then assigns each
+    non-service point to the closest cluster based on Euclidean distance.
+    @param points - a list of points (coordinates) that need to be clustered
+    @param servicePoints - A list of indices representing the points that are designated as service
+    points. These points will be used as the initial centers of the clusters.
+    @returns a list of clusters, where each cluster is a list of points.
     """
 
     # Create the clusters and add the service points to them
@@ -199,9 +210,11 @@ class GRASP(Algorithm):
 
   def SearchInsert(self, solution):
     """
-    This function performs a search and insert algorithm to find the optimal solution for a p-median
-    problem.
-    Stop conditions are when the error is 0 or when the error is improved by less than 30%.
+    This function searches for the best insertion point in a solution to improve its objective value.
+    @param solution - A list representing the current solution to the problem. Each element in the list
+    represents the index of a point in the problem instance.
+    @returns the solution with the minimum objective value after performing a search and insert
+    operation.
     """
     baseSolution = copy.deepcopy(solution)
     clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
@@ -232,6 +245,16 @@ class GRASP(Algorithm):
 
 
   def CreateClustersDelete(self, clusters, solution, newSolution):
+    """
+    This function creates clusters by deleting a solution from a set of clusters and adding its orphaned
+    points to the nearest cluster.
+    @param clusters - a list of clusters, where each cluster is represented as a list of points
+    @param solution - It is a list representing the current solution, where each element represents the
+    cluster to which a point belongs.
+    @param newSolution - It is a list representing a new solution to a problem.
+    @returns the updated clusters after removing a cluster and reassigning its orphaned points to the
+    nearest cluster.
+    """
     clusters = copy.deepcopy(clusters)
     faltantes = [indice for indice, numero in enumerate(solution) if numero not in newSolution]
     puntosHuerfanos = copy.deepcopy(clusters[faltantes[0]])
@@ -252,9 +275,13 @@ class GRASP(Algorithm):
 
   def SearchDelete(self, solution):
     """
-    This function searches for and deletes points of service from a solution, and updates the solution
-    and pmedian accordingly.
-    """ 
+    This function searches for and deletes a point of service from a solution, and returns the updated
+    solution with the best objective value.
+    @param solution - A list representing the current solution, where each element is a point of
+    service.
+    @returns the updated solution after performing a search and delete operation on the input solution.
+    """
+
     newSolution = copy.deepcopy(solution)
     min = copy.deepcopy(newSolution)
     clusters = self.CreateClusters(self.__problem.GetPoints(), newSolution)
@@ -279,9 +306,12 @@ class GRASP(Algorithm):
 
   def SearchSwap(self, solution):
     """
-    The function SearchSwap implements a local search algorithm to improve a solution obtained by the
-    GRASP algorithm by swapping facilities and searching for a better solution.
+    The function performs a search and swap operation to improve a given solution for a clustering
+    problem.
+    @param solution - The current solution to be improved by the search and swap algorithm.
+    @returns the updated solution after performing a search and swap operation.
     """
+
     newSolution = copy.deepcopy(solution)
     min = copy.deepcopy(newSolution)
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
@@ -316,9 +346,18 @@ class GRASP(Algorithm):
 
 
   def Shaking(self, solution, k):
+    """
+    The function "Shaking" takes a solution and a number k, and returns a modified version of the
+    solution by randomly swapping some of its elements with unused elements.
+    @param solution - A list representing a solution to a problem, where each element is an index
+    representing a point in the problem.
+    @param k - The number of times the solution will be shaken or perturbed.
+    @returns The function `Shaking` is returning a modified copy of the input `solution` list, where `k`
+    random swaps have been made between the elements of the list.
+    """
     solution_copy = solution.copy()
     posibles = set(range(0, self.__problem.GetNumOfPoints()))
-    for i in range(1, k - 1):
+    for i in range(0, k):
       for j in range(0, i):
           no_usados = posibles.difference(solution_copy)
           solution_copy[j] = random.choice(list(no_usados))
@@ -328,6 +367,13 @@ class GRASP(Algorithm):
 
 
   def Search(self, solution):
+    """
+    The function performs a local search algorithm by iteratively applying swap, insert, and delete
+    operations on a given solution until no improvement is made.
+    The search operations alter the internal state of the machine.
+    @param solution - The current solution that is being searched for improvement. It is likely a list
+    or array of values that represent a solution to a problem.
+    """
     l = 0
     while l <= 2:
       if l == 0:
@@ -352,7 +398,11 @@ class GRASP(Algorithm):
 
 
   def GVNS(self):
-    k = 0
+    """
+    The GVNS function implements the General Variable Neighborhood Search algorithm to find a local optimal
+    solution for a given problem.
+    """
+    k = 1
     actualSolution = copy.deepcopy(self.__solution)
     bestSolution = copy.deepcopy(self.__solution)
     actualObjetiveValue = copy.deepcopy(self.__objetiveValue)
@@ -365,7 +415,7 @@ class GRASP(Algorithm):
         bestSolution = copy.deepcopy(self.__solution)
         actualSolution = copy.deepcopy(self.__solution)
         actualObjetiveValue = copy.deepcopy(self.__objetiveValue)
-        k = 0
+        k = 1
     
     actualSolution = bestSolution
     actualObjetiveValue
@@ -408,7 +458,7 @@ class GRASP(Algorithm):
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "prob2.txt"))
-    a = GRASP(problem, 2)
+    a = GRASP(problem, 5)
     
     print(a.Grasp())
 
