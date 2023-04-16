@@ -80,8 +80,12 @@ class GRASP(Algorithm):
     # Order in which the dots were added to the clusters
     j = 0
     for point in points:
-        plt.text(point[0], point[1] + 0.5, str(j),
-                 fontsize=12, ha='center', va='center')
+        if j == 12:
+          plt.text(point[0], point[1] - 0.5, str(j),
+                   fontsize=12, ha='center', va='center')
+        else:
+          plt.text(point[0], point[1] + 0.5, str(j),
+                  fontsize=12, ha='center', va='center')
         j += 1
     # Create a scatter plot for each set of points
     for i, point in enumerate(clusters):
@@ -206,7 +210,21 @@ class GRASP(Algorithm):
 
     return servicePoints
 
+    
+  def CreateClustersInsert(self, clusters, newSolution):
+    clustersCopy = copy.deepcopy(clusters)
+    IndiceNuevoPunto = newSolution[-1]
+    nuevoPunto = self.__problem.GetPoints()[IndiceNuevoPunto]
+    clustersCopy.append([nuevoPunto])
+    for i, cluster in enumerate(clustersCopy[:-1]):
+      for indexPoint, punto in enumerate(cluster[1:]):
+        if self.IndexTraductor(punto) == IndiceNuevoPunto:
+          clustersCopy[i].pop(indexPoint + 1)
+        elif self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])] > self.__distanceMatrix[self.IndexTraductor(punto)][IndiceNuevoPunto]:
+          clustersCopy[-1].append(punto)
+          clustersCopy[i].pop(indexPoint + 1)
 
+    return clustersCopy
 
   def SearchInsert(self, solution):
     """
@@ -231,8 +249,8 @@ class GRASP(Algorithm):
     for element in playground:
       baseSolution.append(element)
       # Operacion
-      clusters = self.CreateClusters(self.__problem.GetPoints(), baseSolution)
-      objetiveValue = self.ObjetiveFunction(clusters)
+      NewClusters = self.CreateClustersInsert(clusters, baseSolution)
+      objetiveValue = self.ObjetiveFunction(NewClusters)
       if objetiveValue < bestObjetiveValue:
         min = copy.deepcopy(baseSolution)
         bestObjetiveValue = objetiveValue
@@ -439,7 +457,7 @@ class GRASP(Algorithm):
     objetiveValue = self.ObjetiveFunction(clusters)
     self.UpdateSolution(servicePointsIndex, objetiveValue)
     
-    # self.ShowPlot(clusters, servicePointsIndex, points)
+    self.ShowPlot(clusters, servicePointsIndex, points)
     # Improvement phase
     self.GVNS()
 
@@ -457,7 +475,7 @@ class GRASP(Algorithm):
 
 def test():
   try:
-    problem = Problem(os.path.join(".", "problems", "prob2.txt"))
+    problem = Problem(os.path.join(".", "problems", "prob1.txt"))
     a = GRASP(problem, 5)
     
     print(a.Grasp())
