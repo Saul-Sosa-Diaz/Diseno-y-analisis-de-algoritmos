@@ -85,6 +85,7 @@ def menu() -> None:
     #Resolve the algorithms    
     centroids,SSEGreedy, timeGreedy = greedy.Solve()
     pointOfservices,SSEGrasp, timeGrasp = grasp.Grasp()
+    pointOfservicesGVNS, SSEGvns, timeGVNS, kmax = grasp.GVNS()
     
     if not args.o:
         print()
@@ -96,6 +97,8 @@ def menu() -> None:
         solution.PrintSolution(
             nameOfProblem, pointOfservices, problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
         print()
+        #GVNS
+        solution.PrintSolutionGVNS(nameOfProblem, pointOfservicesGVNS, problem.GetNumOfPoints(),SSEGvns, timeGVNS, k, kmax)
     else:
         # Gready
         solution.PrintSolutionInFile(
@@ -103,6 +106,9 @@ def menu() -> None:
         #GRASP
         solution.PrintSolutionInFile(
             args.o, pointOfservices, nameOfProblem,  problem.GetNumOfPoints(), SSEGrasp, timeGrasp, k, c)
+        #GVNS
+        solution.PrintSolutionGVNSInFile(
+            args.o, nameOfProblem, pointOfservicesGVNS, problem.GetNumOfPoints(), SSEGvns, timeGVNS, k, kmax)
 
 
 if "__main__" == __name__:

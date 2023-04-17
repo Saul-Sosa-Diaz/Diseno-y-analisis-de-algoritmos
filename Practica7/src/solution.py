@@ -58,6 +58,43 @@ class Solution:
           "Problem", "Point of services", "m", "k", "|LRC|", "Objetive Value", "CPU"], tablefmt="github", stralign="center"))
     
 
+  def PrintSolutionGVNS(self, nameOfFile, clusters, numberOfPoints, SSE, CPU, kInicial, kFinal ):
+      table = None
+      table = [[nameOfFile,
+                  clusters,
+                  numberOfPoints,
+                  kInicial,
+                  kFinal,
+                  SSE,
+                  CPU]
+                ]
+      print(tabulate.tabulate(table, headers=[
+            "Problem", "Points of services", "m", "k initial", "k final","Objetive Value", "CPU"], tablefmt="github", stralign="center"))
+
+
+  def PrintSolutionGVNSInFile(self, nameOutFile, nameOfFile, clusters, numberOfPoints, SSE, CPU, kInicial, kFinal):
+      table = None
+      table = [[nameOfFile,
+                clusters,
+                numberOfPoints,
+                kInicial,
+                kFinal,
+                SSE,
+                CPU]
+               ]
+      nameOutFile += "_GVNS.csv"
+      with open(nameOutFile, mode='a', newline='') as csvFile:
+        writer = csv.writer(csvFile)
+        headers = [
+            "Problem", "Points of services", "m", "k initial", "k final", "Objetive Value", "CPU"]
+        # If the file is empty, write the headers
+        if csvFile.tell() == 0:
+          writer.writerow(headers)
+
+        writer.writerow(table[0])
+
+
+
 
   def PrintSolutionInFile(self, nameOutFile, clusters ,nameInFile, numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
     '''

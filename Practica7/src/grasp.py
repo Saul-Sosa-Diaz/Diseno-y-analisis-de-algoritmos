@@ -215,16 +215,21 @@ class GRASP(Algorithm):
     clustersCopy = copy.deepcopy(clusters)
     IndiceNuevoPunto = newSolution[-1]
     nuevoPunto = self.__problem.GetPoints()[IndiceNuevoPunto]
-    clustersCopy.append([nuevoPunto])
-    for i, cluster in enumerate(clustersCopy[:-1]):
-      for indexPoint, punto in enumerate(cluster[1:]):
+    newClusters = [[nuevoPunto]]
+    
+    for i, cluster in enumerate(clustersCopy):
+      nuevoCluster = []
+      for  punto in cluster:
         if self.IndexTraductor(punto) == IndiceNuevoPunto:
-          clustersCopy[i].pop(indexPoint + 1)
-        elif self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])] > self.__distanceMatrix[self.IndexTraductor(punto)][IndiceNuevoPunto]:
-          clustersCopy[-1].append(punto)
-          clustersCopy[i].pop(indexPoint + 1)
+          pass
+        elif self.__distanceMatrix[self.IndexTraductor(punto)][self.IndexTraductor(cluster[0])] > self.__distanceMatrix[self.IndexTraductor(punto)][IndiceNuevoPunto] and self.IndexTraductor(punto) not in newSolution:
+          newClusters[-1].append(punto)
+        else:
+          nuevoCluster.append(punto)
 
-    return clustersCopy
+      newClusters.insert(i, nuevoCluster)
+    
+    return newClusters
 
   def SearchInsert(self, solution):
     """
@@ -420,6 +425,7 @@ class GRASP(Algorithm):
     The GVNS function implements the General Variable Neighborhood Search algorithm to find a local optimal
     solution for a given problem.
     """
+    startTime = time.perf_counter()
     k = 1
     actualSolution = copy.deepcopy(self.__solution)
     bestSolution = copy.deepcopy(self.__solution)
@@ -438,7 +444,9 @@ class GRASP(Algorithm):
     actualSolution = bestSolution
     actualObjetiveValue
     self.UpdateSolution(actualSolution, actualObjetiveValue)
-
+    endTime = time.perf_counter()
+    
+    return actualSolution, round(self.__objetiveValue, 2), (endTime - startTime), self.__k
 
 
   def Grasp(self):
@@ -457,20 +465,12 @@ class GRASP(Algorithm):
     objetiveValue = self.ObjetiveFunction(clusters)
     self.UpdateSolution(servicePointsIndex, objetiveValue)
     
-    self.ShowPlot(clusters, servicePointsIndex, points)
     # Improvement phase
-    self.GVNS()
+    self.SearchSwap(servicePointsIndex)
 
     endTime = time.perf_counter()
-    servicePoints = [list(self.__problem.GetPoints()[i])
-                     for i in self.__solution]
-    clusters = self.CreateClusters(points, self.__solution)
-    
-    #print(self.__solution)
-    #print(self.ObjetiveFunction(self.CreateClusters(
-    #    self.__problem.GetPoints(), self.__solution)))
-    # self.ShowPlot(clusters, self.__solution, points)
-    return servicePoints, round(self.__objetiveValue, 2), (endTime - startTime)
+
+    return self.__solution, round(self.__objetiveValue, 2), (endTime - startTime)
 
 
 def test():
