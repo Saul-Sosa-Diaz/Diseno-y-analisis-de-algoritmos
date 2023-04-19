@@ -72,10 +72,14 @@ class GRASP(Algorithm):
         plt.text(point[0], point[1] + 0.5, str(j),fontsize=12, ha='center', va='center')
         plt.scatter(point[0], point[1], s= 20 ,color="black")
         j += 1
-    plt.scatter(centroid[0], centroid[1], color= "red")    
+    
     # Show service points
-    for i in servicePoints:
-      plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, marker='*')
+    for i in servicePoints[:-1]:
+      plt.scatter(self.__problem.GetPoints()[i][0], self.__problem.GetPoints()[i][1], s=100, color="black", marker='*')
+    
+    plt.scatter(self.__problem.GetPoints()[servicePoints[-1]][0], self.__problem.GetPoints()[
+                servicePoints[-1]][1], s=100, color="green", marker='*')
+    plt.scatter(centroid[0], centroid[1], color="red")
     # Show the graph
     plt.show()
 
@@ -135,7 +139,7 @@ class GRASP(Algorithm):
 
     endTime = time.perf_counter()
 
-    return self.__solution, round(self.__objetiveValue, 2), (endTime - startTime)
+    return (endTime - startTime)
 
 
 def test():
@@ -144,9 +148,10 @@ def test():
     # Greedy
     a = GRASP(problem, 5, 1)
     # Grasp
-    a = GRASP(problem, 5, 3)
+    g = GRASP(problem, 5, 3)
     
     print(a.Grasp())
+    print(g.Grasp())
 
   except Exception as e:
     print(str(e))
