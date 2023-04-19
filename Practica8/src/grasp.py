@@ -141,7 +141,10 @@ class GRASP(Algorithm):
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
+    # Greedy
     a = GRASP(problem, 5, 1)
+    # Grasp
+    a = GRASP(problem, 5, 3)
     
     print(a.Grasp())
 
