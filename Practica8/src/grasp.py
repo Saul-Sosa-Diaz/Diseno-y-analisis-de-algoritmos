@@ -11,7 +11,6 @@ from algorithm import *
 import random
 from problem import Problem
 import matplotlib.pyplot as plt
-import colorsys
 import copy
 import os
 
@@ -41,6 +40,18 @@ class GRASP(Algorithm):
     self.__solution = None
     points = problem.GetPoints()
 
+    self.__distanceMatrix = []
+    for i in range(0, len(points)):
+      row = []
+      for j in range(0, len(points)):
+        if j == i:
+          row.append(float('inf'))
+        elif j < i:
+          row.append(self.EuclideanDistance(points[j], points[i]))
+        else:
+          row.append(self.EuclideanDistance(points[i], points[j]))
+      self.__distanceMatrix.append(row)
+
     self.__pointDictionary = {}
     for i, point in enumerate(points):
       self.__pointDictionary[str(point)] = i
@@ -53,7 +64,7 @@ class GRASP(Algorithm):
     @returns The function `IndexTraductor` is returning yhe index of the point.
     """
     return self.__pointDictionary[str(point)]
-
+  
 
 
   def ShowPlot(self, servicePoints, points, centroid):
@@ -85,6 +96,15 @@ class GRASP(Algorithm):
 
 
 
+  def ObjetiveFunction(self, solution):
+    objetiveValue = 0
+    for i in range(0, len(solution)):
+      for j in range(i + 1, len(solution)):
+        objetiveValue += self.__distanceMatrix[solution[i]][solution[j]]
+    return objetiveValue
+
+
+
   def FarestToCentroid(self, centroid, points):
     distances = []
     DistAndPoints = {}
@@ -112,7 +132,7 @@ class GRASP(Algorithm):
     points[solution[0]] = float('inf')
     for i in range(0, self.__m - 1):
       pointInSolution = [POINTS[j] for j in solution]
-      self.ShowPlot(solution, self.__problem.GetPoints(), centroid)
+      #self.ShowPlot(solution, self.__problem.GetPoints(), centroid)
       centroid = self.CalculateCentroid(pointInSolution)
       newPoint = self.FarestToCentroid(centroid, points)
       solution.append(newPoint)
@@ -121,6 +141,41 @@ class GRASP(Algorithm):
 
     return solution
 
+  def SearchSwap(self, solution):
+    """
+    The function performs a search and swap operation to improve a given solution for a clustering
+    problem.
+    @param solution - The current solution to be improved by the search and swap algorithm.
+    @returns the updated solution after performing a search and swap operation.
+    """
+
+    newSolution = copy.deepcopy(solution)
+    max = None
+    playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
+    bestObjetiveValue = self.ObjetiveFunction(solution)
+
+    while True:
+      playground = list(set(playgroundSet) - set(newSolution))
+      for element in playground:
+        for indexOfPoint, point in enumerate(newSolution):
+          point = newSolution.pop(indexOfPoint)
+          newSolution.insert(indexOfPoint, element)
+          # Operacion
+          if newSolution != solution:
+            objetiveValue = self.ObjetiveFunction(newSolution)
+            if bestObjetiveValue < objetiveValue:
+              max = copy.deepcopy(newSolution)
+              bestObjetiveValue = objetiveValue
+
+          newSolution.pop(indexOfPoint)
+          newSolution.insert(indexOfPoint, point)
+      
+      if max == newSolution or max == None:
+        break
+      newSolution = max
+
+    
+    return max
 
   def Grasp(self):
     """
@@ -134,9 +189,14 @@ class GRASP(Algorithm):
     points = self.__problem.GetPoints()
     solution = self.GetSolution()
     print(solution)
+    print(self.ObjetiveFunction(solution))
     self.ShowPlot(solution, points, (-float('inf'), -float('inf')))
     # Improvement phase
-
+    bestSolution = self.SearchSwap(solution)
+    if bestSolution != None:
+      solution = bestSolution
+    print(solution)
+    print(self.ObjetiveFunction(solution))
     endTime = time.perf_counter()
 
     return (endTime - startTime)
@@ -146,9 +206,9 @@ def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
     # Greedy
-    a = GRASP(problem, 5, 1)
+    a = GRASP(problem, 3, 1)
     # Grasp
-    g = GRASP(problem, 5, 3)
+    g = GRASP(problem, 3, 3)
     
     print(a.Grasp())
     print(g.Grasp())
