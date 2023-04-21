@@ -97,6 +97,22 @@ class GRASP(Algorithm):
 
 
   def ObjetiveFunction(self, solution):
+    '''This function calculates the objective value of a given solution based on a distance matrix.
+    
+    Parameters
+    ----------
+    solution
+      A list representing a possible solution to a problem, where each element in the list represents a
+    node or a city in a traveling salesman problem, for example. The objective function calculates the
+    total distance or cost of visiting all the nodes in the given order. The distance between two nodes
+    is obtained from a distance
+    
+    Returns
+    -------
+      the objective value of a given solution, which is calculated by summing the distances between all
+    pairs of cities in the solution.
+    
+    '''
     objetiveValue = 0
     for i in range(0, len(solution)):
       for j in range(i + 1, len(solution)):
@@ -106,6 +122,23 @@ class GRASP(Algorithm):
 
 
   def FarestToCentroid(self, centroid, points):
+    '''This function calculates the Euclidean distance between a centroid and a set of points, selects the
+    farthest points from the centroid, and returns the index of the farthest point.
+    
+    Parameters
+    ----------
+    centroid
+      The centroid is a point in the dataset that represents the center of a cluster. It is calculated as
+    the mean of all the points in the cluster.
+    points
+      a list of points (as numpy arrays) for which we want to find the point farthest from the given
+    centroid.
+    
+    Returns
+    -------
+      the index of the point in the "points" list that is farthest from the given centroid.
+    
+    '''
     distances = []
     DistAndPoints = {}
     for point in points:
@@ -138,8 +171,39 @@ class GRASP(Algorithm):
       solution.append(newPoint)
       points[newPoint] = float('inf')
       
-
     return solution
+
+
+  def ObjetiveFuntionFromSolution(self, actualObtetiveValue, newElement, oldElement, solution):
+    '''This function calculates the objective function value by subtracting the distance between oldElement
+    and each point in the solution and adding the distance between newElement and each point in the
+    solution.
+    
+    Parameters
+    ----------
+    actualObtetiveValue
+      The current value of the objective function before considering the new element.
+    newElement
+      The new element is a point that is being added to the solution. It is used to calculate the change
+    in the objective function value when this point is added to the solution.
+    oldElement
+      The index of the element that is being replaced in the solution with a new element.
+    solution
+      A list of indices representing the current solution or path.
+    
+    Returns
+    -------
+      the updated objective function.
+    '''
+    distSubtract = 0
+    distSum = 0
+    for indexPoint in solution:
+      distSubtract += self.__distanceMatrix[oldElement][indexPoint]
+      distSum += self.__distanceMatrix[newElement][indexPoint]
+    
+    return actualObtetiveValue - distSubtract + distSum
+  
+
 
   def SearchSwap(self, solution):
     """
@@ -153,64 +217,66 @@ class GRASP(Algorithm):
     max = None
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
     bestObjetiveValue = self.ObjetiveFunction(solution)
+    MaxObjetiveValue = None
 
     while True:
       playground = list(set(playgroundSet) - set(newSolution))
       for element in playground:
         for indexOfPoint, point in enumerate(newSolution):
           point = newSolution.pop(indexOfPoint)
-          newSolution.insert(indexOfPoint, element)
           # Operacion
           if newSolution != solution:
-            objetiveValue = self.ObjetiveFunction(newSolution)
+            objetiveValue = self.ObjetiveFuntionFromSolution(bestObjetiveValue, element, point, newSolution)
             if bestObjetiveValue < objetiveValue:
               max = copy.deepcopy(newSolution)
-              bestObjetiveValue = objetiveValue
+              max.insert(indexOfPoint, element)
+              MaxObjetiveValue = objetiveValue
 
-          newSolution.pop(indexOfPoint)
           newSolution.insert(indexOfPoint, point)
       
       if max == newSolution or max == None:
+        bestObjetiveValue = MaxObjetiveValue
         break
       newSolution = max
-
-    
-    return max
+      bestObjetiveValue = MaxObjetiveValue
+  
+    return max, bestObjetiveValue
 
   def Grasp(self):
-    """
-    The Grasp function performs a constructive and improvement phase to find a solution to a problem,
-    and returns the solution, pmedian, and the time taken to execute the function.
-    @returns a list containing the solution, pmedian, and the time taken to execute the function.
-    """
+
     startTime = time.perf_counter()
 
     # Constructive phase
-    points = self.__problem.GetPoints()
+    
     solution = self.GetSolution()
-    print(solution)
-    print(self.ObjetiveFunction(solution))
-    self.ShowPlot(solution, points, (-float('inf'), -float('inf')))
+    bestObjetiveValue = self.ObjetiveFunction(solution)
+    #points = self.__problem.GetPoints()
+    #self.ShowPlot(solution, points, (-float('inf'), -float('inf')))
+    
     # Improvement phase
-    bestSolution = self.SearchSwap(solution)
-    if bestSolution != None:
-      solution = bestSolution
-    print(solution)
-    print(self.ObjetiveFunction(solution))
-    endTime = time.perf_counter()
+    if self.__cardinality != 1 :
+      bestSolution, objetiveValue = self.SearchSwap(solution)
+      if bestSolution != None:
+        solution = bestSolution
+        bestObjetiveValue = objetiveValue
+      
 
-    return (endTime - startTime)
+    endTime = time.perf_counter()
+    return solution, round(bestObjetiveValue, 2), round((endTime - startTime), 7)
 
 
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
+    
     # Greedy
     a = GRASP(problem, 3, 1)
+    
     # Grasp
     g = GRASP(problem, 3, 3)
-    
+    print(bcolors.UNDERLINE + "Greedy" + bcolors.ENDC)
     print(a.Grasp())
+    print(bcolors.UNDERLINE + "Grasp" + bcolors.ENDC)
     print(g.Grasp())
 
   except Exception as e:

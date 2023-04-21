@@ -24,63 +24,39 @@ class Solution:
     '''
     pass
 
-  def PrintSolution(self, nameOfFile, clusters ,numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
-    '''
-    It prints a table with the results of the algorithm
-    @param nameOfFile - The name of the file that contains the data points.
-    @param numberOfPoints - number of points in the dataset
-    @param SSE - Sum of Squared Errors
-    @param CPU - The time it took to run the algorithm
-    @param [numberOfClusters=3] - number of clusters
-    @param cardinality - the number of points in the LRC
-    '''
-    table = None
-    if cardinality == None: # Print kmeans
-      table = [[]]
-      print(tabulate.tabulate(table, headers=[
-          "Problem", "Centroids","m", "k", "Objetive Value", "CPU"], tablefmt="github", stralign="center"))
-    else: # Print GRASP
-      table = [[nameOfFile,
-                clusters,
-               numberOfPoints,
-               numberOfClusters,
-               cardinality,
-               SSE,
-               CPU]
-               ]
-      print(tabulate.tabulate(table, headers=[
-          "Problem", "Point of services", "m", "k", "|LRC|", "Objetive Value", "CPU"], tablefmt="github", stralign="center"))
+  def PrintSolutionGreedy(self, nameOfProblem, n, k, m, z, S ,CPU):
+    table = [[nameOfProblem, n, k, m, z, S, CPU]]
+    print(tabulate.tabulate(table, headers=[
+        "Problem", "n","K", "m", "z", "S", "CPU"], tablefmt="github", stralign="center"))
+
+  def PrintSolutionGrasp(self, nameOfProblem, n, k, z, m, lrc, S, CPU):
+    table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
+    print(tabulate.tabulate(table, headers=[
+        "Problem", "n", "K", "m", "|lrc|","z", "S", "CPU"], tablefmt="github", stralign="center"))
     
+  def PrintSolutionGreedyInFile(self, nameOutFile, nameOfProblem, n, k, m, z, S, CPU):
+    table = None
+    table = [[nameOfProblem, n, k, m, z, S, CPU]]
+    nameOutFile += "_Greedy.csv"
+    with open(nameOutFile, mode='a', newline='') as csvFile:
+      writer = csv.writer(csvFile)
+      headers = [
+          "Problem", "n", "K", "m", "z", "S", "CPU"]
+      # If the file is empty, write the headers
+      if csvFile.tell() == 0:
+        writer.writerow(headers)
 
-  def PrintSolutionGVNS(self, nameOfFile, clusters, numberOfPoints, SSE, CPU, kInicial, kFinal ):
+      writer.writerow(table[0])
+
+
+  def PrintSolutionGraspInFile(self, nameOutFile, nameOfProblem, n, k, z, m, lrc, S, CPU):
       table = None
-      table = [[nameOfFile,
-                  clusters,
-                  numberOfPoints,
-                  kInicial,
-                  kFinal,
-                  SSE,
-                  CPU]
-                ]
-      print(tabulate.tabulate(table, headers=[
-            "Problem", "Points of services", "m", "k initial", "k final","Objetive Value", "CPU"], tablefmt="github", stralign="center"))
-
-
-  def PrintSolutionGVNSInFile(self, nameOutFile, nameOfFile, clusters, numberOfPoints, SSE, CPU, kInicial, kFinal):
-      table = None
-      table = [[nameOfFile,
-                clusters,
-                numberOfPoints,
-                kInicial,
-                kFinal,
-                SSE,
-                CPU]
-               ]
-      nameOutFile += "_GVNS.csv"
+      table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
+      nameOutFile += "_Grasp.csv"
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "Points of services", "m", "k initial", "k final", "Objetive Value", "CPU"]
+            "Problem", "n", "K", "m", "|lrc|", "z", "S", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)

@@ -33,7 +33,7 @@ def menu() -> None:
     nameOfProblem = ""
     greedy = None
     grasp = None
-    k = 3
+    m = 3
     c = 3
     solution = Solution()
 
@@ -50,11 +50,11 @@ def menu() -> None:
         nameOfProblem = os.path.basename(file_path)
         
     # Number of points by default.
-    if not args.k and args.k != 0:
-        greedy = GRASP(problem, k, 1)
+    if not args.m and args.m != 0:
+        greedy = GRASP(problem, m, 1)
         # Cardinality not indicated
         if not args.c and args.c != 0:
-            grasp = GRASP(problem, k)
+            grasp = GRASP(problem, m)
         else: 
             c = int(args.c)
             if c < 0:
@@ -62,28 +62,70 @@ def menu() -> None:
                     bcolors.FAIL + "Error in c argument cannot be negative or 0." + bcolors.ENDC)
             grasp = GRASP(problem, cardinality=c)
     else:
-        k = int(args.k)
-        if k <= 2:
+        m = int(args.m)
+        if m <= 2:
             raise Exception(
-                bcolors.FAIL + "Error in K argument cannot be less than 2." + bcolors.ENDC)
-        greedy = GRASP(problem, k, 1)
+                bcolors.FAIL + "Error in m argument cannot be less than 2." + bcolors.ENDC)
+        greedy = GRASP(problem, m, 1)
         # Cardinality not indicated
         if not args.c and args.c != 0:
-            grasp = GRASP(problem, k)
+            grasp = GRASP(problem, m)
         else:
             c = int(args.c)
             if c < 0:
                 raise Exception(
                     bcolors.FAIL + "Error in c argument cannot be negative." + bcolors.ENDC)
-            grasp = GRASP(problem, k, c)
+            grasp = GRASP(problem, m, c)
 
     #Resolve the algorithms    
-
+    solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp()
+    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp()
+    
+    #Print results
     if not args.o:
-        print()
+        print(bcolors.UNDERLINE + "Greedy" + bcolors.ENDC)
+        solution.PrintSolutionGreedy(nameOfProblem, 
+                                     problem.GetNumOfPoints(), 
+                                     problem.GetSizeOfPoints(), 
+                                     m, 
+                                     objetiveValueGreedy, 
+                                     solutionGreedy,
+                                     CPUGreedy)
         
+        print()
+        print(bcolors.UNDERLINE + "GRASP" + bcolors.ENDC)
+        solution.PrintSolutionGrasp(nameOfProblem,
+                                     problem.GetNumOfPoints(),
+                                     problem.GetSizeOfPoints(),
+                                     m,
+                                     c,
+                                     objetiveValueGrasp,
+                                     solutionGrasp,
+                                     CPUGrasp)
+        print()
+
     else:
-        pass
+        solution.PrintSolutionGreedyInFile(args.o,
+                                           nameOfProblem,
+                                           problem.GetNumOfPoints(),
+                                           problem.GetSizeOfPoints(),
+                                           m,
+                                           objetiveValueGreedy,
+                                           solutionGreedy,
+                                           CPUGreedy)
+        print(bcolors.OKGREEN + "Created greedy file" + bcolors.ENDC)
+       
+        solution.PrintSolutionGraspInFile(args.o, 
+                                          nameOfProblem,
+                                           problem.GetNumOfPoints(),
+                                           problem.GetSizeOfPoints(),
+                                           m,
+                                           c,
+                                           objetiveValueGrasp,
+                                           solutionGrasp,
+                                           CPUGrasp)
+        print(bcolors.OKGREEN + "Created GRASP file" + bcolors.ENDC)
+
 
 
 if "__main__" == __name__:
