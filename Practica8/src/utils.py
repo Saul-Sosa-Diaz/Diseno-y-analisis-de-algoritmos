@@ -79,7 +79,7 @@ def menu() -> None:
 
     #Resolve the algorithms    
     solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp(1)
-    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(1)
+    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(1000)  # CAMBIAR ESTO POR ITER
     
     #Print results
     if not args.o:

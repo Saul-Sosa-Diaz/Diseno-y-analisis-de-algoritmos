@@ -5,7 +5,7 @@ def generateProblems():
     '''
     It generateProblemss a random matrix of size (rows, columns) with elements rounded to 2 decimals.
     '''
-    for i in range(0,100):
+    for i in range(0,1):
         rows = np.random.randint(low=10, high=30) # Numero mínimo de puntos 10, maximo 200
         columns = np.random.randint(low=2, high=5) # Dimension de los puntos minima 2 maxima 10
         coordenateOfPoints = np.round(np.random.uniform(

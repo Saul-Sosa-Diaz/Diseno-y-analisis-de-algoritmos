@@ -205,7 +205,7 @@ class GRASP(Algorithm):
   
 
 
-  def SearchSwap(self, solution):
+  def SearchSwap(self, solution, objetiveValue):
     """
     The function performs a search and swap operation to improve a given solution for a clustering
     problem.
@@ -216,7 +216,7 @@ class GRASP(Algorithm):
     newSolution = copy.deepcopy(solution)
     max = None
     playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
-    bestObjetiveValue = self.ObjetiveFunction(solution)
+    bestObjetiveValue = objetiveValue
     MaxObjetiveValue = None
 
     while True:
@@ -246,8 +246,10 @@ class GRASP(Algorithm):
     startTime = time.perf_counter()
     bestSolution = None
     bestObjetiveValue = -float('inf')
+    iterWithOutUpgrade = 0
+    i = 0
 
-    for i in range(0, iter):
+    while i <= iter and iterWithOutUpgrade < 100:
       # Constructive phase
       solution = self.GetSolution()
       actualObjetiveValue = self.ObjetiveFunction(solution)
@@ -256,16 +258,19 @@ class GRASP(Algorithm):
       
       # Improvement phase
       if self.__cardinality != 1 :
-        actualSolution, objetiveValue = self.SearchSwap(solution)
+        actualSolution, objetiveValue = self.SearchSwap(solution, actualObjetiveValue)
         if actualSolution != None:
           solution = actualSolution
           actualObjetiveValue = objetiveValue
 
+      iterWithOutUpgrade += 1
+      i += 1
       # Update solution
       if bestObjetiveValue < actualObjetiveValue:
         bestSolution = solution
         bestObjetiveValue = actualObjetiveValue
-
+        iterWithOutUpgrade = 0
+      
     endTime = time.perf_counter()
     return bestSolution, round(bestObjetiveValue, 2), round((endTime - startTime), 7)
 
@@ -278,7 +283,7 @@ def test():
     a = GRASP(problem, 3, 1)
     
     # Grasp
-    g = GRASP(problem, 3, 7)
+    g = GRASP(problem, 3, 40)
     print(bcolors.UNDERLINE + "Greedy" + bcolors.ENDC)
     print(a.Grasp(1))
     print(bcolors.UNDERLINE + "Grasp" + bcolors.ENDC)
