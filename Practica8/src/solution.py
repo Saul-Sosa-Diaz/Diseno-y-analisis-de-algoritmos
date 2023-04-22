@@ -29,7 +29,7 @@ class Solution:
     print(tabulate.tabulate(table, headers=[
         "Problem", "n","K", "m", "z", "S", "CPU"], tablefmt="github", stralign="center"))
 
-  def PrintSolutionGrasp(self, nameOfProblem, n, k, z, m, lrc, S, CPU):
+  def PrintSolutionGrasp(self, nameOfProblem, n, k, m, lrc, z, S, CPU):
     table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
     print(tabulate.tabulate(table, headers=[
         "Problem", "n", "K", "m", "|lrc|","z", "S", "CPU"], tablefmt="github", stralign="center"))
@@ -48,8 +48,7 @@ class Solution:
 
       writer.writerow(table[0])
 
-
-  def PrintSolutionGraspInFile(self, nameOutFile, nameOfProblem, n, k, z, m, lrc, S, CPU):
+  def PrintSolutionGraspInFile(self, nameOutFile, nameOfProblem, n, k, m, lrc, z, S, CPU):
       table = None
       table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
       nameOutFile += "_Grasp.csv"

@@ -242,27 +242,32 @@ class GRASP(Algorithm):
   
     return max, bestObjetiveValue
 
-  def Grasp(self):
-
+  def Grasp(self, iter):
     startTime = time.perf_counter()
+    bestSolution = None
+    bestObjetiveValue = -float('inf')
 
-    # Constructive phase
-    
-    solution = self.GetSolution()
-    bestObjetiveValue = self.ObjetiveFunction(solution)
-    #points = self.__problem.GetPoints()
-    #self.ShowPlot(solution, points, (-float('inf'), -float('inf')))
-    
-    # Improvement phase
-    if self.__cardinality != 1 :
-      bestSolution, objetiveValue = self.SearchSwap(solution)
-      if bestSolution != None:
-        solution = bestSolution
-        bestObjetiveValue = objetiveValue
+    for i in range(0, iter):
+      # Constructive phase
+      solution = self.GetSolution()
+      actualObjetiveValue = self.ObjetiveFunction(solution)
+      #points = self.__problem.GetPoints()
+      #self.ShowPlot(solution, points, (-float('inf'), -float('inf')))
       
+      # Improvement phase
+      if self.__cardinality != 1 :
+        actualSolution, objetiveValue = self.SearchSwap(solution)
+        if actualSolution != None:
+          solution = actualSolution
+          actualObjetiveValue = objetiveValue
+
+      # Update solution
+      if bestObjetiveValue < actualObjetiveValue:
+        bestSolution = solution
+        bestObjetiveValue = actualObjetiveValue
 
     endTime = time.perf_counter()
-    return solution, round(bestObjetiveValue, 2), round((endTime - startTime), 7)
+    return bestSolution, round(bestObjetiveValue, 2), round((endTime - startTime), 7)
 
 
 def test():
@@ -273,11 +278,11 @@ def test():
     a = GRASP(problem, 3, 1)
     
     # Grasp
-    g = GRASP(problem, 3, 3)
+    g = GRASP(problem, 3, 7)
     print(bcolors.UNDERLINE + "Greedy" + bcolors.ENDC)
-    print(a.Grasp())
+    print(a.Grasp(1))
     print(bcolors.UNDERLINE + "Grasp" + bcolors.ENDC)
-    print(g.Grasp())
+    print(g.Grasp(400))
 
   except Exception as e:
     print(str(e))

@@ -78,8 +78,8 @@ def menu() -> None:
             grasp = GRASP(problem, m, c)
 
     #Resolve the algorithms    
-    solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp()
-    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp()
+    solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp(1)
+    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(1)
     
     #Print results
     if not args.o:
