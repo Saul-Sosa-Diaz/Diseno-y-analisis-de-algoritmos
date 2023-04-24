@@ -205,6 +205,77 @@ class GRASP(Algorithm):
   
 
 
+  def tabuSearch(self, solution, iter, numberTabu):
+    numberTabu += 1
+    newSolution = copy.deepcopy(solution)
+    max = None
+    playgroundSet = [i for i in range(0, self.__problem.GetNumOfPoints())]
+    actualObjetiveValue = self.ObjetiveFunction(newSolution)
+    maxObjetiveValue = -float('inf')
+    tabuTable = np.zeros((self.__problem.GetNumOfPoints(), self.__problem.GetNumOfPoints()))
+    
+    for j in range(0,self.__problem.GetNumOfPoints()):
+      tabuTable[j,j] = float('inf')
+    
+    i = 0
+    while i < iter:
+      intercambio = {}
+      for k in range(0, self.__problem.GetNumOfPoints()):
+        for h in range(k, self.__problem.GetNumOfPoints()):
+          if tabuTable[k][h] != 0 and tabuTable[k][h] != float('inf'):
+            tabuTable[k][h] -= 1
+
+      playground = list(set(playgroundSet) - set(newSolution))
+      for element in playground:
+        for indexOfPoint, point in enumerate(newSolution):
+          point = newSolution.pop(indexOfPoint)
+          # Operacion
+          if newSolution != solution:
+            objetiveValue = self.ObjetiveFuntionFromSolution(actualObjetiveValue, element, point, newSolution)
+            intercambio[objetiveValue] = [point, element]
+
+          newSolution.insert(indexOfPoint, point)
+      ordenado = sorted(intercambio.keys(), reverse = True )
+      
+      j = 0
+      while j < len(ordenado):
+
+        # Criterio de aspiración
+        if ordenado[j] > maxObjetiveValue:
+          if intercambio[ordenado[j]][0] < intercambio[ordenado[j]][1]:
+            tabuTable[intercambio[ordenado[j]][0]][intercambio[ordenado[j]][1]] = numberTabu
+          else: 
+            tabuTable[intercambio[ordenado[j]][1]][intercambio[ordenado[j]][0]] = numberTabu 
+          maxObjetiveValue = ordenado[j]
+          actualObjetiveValue = maxObjetiveValue
+          for i in range(len(newSolution)):
+            if newSolution[i] == intercambio[ordenado[j]][0]:
+              newSolution[i] = intercambio[ordenado[j]][1]
+              max = copy.deepcopy(newSolution)
+              break
+          break
+
+        # Elegir uno que no sea tabú
+        elif tabuTable[intercambio[ordenado[j]][0]][intercambio[ordenado[j]][1]] == 0:
+          if intercambio[ordenado[j]][0] < intercambio[ordenado[j]][1]:
+            tabuTable[intercambio[ordenado[j]][0]][intercambio[ordenado[j]][1]] = numberTabu
+          else: 
+            tabuTable[intercambio[ordenado[j]][1]][intercambio[ordenado[j]][0]] = numberTabu 
+
+          actualObjetiveValue = ordenado[j]
+          for w in range(len(newSolution)):
+            if newSolution[w] == intercambio[ordenado[j]][0]:
+              newSolution[w] = intercambio[ordenado[j]][1]
+              break
+          break
+
+        j += 1
+      i += 1
+
+    return max, maxObjetiveValue
+
+
+
   def SearchSwap(self, solution, objetiveValue):
     """
     The function performs a search and swap operation to improve a given solution for a clustering
@@ -288,6 +359,8 @@ def test():
     print(a.Grasp(1))
     print(bcolors.UNDERLINE + "Grasp" + bcolors.ENDC)
     print(g.Grasp(400))
+   
+    #print(a.tabuSearch([0,4,3], 5, 3))
 
   except Exception as e:
     print(str(e))
