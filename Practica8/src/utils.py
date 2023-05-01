@@ -22,12 +22,11 @@ def menu() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', type=str, help='Path to the file with the points')
-    parser.add_argument(
-        '-o', type=str, help='Name of the output file where the solution will be dumped')
-    parser.add_argument(
-        '-m', type=int, help='Modify the number of points of the default algorithms.')
-    parser.add_argument(
-        '-c', type=int, help='Modify the cardinality of the grasp CLR')
+    parser.add_argument('-o', type=str, help='Name of the output file where the solution will be dumped')
+    parser.add_argument('-m', type=int, help='Modify the number of points of the solution.')
+    parser.add_argument('-c', type=int, help='Modify the cardinality of the grasp LCR')
+    parser.add_argument('-i', type=int, help='Iterations of grasp 10 by default')
+    
     args = parser.parse_args()
     problem = None
     nameOfProblem = ""
@@ -35,6 +34,7 @@ def menu() -> None:
     grasp = None
     m = 3
     c = 3
+    i = 10
     solution = Solution()
 
     # Indicate the path to the file with the problem
@@ -77,9 +77,12 @@ def menu() -> None:
                     bcolors.FAIL + "Error in c argument cannot be negative." + bcolors.ENDC)
             grasp = GRASP(problem, m, c)
 
+    if args.i:
+        i = int(args.i)
+
     #Resolve the algorithms    
     solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp(1)
-    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(1000)  # CAMBIAR ESTO POR ITER
+    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(i)  # CAMBIAR ESTO POR ITER
     
     #Print results
     if not args.o:
@@ -98,6 +101,7 @@ def menu() -> None:
                                      problem.GetNumOfPoints(),
                                      problem.GetSizeOfPoints(),
                                      m,
+                                     i,
                                      c,
                                      objetiveValueGrasp,
                                      solutionGrasp,
@@ -120,6 +124,7 @@ def menu() -> None:
                                            problem.GetNumOfPoints(),
                                            problem.GetSizeOfPoints(),
                                            m,
+                                           i,
                                            c,
                                            objetiveValueGrasp,
                                            solutionGrasp,

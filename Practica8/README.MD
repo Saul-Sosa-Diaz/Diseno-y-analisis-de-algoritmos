@@ -17,7 +17,6 @@ python3 ./src/main.py
 ## Opciones del programa
 
 
-
 ## Ayuda
 Para ver las opciones del programa:
 ```BASH

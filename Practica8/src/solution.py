@@ -29,10 +29,10 @@ class Solution:
     print(tabulate.tabulate(table, headers=[
         "Problem", "n","K", "m", "z", "S", "CPU"], tablefmt="github", stralign="center"))
 
-  def PrintSolutionGrasp(self, nameOfProblem, n, k, m, lrc, z, S, CPU):
-    table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
+  def PrintSolutionGrasp(self, nameOfProblem, n, k, m, i, lrc, z, S, CPU):
+    table = [[nameOfProblem, n, k, m, i, lrc, z, S, CPU]]
     print(tabulate.tabulate(table, headers=[
-        "Problem", "n", "K", "m", "|lrc|","z", "S", "CPU"], tablefmt="github", stralign="center"))
+        "Problem", "n", "K", "m", "iteration","|lrc|","z", "S", "CPU"], tablefmt="github", stralign="center"))
     
   def PrintSolutionGreedyInFile(self, nameOutFile, nameOfProblem, n, k, m, z, S, CPU):
     table = None
@@ -48,80 +48,20 @@ class Solution:
 
       writer.writerow(table[0])
 
-  def PrintSolutionGraspInFile(self, nameOutFile, nameOfProblem, n, k, m, lrc, z, S, CPU):
+  def PrintSolutionGraspInFile(self, nameOutFile, nameOfProblem, n, k, m, i, lrc, z, S, CPU):
       table = None
-      table = [[nameOfProblem, n, k, m, lrc, z, S, CPU]]
+      table = [[nameOfProblem, n, k, m, i, lrc, z, S, CPU]]
       nameOutFile += "_Grasp.csv"
       with open(nameOutFile, mode='a', newline='') as csvFile:
         writer = csv.writer(csvFile)
         headers = [
-            "Problem", "n", "K", "m", "|lrc|", "z", "S", "CPU"]
+            "Problem", "n", "K", "m", "iteration", "|lrc|", "z", "S", "CPU"]
         # If the file is empty, write the headers
         if csvFile.tell() == 0:
           writer.writerow(headers)
 
         writer.writerow(table[0])
 
-
-
-
-  def PrintSolutionInFile(self, nameOutFile, clusters ,nameInFile, numberOfPoints, SSE, CPU, numberOfClusters=3, cardinality=None):
-    '''
-    It takes in a bunch of parameters, and writes them to a CSV file. 
-    
-    The CSV file is created if it doesn't exist, and if it does exist, it appends the new data to the
-    end of the file. 
-    The data is written to the CSV file in a single row. 
-    @param nameOutFile - the name of the file to write to
-    @param nameInFile - the name of the file that contains the data points
-    @param numberOfPoints - number of points in the dataset
-    @param SSE - Sum of Squared Errors
-    @param CPU - The time it took to run the algorithm
-    @param [numberOfClusters=3] - The number of clusters to be used in the k-means algorithm.
-    @param cardinality - the number of points in the LRC
-    '''
-    table = None
-
-    if cardinality == None:  # Print kmeans
-      table = [[nameInFile,
-                clusters,
-                numberOfPoints,
-                numberOfClusters,
-                SSE,
-                CPU]
-               ]
-      nameOutFile += "_kmeans.csv"
-
-      with open(nameOutFile, mode='a', newline='') as csvFile:
-        writer = csv.writer(csvFile)
-        headers = [
-            "Problem", "Centroids", "m", "k", "Objetive Value", "CPU"]
-        # If the file is empty, write the headers
-        if csvFile.tell() == 0:
-          writer.writerow(headers)
-        
-        writer.writerow(table[0])
-
-    else:  # Print GRASP
-      table = [[nameInFile,
-                clusters,
-               numberOfPoints,
-               numberOfClusters,
-               cardinality,
-               SSE,
-               CPU]
-               ]
-      nameOutFile += "_GRASP.csv"
-
-      with open(nameOutFile, mode='a', newline='') as csvFile:
-        writer = csv.writer(csvFile)
-        headers = [
-            "Problem", "Point of services", "m", "k", "|LRC|", "Objetive Value", "CPU"]
-        # If the file is empty, write the headers
-        if csvFile.tell() == 0:
-          writer.writerow(headers)
-
-        writer.writerow(table[0])
 
 
 
