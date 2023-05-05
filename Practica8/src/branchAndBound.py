@@ -13,6 +13,7 @@ class BranchAndBound:
     points = problem.GetPoints()
     self.__distanceMatrix = []
     self.__maxDistance = -float('inf')
+
     
     for i in range(0, len(points)):
       row = []
@@ -29,7 +30,8 @@ class BranchAndBound:
       self.__distanceMatrix.append(row)
 
     childs = []
-    self.__expandedNodes = []
+    self.__solution = []
+    self.__nodesGenerated = 1
     for i in range(0, self.__problem.GetNumOfPoints()):
       node = Node(i, self.__maxDistance, None)
       childs.append(node)
@@ -67,66 +69,57 @@ class BranchAndBound:
     for i in range(0, len(solution)):
       for j in range(i + 1, len(solution)):
         objetiveValue += self.__distanceMatrix[solution[i]][solution[j]]
-    return objetiveValue
+    return round(objetiveValue,2)
 
-  from queue import PriorityQueue
+  
 
 
   def bab(self, node: Node):
-    queue = PriorityQueue()
-    # Usamos -node.getupperBound() para que el PriorityQueue ordene los nodos de forma descendente.
-    queue.put((-node.getupperBound(), node))
-
-    while not queue.empty():
-        # Obtenemos el nodo con el valor máximo (el menor valor en términos de la función de costo)
-        _, current_node = queue.get()
-
-        if len(current_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
+    stack = [node]  # Inicializar la pila con el nodo raíz
+    while stack:
+        # Seleccionar el siguiente nodo hijo de la pila con el mayor valor
+        curr_node = max(stack, key=lambda x: x.getupperBound())
+        stack.remove(curr_node)
+        if len(curr_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
             ObjetiveValue = self.ObjetiveFunction(
-                current_node.getAncestors() + [current_node.getId()])
+                curr_node.getAncestors() + [curr_node.getId()])
+            if curr_node.getAncestors() == [8,5,0]:
+                z = 1+1
             if ObjetiveValue >= self.__LowerBound:
                 self.__LowerBound = ObjetiveValue
-                self.__expandedNodes = current_node.getAncestors() + \
-                    [current_node.getId()]
-
+                self.__solution = curr_node.getAncestors() + [curr_node.getId()]
+            continue
         else:
             childs = []
-            # n(n-1)/2 Esto se usa para calcular el número de aristas en el grafo
-            numberOfEdges = (len(current_node.getAncestors()) +
-                              1 * (len(current_node.getAncestors()))) / 2
-
-            # Creamos los hijos del nodo
+            # n(n-1)/2 This is used to calculate the number od edges in the graph
+            numberOfEdges = (len(curr_node.getAncestors()) +
+                             1 * (len(curr_node.getAncestors()))) / 2
+            # Crear los nodos hijos del nodo actual
             for i in range(0, self.__problem.GetNumOfPoints()):
-                if i not in current_node.getAncestors() + [current_node.getId()]:
-                    if current_node.getId() == -1:
+                if i not in curr_node.getAncestors() + [curr_node.getId()]:
+                    if curr_node.getId() == -1:
                         UpperBound = self.ObjetiveFunction(
-                            current_node.getAncestors()) + self.__maxDistance * numberOfEdges
-                        newNode = Node(
-                            i, UpperBound, current_node.getAncestors())
+                            curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
+                        newNode = Node(i, UpperBound, curr_node.getAncestors())
                     else:
-                        UpperBound = self.ObjetiveFunction(current_node.getAncestors(
-                        ) + [current_node.getId()]) + self.__maxDistance * numberOfEdges
-                        newNode = Node(
-                            i, UpperBound, current_node.getAncestors() + [current_node.getId()])
+                        UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
+                        newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
                     childs.append(newNode)
+            # Agregar los nodos hijos a la pila en orden inverso
+            for child in reversed(childs):
+                stack.append(child)
 
-            for child in childs:
-                # Agregamos los hijos del nodo actual a la cola con su valor de costo en negativo (-child.getupperBound()) para que el PriorityQueue ordene los nodos de forma descendente.
-                queue.put((-child.getupperBound(), child))
-
-            # Poda de los hijos del nodo
-            pruned_childs = []
-            for childNode in childs:
-                if childNode.getupperBound() <= self.__LowerBound:
-                    pruned_childs.append(childNode)
-
-            while len(pruned_childs) != 0:
-                bestNode = max(pruned_childs)
-                pruned_childs.remove(bestNode)
-                # Agregamos los nodos podados a la cola con su valor de costo en negativo (-bestNode.getupperBound()) para que el PriorityQueue ordene los nodos de forma descendente.
-                queue.put((-bestNode.getupperBound(), bestNode))
+        # Podar los nodos hijos no prometedores
+        curr_node.setChilds(childs)
+        to_remove = []
+        for childNode in curr_node.getChilds():
+            if childNode.getupperBound() <= self.__LowerBound:
+                to_remove.append(childNode)
+        for childNode in to_remove:
+            curr_node.getChilds().remove(childNode)
 
     return self.__LowerBound
+
 
 
   def byb_dfs(self, node: Node):
@@ -136,19 +129,17 @@ class BranchAndBound:
     stack = [node]  # initialize stack
     while stack:
         curr_node = stack.pop()  # Select node
+        
         if len(curr_node.getAncestors()) == self.__m - 1:  # Leaf node
-            ObjetiveValue = self.ObjetiveFunction(
-                curr_node.getAncestors() + [curr_node.getId()])
+            ObjetiveValue = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()])
             if ObjetiveValue >= self.__LowerBound:
                 self.__LowerBound = ObjetiveValue
-                self.__expandedNodes = curr_node.getAncestors() + \
-                    [curr_node.getId()]
+                self.__solution = curr_node.getAncestors() + [curr_node.getId()]
             continue
         else:
             childs = []
             # n(n-1)/2 This is used to calculate the number od edges in the graph
-            numberOfEdges = (len(curr_node.getAncestors()) +
-                             1 * (len(curr_node.getAncestors()))) / 2
+            numberOfEdges = (len(curr_node.getAncestors()) + 1 * (len(curr_node.getAncestors()))) / 2
             # Create childs
             for i in range(0, self.__problem.GetNumOfPoints()):
                 if i not in curr_node.getAncestors() + [curr_node.getId()]:
@@ -158,7 +149,10 @@ class BranchAndBound:
                     else:
                         UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
                         newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
-                    childs.append(newNode)
+                    if newNode.getupperBound() >= self.__LowerBound:
+                      childs.append(newNode)
+                      self.__nodesGenerated += len(childs)
+
             # Add childs to stack in reverse order
             for child in reversed(childs):
                 stack.append(child)
@@ -180,8 +174,10 @@ class BranchAndBound:
 
   def branchAndBound(self):
     self.bab(self.__root)
-    print("Expanded nodes: " + str(self.__expandedNodes))
-    print("Objetive function: " + str(self.ObjetiveFunction(self.__expandedNodes)))
+    print("Solution: " + str(self.__solution))
+    print("Objetive function: " + str(self.ObjetiveFunction(self.__solution)))
+    print("Nodes generated: " + str(self.__nodesGenerated))
+    
    
 
 
@@ -190,9 +186,11 @@ def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
     # Greedy
-    a = GRASP(problem, 3, 3)
-    resultSol, valueObjetive,time = a.Grasp(1)
-    branch = BranchAndBound(valueObjetive, problem, 3)
+    a = GRASP(problem, 4, 3)
+    
+    resultSol, valueObjetive,time = a.Grasp(100)
+    print("ya", resultSol, valueObjetive, time)
+    branch = BranchAndBound(valueObjetive, problem, 4)
     branch.branchAndBound()
 
   except Exception as e:
