@@ -62,6 +62,25 @@ class Solution:
 
         writer.writerow(table[0])
 
+  def PrintSolutionBaB(self, nameOfProblem, n, k, m, z, S, CPU, generatedNodes):
+    table = [[nameOfProblem, n, k, m, z, S, CPU, generatedNodes]]
+    print(tabulate.tabulate(table, headers=[
+        "Problem", "n", "K", "m", "z", "S", "CPU", "Generated Nodes"], tablefmt="github", stralign="center"))
+
+
+  def PrintSolutionBaBInFile(self, nameOutFile, nameOfProblem, n, k, m, z, S, CPU, generatedNodes):
+    table = None
+    table = [[nameOfProblem, n, k, m, z, S, CPU, generatedNodes]]
+    nameOutFile += "_BaB.csv"
+    with open(nameOutFile, mode='a', newline='') as csvFile:
+      writer = csv.writer(csvFile)
+      headers = [
+          "Problem", "n", "K", "m", "z", "S", "CPU", "Generated Nodes"]
+      # If the file is empty, write the headers
+      if csvFile.tell() == 0:
+        writer.writerow(headers)
+
+      writer.writerow(table[0])
 
 
 

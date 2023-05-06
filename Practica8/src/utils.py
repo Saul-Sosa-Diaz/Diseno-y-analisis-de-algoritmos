@@ -13,6 +13,7 @@ from grasp import GRASP
 from math import ceil
 from solution import Solution
 from colors import bcolors
+from branchAndBound import BranchAndBound
 
 
 def menu() -> None:
@@ -82,7 +83,9 @@ def menu() -> None:
 
     #Resolve the algorithms    
     solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp(1)
-    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(i)  # CAMBIAR ESTO POR ITER
+    solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(i)
+    bab = BranchAndBound(objetiveValueGrasp, problem, m)
+    solutionBab, objetiveValueBab, CPUBab = bab.BranchAndBound()
     
     #Print results
     if not args.o:
@@ -91,7 +94,7 @@ def menu() -> None:
                                      problem.GetNumOfPoints(), 
                                      problem.GetSizeOfPoints(), 
                                      m, 
-                                     objetiveValueGreedy, 
+                                     round(objetiveValueGreedy,2), 
                                      solutionGreedy,
                                      CPUGreedy)
         
@@ -103,10 +106,18 @@ def menu() -> None:
                                      m,
                                      i,
                                      c,
-                                     objetiveValueGrasp,
+                                     round(objetiveValueGrasp, 2),
                                      solutionGrasp,
                                      CPUGrasp)
         print()
+        print(bcolors.UNDERLINE + "Branch and Bound" + bcolors.ENDC)
+        solution.PrintSolutionBaB(nameOfProblem,
+                                    problem.GetNumOfPoints(),
+                                    problem.GetSizeOfPoints(),
+                                    m,
+                                    round(objetiveValueBab, 2),
+                                    solutionBab,
+                                    CPUBab)
 
     else:
         solution.PrintSolutionGreedyInFile(args.o,
@@ -114,7 +125,7 @@ def menu() -> None:
                                            problem.GetNumOfPoints(),
                                            problem.GetSizeOfPoints(),
                                            m,
-                                           objetiveValueGreedy,
+                                           round(objetiveValueGreedy,2),
                                            solutionGreedy,
                                            CPUGreedy)
         print(bcolors.OKGREEN + "Created greedy file" + bcolors.ENDC)
@@ -126,10 +137,19 @@ def menu() -> None:
                                            m,
                                            i,
                                            c,
-                                           objetiveValueGrasp,
+                                           round(objetiveValueGrasp, 2),
                                            solutionGrasp,
                                            CPUGrasp)
         print(bcolors.OKGREEN + "Created GRASP file" + bcolors.ENDC)
+
+        solution.PrintSolutionBaBInFile(args.o,
+                                        nameOfProblem,
+                                        problem.GetNumOfPoints(),
+                                        problem.GetSizeOfPoints(),
+                                        m,
+                                        round(objetiveValueBab, 2),
+                                        solutionBab,
+                                        CPUBab)
 
 
 

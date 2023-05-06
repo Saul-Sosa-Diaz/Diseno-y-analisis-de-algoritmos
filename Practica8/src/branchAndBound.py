@@ -8,7 +8,7 @@ class BranchAndBound:
   def __init__(self, initialLowerBound, problem: Problem, m):
     self.__problem = problem
     self.__m = m
-    self.__LowerBound = initialLowerBound
+    self.__LowerBound = round(initialLowerBound, 5)
     self.__root = Node(-1, initialLowerBound, [])
     points = problem.GetPoints()
     self.__distanceMatrix = []
@@ -32,14 +32,11 @@ class BranchAndBound:
           row.append(self.EuclideanDistance(points[i], points[j]))
       self.__distanceMatrix.append(row)
 
-    childs = []
     self.__solution = []
     self.__nodesGenerated = 1
-    for i in range(0, self.__problem.GetNumOfPoints()):
-      node = Node(i, self.__maxDistance, None)
-      childs.append(node)
 
-    self.__root.setChilds(childs)
+
+
 
   def EuclideanDistance(self, p1: list, p2: list):
       '''
@@ -62,7 +59,7 @@ class BranchAndBound:
       for i in range(0, len(p1)):
         acc += (p1[i]-p2[i])**2
       acc = math.sqrt(acc)
-      return round(acc, 2)
+      return round(acc, 5)
 
 
 
@@ -71,7 +68,7 @@ class BranchAndBound:
     for i in range(0, len(solution)):
       for j in range(i + 1, len(solution)):
         objetiveValue += self.__distanceMatrix[solution[i]][solution[j]]
-    return round(objetiveValue, 2)
+    return round(objetiveValue, 5)
 
 
 
@@ -79,8 +76,7 @@ class BranchAndBound:
     nodesToExplore = [node]  # Inicializar la pila con el nodo raíz
     while nodesToExplore:
         # Seleccionar el siguiente nodo hijo de la pila con el mayor valor
-        curr_node = max(nodesToExplore)
-        nodesToExplore.remove(curr_node)
+        curr_node = nodesToExplore.pop(nodesToExplore.index(max(nodesToExplore)))
         if len(curr_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
             ObjetiveValue = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) 
             if ObjetiveValue >= self.__LowerBound: # Update the lower bound
@@ -155,26 +151,29 @@ class BranchAndBound:
 
     return self.__LowerBound
 
-  def branchAndBound(self):
+
+
+
+  def BranchAndBound(self):
     startTime = time.perf_counter()
     self.bab(self.__root)
     endTime = time.perf_counter()
-    print("Solution: " + str(self.__solution))
-    print("Objetive function: " + str(self.ObjetiveFunction(self.__solution)))
-    print("Nodes generated: " + str(self.__nodesGenerated))
-    print("Time: " + str(endTime - startTime))
+    return self.__solution, self.__LowerBound, self.__nodesGenerated, round(endTime - startTime, 4)
+    
+
+
 
 
 def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
     # Greedy
-    a = GRASP(problem, 2, 3)
+    a = GRASP(problem, 4, 3)
 
     resultSol, valueObjetive, time = a.Grasp(100)
     print("ya", resultSol, valueObjetive, time)
-    branch = BranchAndBound(valueObjetive, problem, 2)
-    branch.branchAndBound()
+    branch = BranchAndBound(valueObjetive, problem, 4)
+    branch.BranchAndBound()
 
   except Exception as e:
     print(str(e))

@@ -343,7 +343,7 @@ class GRASP(Algorithm):
         iterWithOutUpgrade = 0
       
     endTime = time.perf_counter()
-    return bestSolution, round(bestObjetiveValue, 2), round((endTime - startTime), 7)
+    return bestSolution, bestObjetiveValue, round((endTime - startTime), 7)
 
 
 def test():
