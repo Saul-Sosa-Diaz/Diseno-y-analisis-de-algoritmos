@@ -91,17 +91,17 @@ class BranchAndBound:
             # n(n-1)/2 This is used to calculate the number od edges in the graph
             numberOfEdges = self.__maxNumberOfEdges - (len(curr_node.getAncestors()) + 1 * (len(curr_node.getAncestors()))) / 2
             # Crear los nodos hijos del nodo actual
-            pointsOutOfSolution = self.__setOfPoints - set(curr_node.getAncestors() + [curr_node.getId()])
-            for i in pointsOutOfSolution: 
-              if curr_node.getId() == -1:
-                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
-                  newNode = Node(i, UpperBound, curr_node.getAncestors())
-              else:
-                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
-                  newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
-                
-              if UpperBound >= self.__LowerBound:
-                childs.append(newNode)
+            for i in range(0, self.__problem.GetNumOfPoints() - (self.__m-len(curr_node.getAncestors()) + 1)): 
+              if i not in curr_node.getAncestors() + [curr_node.getId()]:
+                if curr_node.getId() == -1:
+                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
+                    newNode = Node(i, UpperBound, curr_node.getAncestors())
+                else:
+                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
+                    newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
+                  
+                if UpperBound >= self.__LowerBound:
+                  childs.append(newNode)
             
             self.__nodesGenerated += len(childs)
             nodesToExplore += childs
@@ -117,7 +117,6 @@ class BranchAndBound:
     stack = [node]  # initialize stack
     while stack:
         curr_node = stack.pop()  # Select node
-
         if len(curr_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
               ObjetiveValue = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) 
               if ObjetiveValue >= self.__LowerBound: # Update the lower bound
@@ -132,17 +131,17 @@ class BranchAndBound:
             # n(n-1)/2 This is used to calculate the number od edges in the graph
             numberOfEdges = self.__maxNumberOfEdges - (len(curr_node.getAncestors()) + 1 * (len(curr_node.getAncestors()))) / 2
             # Crear los nodos hijos del nodo actual
-            pointsOutOfSolution = self.__setOfPoints - set(curr_node.getAncestors() + [curr_node.getId()])
-            for i in pointsOutOfSolution: 
-              if curr_node.getId() == -1:
-                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
-                  newNode = Node(i, UpperBound, curr_node.getAncestors())
-              else:
-                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
-                  newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
-                
-              if UpperBound >= self.__LowerBound:
-                childs.append(newNode)
+            for i in range(0, self.__problem.GetNumOfPoints() - (self.__m-len(curr_node.getAncestors()) + 1)):
+              if i not in curr_node.getAncestors() + [curr_node.getId()]:
+                if curr_node.getId() == -1:
+                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
+                    newNode = Node(i, UpperBound, curr_node.getAncestors())
+                else:
+                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
+                    newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
+                  
+                if UpperBound >= self.__LowerBound:
+                  childs.append(newNode)
 
             self.__nodesGenerated += len(childs)
             # Add childs to stack in reverse order
@@ -168,11 +167,11 @@ def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
     # Greedy
-    a = GRASP(problem, 4, 3)
+    a = GRASP(problem, 5, 3)
 
     resultSol, valueObjetive, time = a.Grasp(100)
     print("ya", resultSol, valueObjetive, time)
-    branch = BranchAndBound(valueObjetive, problem, 4)
+    branch = BranchAndBound(valueObjetive, problem, 5)
     branch.BranchAndBound()
 
   except Exception as e:
