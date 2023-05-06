@@ -85,7 +85,7 @@ def menu() -> None:
     solutionGreedy, objetiveValueGreedy, CPUGreedy = greedy.Grasp(1)
     solutionGrasp, objetiveValueGrasp, CPUGrasp = grasp.Grasp(i)
     bab = BranchAndBound(objetiveValueGrasp, problem, m)
-    solutionBab, objetiveValueBab, CPUBab = bab.BranchAndBound()
+    solutionBab, objetiveValueBab, generatedNodes, CPUBab = bab.BranchAndBound()
     
     #Print results
     if not args.o:
@@ -117,7 +117,8 @@ def menu() -> None:
                                     m,
                                     round(objetiveValueBab, 2),
                                     solutionBab,
-                                    CPUBab)
+                                    CPUBab,
+                                    generatedNodes)
 
     else:
         solution.PrintSolutionGreedyInFile(args.o,
@@ -149,7 +150,8 @@ def menu() -> None:
                                         m,
                                         round(objetiveValueBab, 2),
                                         solutionBab,
-                                        CPUBab)
+                                        CPUBab,
+                                        generatedNodes)
 
 
 
