@@ -62,7 +62,7 @@ class BranchAndBound:
       for i in range(0, len(p1)):
         acc += (p1[i]-p2[i])**2
       acc = math.sqrt(acc)
-      return acc
+      return round(acc, 2)
 
 
 
@@ -104,7 +104,7 @@ class BranchAndBound:
                   UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
                   newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
                 
-              if UpperBound > self.__LowerBound:
+              if UpperBound >= self.__LowerBound:
                 childs.append(newNode)
             
             self.__nodesGenerated += len(childs)
@@ -114,7 +114,7 @@ class BranchAndBound:
 
 
 
-  def byb_dfs(self, node: Node):
+  def bab_dfs(self, node: Node):
     """
     This function implements the branch and bound algorithm using a depth first search.
     """
@@ -122,46 +122,36 @@ class BranchAndBound:
     while stack:
         curr_node = stack.pop()  # Select node
 
-        if len(curr_node.getAncestors()) == self.__m - 1:  # Leaf node
-            ObjetiveValue = self.ObjetiveFunction(
-                curr_node.getAncestors() + [curr_node.getId()])
-            if ObjetiveValue >= self.__LowerBound:
-                self.__LowerBound = ObjetiveValue
-                self.__solution = curr_node.getAncestors() + [curr_node.getId()]
-            continue
+        if len(curr_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
+              ObjetiveValue = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) 
+              if ObjetiveValue >= self.__LowerBound: # Update the lower bound
+                  self.__LowerBound = ObjetiveValue
+                  self.__solution = curr_node.getAncestors() + [curr_node.getId()]
+                  for node in stack: # Prune the nodes that can't be a solution
+                      if node.getupperBound() <= self.__LowerBound:
+                          stack.remove(node)
+              continue
         else:
             childs = []
             # n(n-1)/2 This is used to calculate the number od edges in the graph
-            numberOfEdges = (len(curr_node.getAncestors()) +
-                             1 * (len(curr_node.getAncestors()))) / 2
-            # Create childs
-            for i in range(0, self.__problem.GetNumOfPoints()):
-                if i not in curr_node.getAncestors() + [curr_node.getId()]:
-                    if curr_node.getId() == -1:
-                        UpperBound = self.ObjetiveFunction(
-                            curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
-                        newNode = Node(i, UpperBound, curr_node.getAncestors())
-                    else:
-                        UpperBound = self.ObjetiveFunction(curr_node.getAncestors(
-                        ) + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
-                        newNode = Node(
-                            i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
-                    if newNode.getupperBound() >= self.__LowerBound:
-                      childs.append(newNode)
-                      self.__nodesGenerated += len(childs)
+            numberOfEdges = self.__maxNumberOfEdges - (len(curr_node.getAncestors()) + 1 * (len(curr_node.getAncestors()))) / 2
+            # Crear los nodos hijos del nodo actual
+            pointsOutOfSolution = self.__setOfPoints - set(curr_node.getAncestors() + [curr_node.getId()])
+            for i in pointsOutOfSolution: 
+              if curr_node.getId() == -1:
+                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
+                  newNode = Node(i, UpperBound, curr_node.getAncestors())
+              else:
+                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
+                  newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
+                
+              if UpperBound >= self.__LowerBound:
+                childs.append(newNode)
 
+            self.__nodesGenerated += len(childs)
             # Add childs to stack in reverse order
             for child in reversed(childs):
                 stack.append(child)
-
-        # Prune
-        curr_node.setChilds(childs)
-        to_remove = []
-        for childNode in curr_node.getChilds():
-            if childNode.getupperBound() <= self.__LowerBound:
-                to_remove.append(childNode)
-        for childNode in to_remove:
-            curr_node.getChilds().remove(childNode)
 
     return self.__LowerBound
 
@@ -179,11 +169,11 @@ def test():
   try:
     problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
     # Greedy
-    a = GRASP(problem, 5, 3)
+    a = GRASP(problem, 2, 3)
 
     resultSol, valueObjetive, time = a.Grasp(100)
     print("ya", resultSol, valueObjetive, time)
-    branch = BranchAndBound(valueObjetive, problem, 5)
+    branch = BranchAndBound(valueObjetive, problem, 2)
     branch.branchAndBound()
 
   except Exception as e:
