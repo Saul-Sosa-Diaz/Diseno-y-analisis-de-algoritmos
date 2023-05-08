@@ -1,14 +1,13 @@
 from node import *
 from problem import *
 from grasp import *
-from queue import PriorityQueue
 
 
 class BranchAndBound:
   def __init__(self, initialLowerBound, problem: Problem, m):
     self.__problem = problem
     self.__m = m
-    self.__LowerBound = round(initialLowerBound, 5)
+    self.__LowerBound = initialLowerBound
     self.__root = Node(-1, initialLowerBound, [])
     points = problem.GetPoints()
     self.__distanceMatrix = []
@@ -59,7 +58,7 @@ class BranchAndBound:
       for i in range(0, len(p1)):
         acc += (p1[i]-p2[i])**2
       acc = math.sqrt(acc)
-      return round(acc, 5)
+      return acc
 
 
 
@@ -68,7 +67,7 @@ class BranchAndBound:
     for i in range(0, len(solution)):
       for j in range(i + 1, len(solution)):
         objetiveValue += self.__distanceMatrix[solution[i]][solution[j]]
-    return round(objetiveValue, 5)
+    return objetiveValue
 
 
 
@@ -76,10 +75,12 @@ class BranchAndBound:
     nodesToExplore = [node]  # Inicializar la pila con el nodo raíz
     while nodesToExplore:
         # Seleccionar el siguiente nodo hijo de la pila con el mayor valor
-        curr_node = nodesToExplore.pop(nodesToExplore.index(max(nodesToExplore)))
+        curr_node = min(nodesToExplore)
+        nodesToExplore.remove(curr_node)
+
         if len(curr_node.getAncestors()) == self.__m - 1:  # Si el nodo es una hoja
             ObjetiveValue = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) 
-            if ObjetiveValue >= self.__LowerBound: # Update the lower bound
+            if round(ObjetiveValue, 5) >= round(self.__LowerBound, 5): # Update the lower bound
                 self.__LowerBound = ObjetiveValue
                 self.__solution = curr_node.getAncestors() + [curr_node.getId()]
                 for node in nodesToExplore: # Prune the nodes that can't be a solution
@@ -91,17 +92,19 @@ class BranchAndBound:
             # n(n-1)/2 This is used to calculate the number od edges in the graph
             numberOfEdges = self.__maxNumberOfEdges - (len(curr_node.getAncestors()) + 1 * (len(curr_node.getAncestors()))) / 2
             # Crear los nodos hijos del nodo actual
-            for i in range(0, self.__problem.GetNumOfPoints() - (self.__m-len(curr_node.getAncestors()) + 1)): 
-              if i not in curr_node.getAncestors() + [curr_node.getId()]:
-                if curr_node.getId() == -1:
-                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
-                    newNode = Node(i, UpperBound, curr_node.getAncestors())
-                else:
-                    UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
-                    newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
-                  
-                if UpperBound >= self.__LowerBound:
-                  childs.append(newNode)
+            k = 1
+            if curr_node.getId() == -1:
+               k = 0
+            for i in range(curr_node.getId() + 1, self.__problem.GetNumOfPoints() - 1 - (self.__m - (len(curr_node.getAncestors()) + k)) + 1):
+              if curr_node.getId() == -1:
+                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors()) + self.__maxDistance * numberOfEdges
+                  newNode = Node(i, UpperBound, curr_node.getAncestors())
+              else:
+                  UpperBound = self.ObjetiveFunction(curr_node.getAncestors() + [curr_node.getId()]) + self.__maxDistance * numberOfEdges
+                  newNode = Node(i, UpperBound, curr_node.getAncestors() + [curr_node.getId()])
+                
+              if UpperBound >= self.__LowerBound:
+                childs.append(newNode)
             
             self.__nodesGenerated += len(childs)
             nodesToExplore += childs
@@ -165,15 +168,14 @@ class BranchAndBound:
 
 def test():
   try:
-    problem = Problem(os.path.join(".", "problems", "max_div_15_2.txt"))
+    problem = Problem(os.path.join(".", "problems", "max_div_30_3.txt"))
     # Greedy
     a = GRASP(problem, 5, 3)
 
     resultSol, valueObjetive, time = a.Grasp(100)
-    print("ya", resultSol, valueObjetive, time)
+    print(resultSol, valueObjetive, time)
     branch = BranchAndBound(valueObjetive, problem, 5)
-    branch.BranchAndBound()
-
+    print(branch.BranchAndBound())
   except Exception as e:
     print(str(e))
 
